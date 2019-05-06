@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:layout_marginLeft="@dimen/d5dp"
+    android:layout_marginRight="@dimen/d5dp"
+    android:layout_marginTop="@dimen/d10dp">
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d100dp"
+        android:scaleType="centerCrop"/>
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/d10dp"
+        android:paddingRight="@dimen/d10dp"
+        android:singleLine="true"
+        android:text="足球赛事直播中"
+        android:paddingTop="@dimen/d2dp"
+        style="@style/TextBlack1Style9sp"/>
+    <TextView
+        android:id="@+id/tv_see_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        style="@style/TextGrayStyle7sp"
+        android:paddingLeft="@dimen/d10dp"
+        android:paddingRight="@dimen/d10dp"
+        android:paddingTop="@dimen/d2dp"
+        android:paddingBottom="@dimen/d10dp"
+        android:text="观看人数94848"/>
+</LinearLayout>

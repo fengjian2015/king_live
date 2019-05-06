@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_search_out"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/d60dp"
+    android:background="@drawable/red_gradient"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/d15dp"
+    android:paddingTop="@dimen/d10dp"
+    android:paddingRight="@dimen/d15dp"
+    android:paddingBottom="@dimen/d10dp">
+
+    <ImageView
+        android:id="@+id/iv_avatar"
+        android:layout_width="@dimen/d35dp"
+        android:layout_height="@dimen/d35dp"
+        android:layout_marginRight="@dimen/d20dp"
+        android:background="@mipmap/icon_avatar" />
+
+    <LinearLayout
+        android:id="@+id/ll_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/ft_gray_search"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/d15dp"
+            android:layout_height="@dimen/d15dp"
+            android:layout_marginLeft="@dimen/d15dp"
+            android:background="@mipmap/icon_search" />
+
+        <TextView
+            android:id="@+id/tv_search_content"
+            style="@style/TextWhiteStyle14sp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/d10dp"
+            android:gravity="center_vertical"
+            android:text="@string/search_game_home" />
+    </LinearLayout>
+</LinearLayout>

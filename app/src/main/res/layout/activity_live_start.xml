@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.activity.Live.LiveStartActivity">
+    <View
+        android:id="@+id/main_root"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@color/black"
+        />
+    <LinearLayout
+        android:id="@+id/ll_live"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/main_root">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/bt_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="开始推流" />
+
+            <Button
+                android:id="@+id/bt_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="切换摄像头" />
+
+            <Button
+                android:id="@+id/bt_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="设置美颜参数" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/bt_startMusic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="打开背景音乐" />
+            <Button
+                android:id="@+id/bt_pauseMusic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="暂停" />
+            <Button
+                android:id="@+id/bt_resumeMusic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="恢复" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="伴奏音量"/>
+            <SeekBar
+                android:id="@+id/seekbar_bgm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="人声音量"/>
+            <SeekBar
+                android:id="@+id/seekbar_capture"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100"/>
+        </LinearLayout>
+    </LinearLayout>
+    <com.wewin.live.ui.widget.LiveSurfceView
+        android:id="@+id/surfceview"
+        android:layout_below="@+id/ll_live"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</RelativeLayout>

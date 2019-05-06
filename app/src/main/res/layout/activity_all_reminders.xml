@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.activity.person.AllRemindersActivity">
+    <include layout="@layout/activity_top"></include>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d50dp"
+        android:background="@color/white"
+        android:layout_marginTop="@dimen/d10dp"
+        android:paddingLeft="@dimen/d15dp"
+        android:paddingRight="@dimen/d15dp">
+        <ImageView
+            android:id="@+id/iv1"
+            android:layout_width="@dimen/d40dp"
+            android:layout_height="@dimen/d40dp"
+            android:src="@mipmap/icon_reminders"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/d15dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv1"
+            android:text="@string/all_reminders"
+            style="@style/TextBlack1Style18sp"/>
+        <Switch
+            android:id="@+id/on_off_y"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff=""
+            android:textOn=""
+            android:thumb="@drawable/select_thumb"
+            android:track="@drawable/set_disturb_seletor"
+            android:checked="false"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        app:srlDisableContentWhenRefresh="true"
+        app:srlEnableAutoLoadMore="false"
+        android:layout_marginTop="@dimen/d10dp"
+        app:srlEnableScrollContentWhenRefreshed="false">
+        <com.wewin.live.ui.widget.WaveSwipeHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_srlBackgroundColor="@color/home_red"
+            app:wshPrimaryColor="@color/home_red"
+            app:wshShadowColor="@color/home_red" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+        </android.support.v7.widget.RecyclerView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</LinearLayout>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/d300dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ft_white_bt1"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/d10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/d15dp"
+        android:gravity="center_vertical"
+
+        >
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextBlack1Style18sp"
+            android:text="@string/after_registration_you_can"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="@dimen/d10dp"
+            />
+        <ImageView
+            android:id="@+id/iv_finish"
+            android:layout_width="@dimen/d35dp"
+            android:layout_height="@dimen/d35dp"
+            android:src="@mipmap/icon_sh_cancel"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/d5dp"
+            android:paddingTop="@dimen/d15dp"
+            android:paddingRight="@dimen/d15dp"
+            android:paddingBottom="@dimen/d5dp"
+            android:paddingLeft="@dimen/d5dp"
+            />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d100dp"
+        android:orientation="horizontal"
+        android:layout_above="@+id/iv_finish"
+        android:paddingLeft="@dimen/d10dp"
+        android:paddingRight="@dimen/d10dp"
+        >
+        <LinearLayout
+            android:id="@+id/ll_message"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/d50dp"
+                android:layout_height="@dimen/d50dp"
+                android:src="@mipmap/icon_chat_interaction" />
+
+            <TextView
+                style="@style/TextBlack1Style13sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv"
+                android:layout_marginTop="@dimen/d2dp"
+                android:text="@string/chat_interaction" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_live_more"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/d50dp"
+                android:layout_height="@dimen/d50dp"
+                android:src="@mipmap/icon_live_more" />
+
+            <TextView
+                style="@style/TextBlack1Style13sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv"
+                android:layout_marginTop="@dimen/d2dp"
+                android:text="@string/more_live_broadcasts" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_focus_anchor"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/d50dp"
+                android:layout_height="@dimen/d50dp"
+                android:src="@mipmap/icon_focus_anchor" />
+
+            <TextView
+                style="@style/TextBlack1Style13sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv"
+                android:layout_marginTop="@dimen/d2dp"
+                android:text="@string/focus_on_the_anchor" />
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        style="@style/HorizontalBoundaryStyle"/>
+    <Button
+        android:id="@+id/bt_registration"
+        style="@style/BtRedStyle18sp"
+        android:text="@string/quick_registration"
+        android:layout_marginTop="@dimen/d10dp"></Button>
+</LinearLayout>

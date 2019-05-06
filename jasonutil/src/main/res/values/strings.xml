@@ -1,0 +1,9 @@
+<resources>
+    <string name="accessibility">权限申请</string>
+    <string name="not_obtainable">由于王者体育直播无法获得</string>
+    <string name="open_access_path">权限，不能正常运行，请开启权限在使用王者体育直播\n设置路径：设置->应用->王者体育直播->权限</string>
+    <string name="not_obtainable1">当前王者体育直播没有</string>
+    <string name="open_access_path1">权限，请到当前设备管理应用或设置中开启\n设置路径：设置->应用->王者体育直播->权限</string>
+    <string name="confirm">确定</string>
+    <string name="copy_success">复制成功</string>
+</resources>

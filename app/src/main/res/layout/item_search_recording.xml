@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zhy="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView_data"
+    android:scrollbars="none"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingTop="@dimen/d10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_hot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextBlack1Style18sp"
+            android:text="@string/history_record"
+            android:textStyle="bold"
+            android:paddingLeft="@dimen/d15dp"
+            />
+        <com.wewin.live.ui.widget.flowlayout.TagFlowLayout
+            android:id="@+id/tg_flow_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/d10dp"
+            android:padding="@dimen/d15dp">
+        </com.wewin.live.ui.widget.flowlayout.TagFlowLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextBlack1Style18sp"
+            android:text="@string/popular_searches"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/d10dp"
+            android:paddingLeft="@dimen/d15dp"
+            />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/black"
+    >
+
+    <com.wewin.live.ui.widget.VideoSurfceView
+        android:id="@+id/live_surfce"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+    <ImageView
+        android:id="@+id/iv_finish"
+        android:layout_width="@dimen/d28dp"
+        android:layout_height="@dimen/d28dp"
+        android:src="@mipmap/icon_sh_cancel1"
+        android:padding="@dimen/d5dp"
+        />
+    <ImageView
+        android:id="@+id/iv_amp"
+        android:layout_width="@dimen/d30dp"
+        android:layout_height="@dimen/d30dp"
+        android:padding="@dimen/d5dp"
+        android:src="@drawable/selector_live_amplification_pause"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        />
+</RelativeLayout>

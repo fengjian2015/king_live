@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white_bg"
+    tools:context=".ui.activity.person.FeedbackActivity">
+    <include layout="@layout/activity_top"></include>
+    <EditText
+        android:id="@+id/et_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d200dp"
+        android:background="@drawable/bg_et_feedback"
+        android:layout_marginRight="@dimen/d15dp"
+        android:layout_marginTop="@dimen/d15dp"
+        android:layout_marginLeft="@dimen/d15dp"
+        android:gravity="top|left"
+        style="@style/TextBlackStyle14sp"
+        android:hint="@string/feedback_help"
+        android:textColorHint="@color/gray5"
+        android:padding="@dimen/d10dp"/>
+    <Button
+        android:id="@+id/tv_submit"
+        style="@style/BtRedStyle18sp"
+        android:layout_marginTop="@dimen/d15dp"
+        android:text="@string/submit"
+        ></Button>
+</LinearLayout>

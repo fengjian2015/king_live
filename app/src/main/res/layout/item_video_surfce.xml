@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SurfaceView
+        android:id="@+id/surfceview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/ll_load"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/pb_load"
+            style="@style/Base.Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_load"
+            style="@style/TextWhiteStyle18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/d5dp"
+            android:text="0%" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_prompt"
+        style="@style/TextWhiteStyle18sp"
+        android:layout_width="@dimen/d300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/d15dp"
+        android:background="@drawable/ft_black_bt"
+        android:padding="@dimen/d15dp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_start"
+        android:layout_width="@dimen/d100dp"
+        android:layout_height="@dimen/d100dp"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/icon_start1"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/rl_voluem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/d30dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_volume"
+            style="@style/TextWhiteStyle18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ft_black_bt"
+            android:padding="@dimen/d15dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_marquee"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/black2"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="@dimen/d10dp"
+        android:paddingRight="@dimen/d10dp"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/iv_marquee"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@mipmap/icon_marquee"/>
+        <com.wewin.live.ui.widget.MarqueeView
+            android:id="@+id/tv_marquee"
+            app:direction="left"
+            app:isRepeat="true"
+            app:speed="20"
+            app:startPoint="end"
+            app:textSize="@dimen/d14sp"
+            app:textcolor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/iv_marquee"
+            android:layout_marginLeft="@dimen/d10dp"
+            android:layout_alignParentBottom="true"
+            />
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/ll_right_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/d28dp"
+        android:background="@drawable/ft_red_bt6"
+        android:layout_marginTop="@dimen/d40dp"
+        android:paddingRight="@dimen/d15dp"
+        android:paddingLeft="@dimen/d10dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:id="@+id/iv_right_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@mipmap/icon_video_wx"
+            android:layout_marginRight="@dimen/d5dp"/>
+        <TextView
+            android:id="@+id/tv_right_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            style="@style/TextWhiteStyle14sp"
+            android:gravity="center_vertical"
+            />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_transparent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/black2">
+
+        <ImageView
+            android:id="@+id/iv_switch"
+            android:layout_width="@dimen/d30dp"
+            android:layout_height="@dimen/d30dp"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/d5dp"
+            android:src="@drawable/selector_live_start_pause" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            style="@style/TextGrayStyle14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/d30dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv_switch"
+            android:gravity="center_vertical"
+            android:text="00:00/00:00" />
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/d10dp"
+            android:layout_toLeftOf="@+id/iv_amplification"
+            android:layout_toRightOf="@+id/tv_time"
+            android:progressBackgroundTint="@color/white"
+            android:progressTint="@color/red"
+            android:secondaryProgressTint="@color/gray4" />
+
+        <ImageView
+            android:id="@+id/iv_amplification"
+            android:layout_width="@dimen/d30dp"
+            android:layout_height="@dimen/d30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/d10dp"
+            android:padding="@dimen/d5dp"
+            android:src="@drawable/selector_live_amplification_pause" />
+
+    </RelativeLayout>
+</RelativeLayout>

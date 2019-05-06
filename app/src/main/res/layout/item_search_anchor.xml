@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="@dimen/d80dp"
+    android:paddingLeft="@dimen/d15dp"
+    android:paddingRight="@dimen/d15dp"
+    android:background="@color/white">
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="@dimen/d60dp"
+        android:layout_height="@dimen/d60dp"
+        android:src="@mipmap/icon_avatar"
+        android:layout_marginRight="@dimen/d15dp"
+        android:layout_centerVertical="true"
+       />
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/d30dp"
+        android:layout_toRightOf="@id/iv_image"
+        android:gravity="bottom"
+        android:singleLine="true"
+        style="@style/TextBlackStyle15sp"
+        android:text="Jason"/>
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/d26dp"
+        android:layout_toRightOf="@id/iv_image"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/d2dp"
+        style="@style/TextGrayStyle12sp"
+        android:layout_below="@+id/tv_name"
+        android:singleLine="true"
+        android:text="最近在线时间：19.03.02"
+        />
+    <TextView
+        android:id="@+id/tv_number"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/d26dp"
+        android:layout_toRightOf="@id/iv_image"
+        android:gravity="top"
+        style="@style/TextGrayStyle12sp"
+        android:textColor="@color/gray6"
+        android:singleLine="true"
+        android:layout_below="@+id/tv_time"
+        android:text="粉丝:999999"
+        />
+    <View
+        style="@style/HorizontalBoundaryStyle"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

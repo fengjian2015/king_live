@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomTabLayout">
+        <attr name="ctlTextSize" format="dimension"/>
+        <attr name="ctlTextColor" format="color"/>
+        <attr name="ctlTvBackground" format="color"/>
+        <attr name="ctlTextStyle" format="enum">
+            <enum name="normal" value="0"/>
+            <enum name="bold" value="1"/>
+        </attr>
+        <attr name="ctlUnderlineWidth" format="dimension"/>
+        <attr name="ctlUnderlineHeight" format="dimension"/>
+        <attr name="ctlUnderlinePaddingBottom" format="dimension"/>
+        <attr name="ctlUnderlineColor" format="color"/>
+        <attr name="ctlUnderlineNumber" format="integer"/>
+        <attr name="ctlCheckedTextColor" format="color"/>
+        <attr name="ctlCheckedTextSize" format="dimension"/>
+        <attr name="ctlUnderlineDuration" format="integer"/>
+        <attr name="ctlHorizontalSpace" format="integer"/>
+        <attr name="ctlIsAutomatic" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="TagFlowLayout">
+        <attr name="max_select" format="integer"></attr>
+        <attr name="tag_gravity">
+            <enum name="left" value="-1" />
+            <enum name="center" value="0" />
+            <enum name="right" value="1" />
+        </attr>
+    </declare-styleable>
+
+
+    <declare-styleable name="HintText">
+        <attr name="hintText_hint" format="string"></attr>
+        <attr name="hintText_color" format="color"></attr>
+        <attr name="text_color" format="color"></attr>
+    </declare-styleable>
+
+    <declare-styleable name="ButtonAnimation">
+        <attr name="text_data" format="string"></attr>
+        <attr name="t_color" format="color"></attr>
+        <attr name="t_size" format="dimension"></attr>
+        <attr name="bg_color" format="color"></attr>
+    </declare-styleable>
+
+    <declare-styleable name="MarqueeView">
+        <attr name="textcolor" format="color" />
+        <attr name="textSize" format="dimension" />
+        <attr name="isRepeat" format="boolean" />
+        <attr name="speed" format="integer"/>
+        <attr name="startPoint" format="integer">
+            <enum name="start" value="0"/>
+            <enum name="end" value="1"/>
+        </attr>
+        <attr name="direction" format="integer">
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+        </attr>
+    </declare-styleable>
+</resources>

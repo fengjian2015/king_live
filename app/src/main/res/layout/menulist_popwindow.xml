@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--android:background="@mipmap/collect_popupwindow_bg"-->
+    <LinearLayout
+        android:id="@+id/quit_popupwindows_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        >
+    </LinearLayout>
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d6dp"
+        android:layout_alignParentBottom="true"
+        />
+    <RelativeLayout
+        android:id="@+id/card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/d10dp"
+        android:layout_above="@+id/text1"
+        android:layout_marginRight="@dimen/d10dp"
+        android:background="@drawable/ft_white_bt1"
+        >
+        <RelativeLayout
+            android:id="@+id/rl_card"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d50dp">
+            <Button
+                android:id="@+id/button_common3"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/d50dp"
+                android:background="@null"
+                android:text="@string/cancel"
+                style="@style/TextBlack1Style16sp"
+                />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/jiange"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d6dp"
+        android:layout_above="@id/card"/>
+
+    <ListView
+        android:id="@+id/lv_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/jiange"
+        android:divider="@null"
+        ></ListView>
+
+</RelativeLayout>

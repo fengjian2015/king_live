@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d50dp"
+        android:background="@color/white"
+        android:layout_marginTop="@dimen/d10dp"
+        android:paddingLeft="@dimen/d15dp"
+        android:paddingRight="@dimen/d15dp">
+        <ImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/d40dp"
+            android:layout_height="@dimen/d40dp"
+            android:src="@mipmap/icon_avatar"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/d15dp"/>
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/d30dp"
+            android:layout_toRightOf="@+id/iv_avatar"
+            android:text="@string/all_reminders"
+            android:gravity="bottom"
+            style="@style/TextBlack1Style18sp"/>
+        <TextView
+            android:id="@+id/tv_grade"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/d20dp"
+            android:layout_toRightOf="@+id/iv_avatar"
+            android:layout_alignParentBottom="true"
+            android:text="王者新人"
+            android:gravity="top"
+            style="@style/TextRedStyle11sp"/>
+        <Switch
+            android:id="@+id/on_off_y"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff=""
+            android:textOn=""
+            android:thumb="@drawable/select_thumb"
+            android:track="@drawable/set_disturb_seletor"
+            android:checked="false"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="@dimen/d50dp"
+    android:paddingLeft="@dimen/d15dp"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <ImageView
+            android:id="@+id/iv_image"
+            android:layout_width="@dimen/d14dp"
+            android:layout_height="@dimen/d14dp"
+            android:background="@mipmap/icon_search_popular"
+            android:visibility="gone"
+            />
+        <TextView
+            android:id="@+id/tv_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ft_red_bt5"
+            style="@style/TextWhiteStyle12sp"
+            android:paddingLeft="@dimen/d2dp"
+            android:paddingRight="@dimen/d2dp"
+            android:visibility="gone"
+            android:text="热"/>
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextBlack1Style17sp"
+            android:text="世界杯1/2决赛"
+            android:layout_marginLeft="@dimen/d10dp"
+            />
+    </LinearLayout>
+
+    <View
+        style="@style/HorizontalBoundaryStyle"
+        android:layout_alignParentBottom="true"></View>
+</RelativeLayout>

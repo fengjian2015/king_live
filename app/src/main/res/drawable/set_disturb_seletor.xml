@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+   <!-- <item android:state_selected="false" android:drawable="@mipmap/btn_set_of"/>
+    <item android:state_selected="true" android:drawable="@mipmap/btn_set_on"/>-->
+    <item android:drawable="@drawable/ft_red_bt3" android:state_checked="true"/>
+    <!--正常情况滑块图片-->
+    <item android:drawable="@drawable/ft_gray_bt3"/>
+</selector>

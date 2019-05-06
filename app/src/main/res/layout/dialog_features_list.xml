@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/d30dp"
+        android:paddingLeft="@dimen/d15dp"
+        android:paddingBottom="@dimen/d10dp"
+        android:background="@color/white_bg">
+        <TextView
+            android:id="@+id/tv_day"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/d70dp"
+            android:textColor="@color/black1"
+            android:textSize="@dimen/d70sp"
+            android:includeFontPadding="false"
+            android:text="30"/>
+        <TextView
+            android:id="@+id/week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tv_day"
+            android:layout_above="@+id/tv_year_month"
+            android:text="周二"
+            />
+        <TextView
+            android:id="@+id/tv_year_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextBlack1Style15sp"
+            android:text="03/2019"
+            android:layout_alignBottom="@+id/tv_day"
+            android:layout_toRightOf="@+id/tv_day"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/d50dp"
+            android:layout_alignBottom="@+id/tv_day"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/tv_year_month"
+            android:layout_marginRight="@dimen/d10dp"
+            android:layout_marginLeft="@dimen/d40dp"
+            android:src="@mipmap/icon_aboutlogo" />
+    </RelativeLayout>
+
+   <RelativeLayout
+       android:id="@+id/rl_finish"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_below="@+id/rl_time"
+       android:background="@color/white2">
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="@dimen/d100dp"
+           android:orientation="horizontal"
+           android:layout_above="@+id/iv_finish"
+           android:paddingLeft="@dimen/d10dp"
+           android:paddingRight="@dimen/d10dp"
+           >
+           <LinearLayout
+               android:id="@+id/ll_live"
+               android:layout_width="0dp"
+               android:layout_height="match_parent"
+               android:layout_weight="1"
+               android:gravity="center"
+               android:orientation="vertical">
+
+               <ImageView
+                   android:layout_width="@dimen/d60dp"
+                   android:layout_height="@dimen/d60dp"
+                   android:src="@mipmap/icon_want_live" />
+
+               <TextView
+                   style="@style/TextBlack1Style13sp"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/iv"
+                   android:layout_marginTop="@dimen/d2dp"
+                   android:text="@string/want_broadcast_live" />
+           </LinearLayout>
+           <LinearLayout
+               android:id="@+id/ll_video"
+               android:layout_width="0dp"
+               android:layout_height="match_parent"
+               android:layout_weight="1"
+               android:gravity="center"
+               android:orientation="vertical">
+
+               <ImageView
+                   android:layout_width="@dimen/d60dp"
+                   android:layout_height="@dimen/d60dp"
+                   android:src="@mipmap/icon_take_video" />
+
+               <TextView
+                   style="@style/TextBlack1Style13sp"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/iv"
+                   android:layout_marginTop="@dimen/d2dp"
+                   android:text="@string/take_video" />
+           </LinearLayout>
+           <LinearLayout
+               android:id="@+id/ll_dynamic"
+               android:layout_width="0dp"
+               android:layout_height="match_parent"
+               android:layout_weight="1"
+               android:gravity="center"
+               android:orientation="vertical">
+
+               <ImageView
+                   android:layout_width="@dimen/d60dp"
+                   android:layout_height="@dimen/d60dp"
+                   android:src="@mipmap/icon_release_dynamics" />
+
+               <TextView
+                   style="@style/TextBlack1Style13sp"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/iv"
+                   android:layout_marginTop="@dimen/d2dp"
+                   android:text="@string/release_dynamics" />
+           </LinearLayout>
+           <LinearLayout
+               android:id="@+id/ll_check_in"
+               android:layout_width="0dp"
+               android:layout_height="match_parent"
+               android:layout_weight="1"
+               android:gravity="center"
+               android:orientation="vertical">
+
+               <ImageView
+                   android:layout_width="@dimen/d60dp"
+                   android:layout_height="@dimen/d60dp"
+                   android:src="@mipmap/icon_check_in" />
+
+               <TextView
+                   style="@style/TextBlack1Style13sp"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/iv"
+                   android:layout_marginTop="@dimen/d2dp"
+                   android:text="@string/check_in" />
+           </LinearLayout>
+       </LinearLayout>
+       <ImageView
+           android:id="@+id/iv_finish"
+           android:layout_width="match_parent"
+           android:layout_height="@dimen/d45dp"
+           android:src="@mipmap/icon_sh_cancel"
+           android:layout_alignParentBottom="true"
+           android:layout_centerHorizontal="true"
+           android:paddingBottom="@dimen/d15dp"
+           android:paddingTop="@dimen/d15dp"
+           />
+   </RelativeLayout>
+</RelativeLayout>

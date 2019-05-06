@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    style="@style/TextGrayStyle16sp"
+    android:textColor="@color/gray7"
+    android:background="@drawable/ft_gray_bt"
+    android:text="士大夫大师傅"
+    android:paddingLeft="@dimen/d15dp"
+    android:paddingRight="@dimen/d15dp"
+    android:paddingTop="@dimen/d8dp"
+    android:paddingBottom="@dimen/d8dp"
+    android:layout_margin="@dimen/d5dp">
+
+</TextView>

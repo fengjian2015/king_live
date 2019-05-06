@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/d10dp"
+    android:paddingRight="@dimen/d15dp"
+    android:paddingLeft="@dimen/d15dp"
+    android:background="@color/white">
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextBlack1Style17sp"
+        android:text="新加坡滨海湾金沙购物中心2018年零点3分发生一起枪击案件"
+        android:singleLine="true"/>
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextGrayStyle8sp"
+        android:text="时间：2019-02-26 20:30:55"
+        android:layout_marginTop="@dimen/d8dp"/>
+    <View
+        style="@style/HorizontalBoundaryStyle"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/d10dp"/>
+</LinearLayout>

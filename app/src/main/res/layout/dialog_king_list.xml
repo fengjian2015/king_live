@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/icon_wzh_bg">
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/ll_data"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv1"
+                        style="@style/TextWhiteStyle18sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/d15dp"
+                        android:layout_marginTop="@dimen/d15dp"
+                        android:text="@string/king" />
+
+                    <TextView
+                        android:id="@+id/tv2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/d3dp"
+                        android:layout_below="@+id/tv1"
+                        android:layout_alignLeft="@+id/tv1"
+                        android:layout_alignRight="@+id/tv1"
+                        android:background="@color/white" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tv3"
+                    style="@style/TextWhiteStyle18sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/recent_attention" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_attention"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/d15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="@dimen/d15dp" />
+
+                <View
+                    android:id="@+id/view"
+                    style="@style/HorizontalBoundaryStyle"
+                    android:layout_marginLeft="@dimen/d15dp"
+                    android:layout_marginTop="@dimen/d10dp"
+                    android:layout_marginRight="@dimen/d15dp"></View>
+
+                <TextView
+                    android:id="@+id/tv4"
+                    style="@style/TextWhiteStyle18sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/d15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/more_recommendations" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_recommendations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginLeft="@dimen/d15dp"
+                    android:layout_marginTop="@dimen/d10dp"
+                    android:layout_marginRight="@dimen/d15dp" />
+
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/iv_finish"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/d45dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:paddingLeft="@dimen/d10dp"
+                android:paddingRight="@dimen/d10dp"
+                android:paddingTop="@dimen/d15dp"
+                android:paddingBottom="@dimen/d15dp"
+                android:src="@mipmap/icon_up" />
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

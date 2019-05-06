@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/d300dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ft_white_bt3"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/d10dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="@dimen/d20dp"
+        android:paddingLeft="@dimen/d10dp"
+        android:paddingRight="@dimen/d10dp"
+        android:paddingTop="@dimen/d20dp">
+
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/TextBlack1Style18sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/tv_content"
+            style="@style/TextGrayStyle14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_title"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/d15dp"
+            android:visibility="gone"
+            />
+
+    </RelativeLayout>
+
+    <View style="@style/HorizontalBoundaryStyle"/>
+
+    <Button
+        android:id="@+id/btn_confirm"
+        style="@style/BtRedStyle18sp"
+        android:layout_marginTop="@dimen/d10dp"
+        android:text="@string/confirm"/>
+
+</LinearLayout>
