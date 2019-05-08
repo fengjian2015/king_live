@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
@@ -26,11 +27,16 @@ import android.widget.TextView;
 
 import com.example.jasonutil.R;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -313,6 +319,7 @@ public class UtilTool {
      * @return
      */
     public static byte[] bitmap2Bytes(Bitmap bitmap, int maxkb) {
+        if(bitmap==null)return null;
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
         int options = 100;
@@ -364,4 +371,40 @@ public class UtilTool {
         }
         WebStorage.getInstance().deleteAllData(); //清空WebView的localStorage
     }
+
+    /**
+     * 把网络资源图片转化成bitmap
+     *
+     * @param url 网络资源图片
+     * @return Bitmap
+     */
+    public static Bitmap GetLocalOrNetBitmap(String url) {
+        Bitmap bitmap = null;
+        InputStream in = null;
+        BufferedOutputStream out = null;
+        try {
+            in = new BufferedInputStream(new URL(url).openStream(), 1024);
+            final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+            out = new BufferedOutputStream(dataStream, 1024);
+            copy(in, out);
+            out.flush();
+            byte[] data = dataStream.toByteArray();
+            bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+            data = null;
+            return bitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static void copy(InputStream in, OutputStream out)
+            throws IOException {
+        byte[] b = new byte[1024];
+        int read;
+        while ((read = in.read(b)) != -1) {
+            out.write(b, 0, read);
+        }
+    }
+
 }

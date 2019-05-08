@@ -36,9 +36,15 @@ import com.wewin.live.ui.activity.HtmlActivity;
 import com.wewin.live.ui.activity.Live.VideoDetailsActivity;
 import com.wewin.live.utils.AndroidBug5497Workaround;
 import com.wewin.live.utils.IntentStart;
+import com.wewin.live.utils.MessageEvent;
 import com.wewin.live.utils.SignOutUtil;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.Map;
+
+import static com.wewin.live.utils.MessageEvent.DOWN_ANIMATION;
+import static com.wewin.live.utils.MessageEvent.START_ANIMATION;
 
 /**
  * @author jsaon
@@ -105,6 +111,7 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mWebView.setWebContentsDebuggingEnabled(true);
         }
+
         mWebView.getSettings().setUserAgentString(mWebView.getSettings().getUserAgentString() + "zhibo18.app");
         mWebView.getSettings().setTextZoom(100);
         AndroidBug5497Workaround.assistActivity((Activity) mContext);
@@ -337,6 +344,8 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
         void goBack();
 
         void setTitle(String title);
+
+        void setShareView(boolean isShow);
     }
 
     /**
@@ -369,10 +378,10 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
     private final int GET_USER_INFO = 1;//获取用户信息
     private final int GO_VIDEO_PLAY = 2;//跳转到播放器
     private final int GO_VIDEO_PLAY_LOGIN = 3;//跳转到播放器需登录
-    private final int GET_IS_APP = 4;//返回是否在app端，方便H5判断
     private final int SHOW_DIALOG = 5;//弹窗提示
     private final int SHOW_DIALOG_RELOAD = 6;//弹窗提示,重新刷新
     private final int IS_LONG = 7;//判断是否登录
+    private final int IS_SHOW_SHARE = 8;//是否显示分享按钮
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
         @Override
@@ -387,9 +396,6 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
                     break;
                 case GO_VIDEO_PLAY_LOGIN:
                     goVideoPlay((String) msg.obj, true);
-                    break;
-                case GET_IS_APP:
-
                     break;
                 case SHOW_DIALOG:
                 case SHOW_DIALOG_RELOAD:
@@ -411,6 +417,15 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
                         IntentStart.starLogin(mContext);
                     }
                     break;
+                case IS_SHOW_SHARE:
+                    if (mOnHtmlListener==null)return;
+                    int isShow= (int) msg.obj;
+                    if(1==isShow){
+                        mOnHtmlListener.setShareView(true);
+                    }else {
+                        mOnHtmlListener.setShareView(false);
+                    }
+                    break;
             }
         }
     };
@@ -430,6 +445,10 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
             bundle.putString(BaseInfoConstants.WECHAT, map.get(BaseInfoConstants.WECHAT) + "");
             bundle.putString(BaseInfoConstants.ADSCONTENT, map.get(BaseInfoConstants.ADSCONTENT) + "");
             bundle.putString(BaseInfoConstants.WXIMAGE, map.get(BaseInfoConstants.WXIMAGE) + "");
+            bundle.putString(BaseInfoConstants.SHARE_URL, map.get(BaseInfoConstants.SHARE_URL) + "");
+            bundle.putString(BaseInfoConstants.SHARE_TITLE, map.get(BaseInfoConstants.SHARE_TITLE) + "");
+            bundle.putString(BaseInfoConstants.SHARE_CONTENT, map.get(BaseInfoConstants.SHARE_CONTENT) + "");
+            bundle.putString(BaseInfoConstants.SHARE_IMAGE, map.get(BaseInfoConstants.SHARE_IMAGE) + "");
             if (isNeesLogin) {
                 IntentStart.starLogin(mContext, VideoDetailsActivity.class, bundle);
             } else {
@@ -458,18 +477,6 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
         mWebView.loadUrl("javascript:appGetUserInfo('" + userInfo.getJson() + " ');");
     }
 
-    /**
-     * 获取是否是app端回调h5
-     */
-    private void getIsApp() {
-        UserInfo userInfo = UserInfoDao.queryUserInfo(SignOutUtil.getUserId());
-        userInfo.setToken(SignOutUtil.getToken());
-//        HashMap hashMap=new HashMap();
-//        hashMap.put("uid",SignOutUtil.getUserId());
-//        hashMap.put("token",SignOutUtil.getToken());
-        String content = JSONObject.toJSONString(userInfo);
-        mWebView.loadUrl("javascript:appGetUserInfo('" + content + " ');");
-    }
 
     /*------------------------------------以下是h5调用java方法--------------------------------------------*/
 
@@ -571,5 +578,28 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
     @JavascriptInterface
     public void jsScrollChanged(String starY,String scrollY ) {
         onWbScrollChanged.onScrollChanged(UtilTool.parseFloat(starY),UtilTool.parseFloat(scrollY));
+    }
+
+
+    /**
+     * 获取动画，下载和展示动画
+     */
+    @JavascriptInterface
+    public void jsAnimation(String url,String fileName) {
+        MessageEvent messageEvent=new MessageEvent(START_ANIMATION);
+        messageEvent.setUrl(url);
+        messageEvent.setFileName(fileName);
+        EventBus.getDefault().post(messageEvent);
+    }
+
+    /**
+     * 获取动画，下载和展示动画
+     */
+    @JavascriptInterface
+    public void jsIsShowShare(int isShow) {
+        Message message = new Message();
+        message.what = IS_SHOW_SHARE;
+        message.obj = isShow;
+        handler.sendMessage(message);
     }
 }

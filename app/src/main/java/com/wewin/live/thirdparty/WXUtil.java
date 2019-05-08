@@ -148,26 +148,30 @@ public class WXUtil {
      * @param desc           描述
      * @param type 类型
      */
-    public void shareUrlToWx(Context context,String url, String title, String desc, final int type) {
-        TYPE=SHARE;
-        if(!isWeiXinAppInstall(context)){
-            return;
-        }
-        WXWebpageObject webpage = new WXWebpageObject();
-        webpage.webpageUrl = url;
-        final WXMediaMessage msg = new WXMediaMessage(webpage);
-        msg.title = title;
-        msg.description = desc;
+    public void shareUrlToWx(final Context context, final String url, final String title, final String desc, final String imageUrl, final int type) {
+        if(!isWeiXinAppInstall(context))return;
+        new Thread(){
+            @Override
+            public void run() {
+                TYPE=SHARE;
 
-        Bitmap thumbBmp = BitmapFactory.decodeResource(context.getResources(), R.mipmap.icon_logo);
-        msg.thumbData =UtilTool.bitmap2Bytes(thumbBmp,30);
-        //构造一个Req
-        SendMessageToWX.Req req = new SendMessageToWX.Req();
-        req.transaction = buildTransaction("webpage");
-        req.message =msg;
-        req.scene =type;
-        //调用api接口，发送数据到微信
-        wxapi.sendReq(req);
+                WXWebpageObject webpage = new WXWebpageObject();
+                webpage.webpageUrl = url;
+                final WXMediaMessage msg = new WXMediaMessage(webpage);
+                msg.title = title;
+                msg.description = desc;
+
+                Bitmap thumbBmp =UtilTool.GetLocalOrNetBitmap(imageUrl);
+                msg.thumbData =UtilTool.bitmap2Bytes(thumbBmp,30);
+                //构造一个Req
+                SendMessageToWX.Req req = new SendMessageToWX.Req();
+                req.transaction = buildTransaction("webpage");
+                req.message =msg;
+                req.scene =type;
+                //调用api接口，发送数据到微信
+                wxapi.sendReq(req);
+            }
+        }.start();
     }
 
     private String buildTransaction(final String type) {

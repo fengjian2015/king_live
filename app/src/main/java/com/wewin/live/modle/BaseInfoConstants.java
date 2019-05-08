@@ -94,4 +94,9 @@ public class BaseInfoConstants {
     public static final String WECHAT="wechat";
     public static final String ADSCONTENT="adscontent";
     public static final String WXIMAGE="wximage";
+    public static final String IS_HORIZONTAL="is_horizontal";
+    public static final String SHARE_URL="share_url";
+    public static final String SHARE_TITLE="share_title";
+    public static final String SHARE_CONTENT="share_content";
+    public static final String SHARE_IMAGE="share_image";
 }

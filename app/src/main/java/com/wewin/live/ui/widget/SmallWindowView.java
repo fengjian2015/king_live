@@ -2,6 +2,7 @@ package com.wewin.live.ui.widget;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -13,8 +14,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.wewin.live.R;
+import com.wewin.live.aliyun.LiveManage;
 import com.wewin.live.base.MyApp;
-import com.wewin.live.ui.activity.Live.VideoBigActivity;
+import com.wewin.live.modle.BaseInfoConstants;
+import com.wewin.live.ui.activity.Live.VideoDetailsActivity;
 
 
 /**
@@ -236,7 +239,10 @@ public class SmallWindowView extends LinearLayout {
     }
 
     private void goBigView() {
-        Intent intent = new Intent(mContext, VideoBigActivity.class);
+        Intent intent = new Intent(mContext, VideoDetailsActivity.class);
+        Bundle bundle=LiveManage.getInstance().getBundle();
+        bundle.putBoolean(BaseInfoConstants.IS_HORIZONTAL,true);
+        intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
     }

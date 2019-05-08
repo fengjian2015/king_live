@@ -63,7 +63,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
     //跑马灯效果
     private RelativeLayout rlMarquee;
     //跑马灯文本
-    private MarqueeView tvMarquee;
+    private ScrollTextView tvMarquee;
     //右上角提示内容
     private TextView tvRightPrompt;
     private LinearLayout llRightPrompt;
@@ -487,21 +487,17 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
         if(!isShow){
             rlMarquee.setVisibility(GONE);
             tvMarquee.setVisibility(GONE);
-            tvMarquee.stopScroll();
         }else if(!StringUtils.isEmpty(LiveManage.getInstance().getMarqueeContent())){
             rlMarquee.setVisibility(VISIBLE);
             tvMarquee.setVisibility(VISIBLE);
             tvMarquee.setText(LiveManage.getInstance().getMarqueeContent());
-            tvMarquee.stopScroll();
-            tvMarquee.startScroll();
         }else {
             rlMarquee.setVisibility(GONE);
             tvMarquee.setVisibility(GONE);
-            tvMarquee.stopScroll();
         }
         if(!StringUtils.isEmpty(LiveManage.getInstance().getRightPrompt())){
-            llRightPrompt.setVisibility(VISIBLE);
             tvRightPrompt.setText(LiveManage.getInstance().getRightPrompt());
+            llRightPrompt.setVisibility(VISIBLE);
             GlideUtil.setImg(mContext,LiveManage.getInstance().getRightImage(),ivRightPrompt,0);
         }else {
             llRightPrompt.setVisibility(GONE);
@@ -648,7 +644,6 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
 
     @Override
     public void destroyDrawingCache() {
-        tvMarquee.stopScroll();
         super.destroyDrawingCache();
         LiveListenerManage.getInstance().unregisterLiveListener(this);
         isSeekPlay=false;

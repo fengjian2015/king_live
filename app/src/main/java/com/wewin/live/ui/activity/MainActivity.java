@@ -2,11 +2,13 @@ package com.wewin.live.ui.activity;
 
 import android.os.Bundle;
 
+import com.example.jasonutil.util.LogUtil;
 import com.wewin.live.base.BaseMainAcitvity;
 import com.wewin.live.modle.BaseInfoConstants;
 import com.wewin.live.newtwork.OnSuccess;
 import com.wewin.live.presenter.PersenterLogin;
 import com.wewin.live.presenter.PersenterPersonal;
+import com.wewin.live.rxjava.RxJavaObserver;
 import com.wewin.live.ui.activity.Live.VideoDetailsActivity;
 import com.wewin.live.utils.IntentStart;
 import com.wewin.live.utils.MessageEvent;
@@ -16,8 +18,13 @@ import com.wewin.live.utils.down.DownloadService;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class MainActivity extends BaseMainAcitvity {
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
+public class MainActivity extends BaseMainAcitvity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

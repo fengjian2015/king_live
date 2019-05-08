@@ -3,6 +3,7 @@ package com.wewin.live.aliyun;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -52,6 +53,8 @@ public class LiveManage {
     private String rightPrompt;
     //右上角图标
     private String rightImage;
+    //记录播放器界面的数据
+    private Bundle mBundle;
 
     public static LiveManage getInstance() {
         if (instance == null) {
@@ -407,6 +410,22 @@ public class LiveManage {
      */
     public String getRightPrompt(){
         return rightPrompt;
+    }
+
+    /**
+     * 设置播放器界面的参数
+     * @param bundle
+     */
+    public void setBundle(Bundle bundle){
+        mBundle=bundle;
+    }
+
+    /**
+     * 返回播放器的数据
+     * @return
+     */
+    public Bundle getBundle(){
+        return mBundle;
     }
 
     /**

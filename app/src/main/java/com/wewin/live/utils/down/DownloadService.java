@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 
+import com.example.jasonutil.util.LogUtil;
 import com.wewin.live.R;
 import com.example.jasonutil.util.FileUtil;
 import com.wewin.live.utils.MessageEvent;
@@ -42,7 +43,7 @@ import okhttp3.Response;
  * @date 2019/3/12
  */
 public class DownloadService extends Service {
-    public final static String DOWN_LOAD_SERVICE_NAME="com.wewin.live.utils.down.DownloadService";
+    public final static String DOWN_LOAD_SERVICE_NAME = "com.wewin.live.utils.down.DownloadService";
     //定义notify的id，避免与其它的notification的处理冲突
     private static final int NOTIFY_ID = 0;
     private static final String CHANNEL = "update";
@@ -74,8 +75,8 @@ public class DownloadService extends Service {
     @Override
     public void unbindService(ServiceConnection conn) {
         super.unbindService(conn);
-        if(mNotificationManager!=null)
-        mNotificationManager.cancelAll();
+        if (mNotificationManager != null)
+            mNotificationManager.cancelAll();
         mNotificationManager = null;
         mBuilder = null;
     }
@@ -94,11 +95,14 @@ public class DownloadService extends Service {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
-        int msgId=event.getMsgId();
-       if(msgId==MessageEvent.START_UPDATA_APK){
+        int msgId = event.getMsgId();
+        if (msgId == MessageEvent.START_UPDATA_APK) {
             //开始下载apk
-           versionName=event.getVersionName();
-            downApk(event.getUrl(),event.getDownloadCallback());
+            versionName = event.getVersionName();
+            downApk(event.getUrl(), event.getDownloadCallback());
+        } else if (msgId == MessageEvent.DOWN_ANIMATION) {
+            //开始下载apk
+            downAnimation(event.getUrl(), event.getFileName(), event.getDownloadCallback());
         }
     }
 
@@ -108,7 +112,7 @@ public class DownloadService extends Service {
     private void setNotification() {
         if (mNotificationManager == null)
             mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(this,CHANNEL);
+        mBuilder = new NotificationCompat.Builder(this, CHANNEL);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
@@ -128,8 +132,8 @@ public class DownloadService extends Service {
                     .setAutoCancel(true)
                     .setWhen(System.currentTimeMillis());
         }
-        if(mNotificationManager!=null)
-        mNotificationManager.notify(NOTIFY_ID, mBuilder.build());
+        if (mNotificationManager != null)
+            mNotificationManager.notify(NOTIFY_ID, mBuilder.build());
     }
 
     /**
@@ -140,8 +144,8 @@ public class DownloadService extends Service {
             mBuilder.setContentTitle("新版本").setContentText(msg);
             Notification notification = mBuilder.build();
             notification.flags = Notification.FLAG_AUTO_CANCEL;
-            if(mNotificationManager!=null)
-            mNotificationManager.notify(NOTIFY_ID, notification);
+            if (mNotificationManager != null)
+                mNotificationManager.notify(NOTIFY_ID, notification);
         }
         stopSelf();
     }
@@ -149,7 +153,7 @@ public class DownloadService extends Service {
     /**
      * 开始下载apk
      */
-    public void downApk(String url,DownloadCallback callback) {
+    public void downApk(String url, DownloadCallback callback) {
         this.callback = callback;
         if (TextUtils.isEmpty(url)) {
             complete("下载路径错误");
@@ -183,12 +187,12 @@ public class DownloadService extends Service {
                 try {
                     is = response.body().byteStream();
                     long total = response.body().contentLength();
-                    File file = FileUtil.createAPKFile(DownloadService.this,versionName);
+                    File file = FileUtil.createAPKFile(DownloadService.this, versionName);
                     fos = new FileOutputStream(file);
                     long sum = 0;
                     while ((len = is.read(buff)) != -1) {
-                        fos.write(buff,0,len);
-                        sum+=len;
+                        fos.write(buff, 0, len);
+                        sum += len;
                         int progress = (int) (sum * 1.0f / total * 100);
                         if (rate != progress) {
                             Message message = Message.obtain();
@@ -220,6 +224,77 @@ public class DownloadService extends Service {
     }
 
 
+    /**
+     * 开始下载动画
+     */
+    public void downAnimation(String url, final String fileName, final DownloadCallback callback) {
+        this.callback = callback;
+        if (TextUtils.isEmpty(url)) {
+            complete("下载路径错误");
+            return;
+        }
+        String root =FileUtil.getAnimationLoc(this);
+        File file = new File(root,fileName+".json" );
+        if (file.exists() && callback != null) {
+            LogUtil.Log("动画文件已存在");
+            callback.onComplete(file);
+            return;
+        }
+        Request request = new Request.Builder().url(url).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            File file = FileUtil.createAnimationFile(DownloadService.this, fileName);
+            @Override
+            public void onFailure(Call call, IOException e) {
+                file.delete();
+                if (callback != null)
+                    callback.onFail(e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.body() == null) {
+                    if (callback != null)
+                        callback.onFail("下载错误");
+                    return;
+                }
+                InputStream is = null;
+                byte[] buff = new byte[2048];
+                int len;
+                FileOutputStream fos = null;
+                try {
+                    is = response.body().byteStream();
+                    long total = response.body().contentLength();
+                    fos = new FileOutputStream(file);
+                    long sum = 0;
+                    while ((len = is.read(buff)) != -1) {
+                        fos.write(buff, 0, len);
+                        sum += len;
+                        int progress = (int) (sum * 1.0f / total * 100);
+                        if (rate != progress) {
+                            rate = progress;
+                            if (callback != null)
+                                callback.onProgress(progress);
+                        }
+                    }
+                    fos.flush();
+                    if (callback != null)
+                        callback.onComplete(file);
+                } catch (Exception e) {
+                    file.delete();
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (is != null)
+                            is.close();
+                        if (fos != null)
+                            fos.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
 
 
     /**
@@ -230,41 +305,41 @@ public class DownloadService extends Service {
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    if(callback!=null)
-                    callback.onPrepare();
+                    if (callback != null)
+                        callback.onPrepare();
                     break;
 
                 case 1:
-                    if(mNotificationManager!=null)
-                    mNotificationManager.cancel(NOTIFY_ID);
-                    if(callback!=null)
-                    callback.onFail((String) msg.obj);
+                    if (mNotificationManager != null)
+                        mNotificationManager.cancel(NOTIFY_ID);
+                    if (callback != null)
+                        callback.onFail((String) msg.obj);
                     stopSelf();
                     break;
 
-                case 2:{
+                case 2: {
                     int progress = (int) msg.obj;
-                    if(callback!=null)
-                    callback.onProgress(progress);
+                    if (callback != null)
+                        callback.onProgress(progress);
                     mBuilder.setContentTitle("正在下载：新版本...")
-                            .setContentText(String.format(Locale.CHINESE,"%d%%",progress))
-                            .setProgress(100,progress,false)
+                            .setContentText(String.format(Locale.CHINESE, "%d%%", progress))
+                            .setProgress(100, progress, false)
                             .setWhen(System.currentTimeMillis());
                     Notification notification = mBuilder.build();
                     notification.flags = Notification.FLAG_AUTO_CANCEL;
-                    if(mNotificationManager!=null)
-                    mNotificationManager.notify(NOTIFY_ID,notification);
+                    if (mNotificationManager != null)
+                        mNotificationManager.notify(NOTIFY_ID, notification);
                 }
                 break;
 
-                case 3:{
-                    if(callback!=null)
-                    callback.onComplete((File) msg.obj);
+                case 3: {
+                    if (callback != null)
+                        callback.onComplete((File) msg.obj);
                     //app运行在界面,直接安装
                     //否则运行在后台则通知形式告知完成
-                    if(mNotificationManager!=null)
-                    mNotificationManager.cancel(NOTIFY_ID);
-                    UtilTool.install(DownloadService.this,(File) msg.obj);
+                    if (mNotificationManager != null)
+                        mNotificationManager.cancel(NOTIFY_ID);
+                    UtilTool.install(DownloadService.this, (File) msg.obj);
                 }
                 break;
             }
@@ -276,10 +351,13 @@ public class DownloadService extends Service {
     /**
      * 定义一下回调方法
      */
-    public interface DownloadCallback{
+    public interface DownloadCallback {
         void onPrepare();
+
         void onProgress(int progress);
+
         void onComplete(File file);
+
         void onFail(String msg);
     }
 }

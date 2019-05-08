@@ -274,7 +274,6 @@
             android:background="@drawable/bg_pressed"
             android:layout_height="@dimen/d50dp"
             android:paddingLeft="@dimen/d15dp"
-            android:visibility="gone"
             android:paddingRight="@dimen/d15dp">
             <ImageView
                 android:id="@+id/iv4"

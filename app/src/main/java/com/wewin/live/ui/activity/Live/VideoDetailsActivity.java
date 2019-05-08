@@ -1,17 +1,27 @@
 package com.wewin.live.ui.activity.Live;
 
 
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
+import android.util.JsonReader;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.example.jasonutil.util.ActivityManage;
+import com.example.jasonutil.util.LogUtil;
+import com.example.jasonutil.util.MySharedPreferences;
+import com.example.jasonutil.util.NetWorkUtil;
+import com.example.jasonutil.util.ScreenTools;
 import com.example.jasonutil.util.StringUtils;
 import com.example.jasonutil.util.ToastShow;
 import com.tencent.connect.common.Constants;
@@ -26,20 +36,26 @@ import com.wewin.live.thirdparty.QqShare;
 import com.wewin.live.thirdparty.WeiBoShare;
 import com.wewin.live.ui.widget.HtmlWebView;
 import com.wewin.live.ui.widget.VideoSurfceView;
-import com.example.jasonutil.util.ActivityManage;
 import com.wewin.live.utils.MessageEvent;
 import com.wewin.live.utils.MySharedConstants;
-import com.example.jasonutil.util.MySharedPreferences;
-import com.example.jasonutil.util.NetWorkUtil;
 import com.wewin.live.utils.OrientationWatchDog;
-import com.example.jasonutil.util.ScreenTools;
+import com.wewin.live.utils.down.DownloadService;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import butterknife.InjectView;
 import butterknife.OnClick;
+
+import static com.wewin.live.utils.MessageEvent.DOWN_ANIMATION;
 
 /**
  * 播放器详情
@@ -53,12 +69,17 @@ public class VideoDetailsActivity extends BaseActivity {
     LinearLayout llData;
     @InjectView(R.id.live_surfce)
     VideoSurfceView liveSurfce;
+    @InjectView(R.id.animation_view)
+    LottieAnimationView animationView;
+    @InjectView(R.id.iv_more_two)
+    ImageView ivMoreTwo;
 
-    private String pull_url ="";//视频链接
+    private String pull_url = "";//视频链接
     private String marquee_text;//跑马灯文本
     private String wx_number;//微信号码
     private String wx_image;//微信图标
     private String html5Url;//网页链接
+    private boolean is_horizontal = false;
 
 
     private NetWorkUtil netWorkUtil;//网络监听
@@ -83,7 +104,7 @@ public class VideoDetailsActivity extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if(intent==null)return;
+        if (intent == null) return;
         WeiBoShare.getInstance().doResultIntent(intent);
     }
 
@@ -100,24 +121,75 @@ public class VideoDetailsActivity extends BaseActivity {
         initNetWork();
         initVideo();
         initHtml();
+        initAnimationView();
+        initWindow();
+    }
+
+    private void initWindow() {
+        htmlWebview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                htmlWebview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                if (is_horizontal) {
+                    changeView(is_horizontal);
+                    OrientationWatchDog.changeHorizontalOrverticalScreen(VideoDetailsActivity.this);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 初始化动画控件
+     */
+    private void initAnimationView() {
+        animationView.addAnimatorUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if ((int) animation.getAnimatedFraction() * 100 == 100) {
+                    animationView.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     /**
      * 获取传递过来数据
      */
     private void initIntent() {
-        if(getIntent()!=null&&getIntent().getExtras()!=null) {
+        if (getIntent() != null && getIntent().getExtras() != null) {
             pull_url = getIntent().getExtras().getString(BaseInfoConstants.PULL_URL);
-            html5Url=getIntent().getExtras().getString(BaseInfoConstants.URL);
+            html5Url = getIntent().getExtras().getString(BaseInfoConstants.URL);
             marquee_text = getIntent().getExtras().getString(BaseInfoConstants.ADSCONTENT);
-            wx_number=getIntent().getExtras().getString(BaseInfoConstants.WECHAT);
-            wx_image=getIntent().getExtras().getString(BaseInfoConstants.WXIMAGE);
+            wx_number = getIntent().getExtras().getString(BaseInfoConstants.WECHAT);
+            wx_image = getIntent().getExtras().getString(BaseInfoConstants.WXIMAGE);
+            is_horizontal = getIntent().getExtras().getBoolean(BaseInfoConstants.IS_HORIZONTAL);
         }
     }
 
 
     private void initHtml() {
         htmlWebview.setHtml5Url(html5Url);
+        htmlWebview.setOnHtmlListener(new HtmlWebView.OnHtmlListener() {
+            @Override
+            public void goBack() {
+
+            }
+
+            @Override
+            public void setTitle(String title) {
+
+            }
+
+            @Override
+            public void setShareView(boolean isShow) {
+                if(isShow){
+                    ivMoreTwo.setVisibility(View.VISIBLE);
+                }else {
+                    ivMoreTwo.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     /**
@@ -158,7 +230,8 @@ public class VideoDetailsActivity extends BaseActivity {
      * 初始化播放器
      */
     private void initVideo() {
-        liveSurfce.setRightPrompt(wx_number,wx_image);
+        LiveManage.getInstance().setBundle(getIntent().getExtras());
+        liveSurfce.setRightPrompt(wx_number, wx_image);
         liveSurfce.setMarqueeContent(marquee_text);
         if (!StringUtils.isEmpty(LiveManage.getInstance().getUrl()) && LiveManage.getInstance().getUrl().equals(pull_url)) {
             liveSurfce.changeSufaceView();
@@ -204,9 +277,13 @@ public class VideoDetailsActivity extends BaseActivity {
                 .setListOnClick(new ShareDialog.ListOnClick() {
                     @Override
                     public void onclickitem(int position) {
-                        if(position!=5)
-                        mLoadingProgressDialog.showDialog();
-                        shareDialog.goShare(VideoDetailsActivity.this, "http://testzhibo.wewin18.net", "标题", "描述","图片地址", position);
+                        if (position != 5)
+                            mLoadingProgressDialog.showDialog();
+                        Bundle bundle = getIntent().getExtras();
+                        if (bundle == null) return;
+                        shareDialog.goShare(VideoDetailsActivity.this,
+                                bundle.getString(BaseInfoConstants.SHARE_URL), bundle.getString(BaseInfoConstants.SHARE_TITLE)
+                                , bundle.getString(BaseInfoConstants.SHARE_CONTENT), bundle.getString(BaseInfoConstants.SHARE_IMAGE), position);
                     }
                 });
     }
@@ -223,12 +300,17 @@ public class VideoDetailsActivity extends BaseActivity {
         } else if (msgId == MessageEvent.SHARE_CANCEL) {
             mLoadingProgressDialog.hideDialog();
             ToastShow.showToast2(VideoDetailsActivity.this, getString(R.string.share_cancel));
+        } else if (msgId == MessageEvent.START_ANIMATION) {
+            event.setMsgId(DOWN_ANIMATION);
+            event.setDownloadCallback(mDownloadCallback);
+            EventBus.getDefault().post(event);
         }
     }
 
 
     /**
      * 界面改变
+     *
      * @param newConfig
      */
     @Override
@@ -252,28 +334,74 @@ public class VideoDetailsActivity extends BaseActivity {
         if (OrientationWatchDog.isLandscape(this)) {
             params.height = height - ScreenTools.getStateBar3(this);
             changeView(true);
-        }else if (OrientationWatchDog.isPoriratt(this)) {
+        } else if (OrientationWatchDog.isPoriratt(this)) {
             changeView(false);
             params.height = getResources().getDimensionPixelSize(R.dimen.d200dp);
         }
         liveSurfce.setLayoutParams(params);
+
+
     }
 
     /**
      * 横竖屏切换后界面更改
+     *
      * @param isHorizontal
      */
-    private void changeView(boolean isHorizontal){
-        if(isHorizontal){
+    private void changeView(boolean isHorizontal) {
+        if (isHorizontal) {
             liveSurfce.setIvAmplification(true);
             rlTitleTop.setVisibility(View.GONE);
             llData.setVisibility(View.GONE);
-        }else {
+        } else {
             liveSurfce.setIvAmplification(false);
             rlTitleTop.setVisibility(View.VISIBLE);
             llData.setVisibility(View.VISIBLE);
         }
     }
+
+    /**
+     * 下载回调
+     */
+    DownloadService.DownloadCallback mDownloadCallback = new DownloadService.DownloadCallback() {
+        @Override
+        public void onPrepare() {
+
+        }
+
+        @Override
+        public void onProgress(int progress) {
+            LogUtil.Log("下载进度：" + progress);
+        }
+
+        @Override
+        public void onComplete(final File file) {
+
+            LogUtil.Log("下载的文件：" + file.getAbsolutePath() + Thread.currentThread());
+            animationView.post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        InputStream is = new FileInputStream(file);
+                        JsonReader reader = new JsonReader(new InputStreamReader(is));
+                        animationView.cancelAnimation();
+                        animationView.setVisibility(View.VISIBLE);
+                        animationView.setAnimation(reader);
+                        animationView.playAnimation();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+        }
+
+        @Override
+        public void onFail(String msg) {
+            LogUtil.Log("下载失败：" + msg);
+        }
+    };
+
 
     /**
      * 菜单、返回键响应
@@ -301,7 +429,7 @@ public class VideoDetailsActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         //设置可以显示小窗口界面
-
+        animationView.cancelAnimation();
         super.onDestroy();
         netWorkUtil.stopWatch();
     }

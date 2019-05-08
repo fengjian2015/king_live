@@ -21,12 +21,12 @@
          }
 
          function jsPlay(){
-            var s='{"pull_url":"https://www.zhibo18.live/upload/20190227/2ff6f690c09ac85419a8858009e4e61a.mp4","html_url":"http://testzhibo.wewin18.net"}';
+            var s='{"pull_url":"https://www.zhibo18.live/upload/20190227/2ff6f690c09ac85419a8858009e4e61a.mp4","html_url":"http://testzhibo.wewin18.net","share_url":"http://testzhibo.wewin18.net","share_title":"标题","share_content":"测试分享的内容","share_image":"http://www.sxzf.org.cn/wp-content/uploads/2019/04/201904011554159980.jpg"}';
              app.jsPlay(s);
          }
 
           function jsPlayOrLogin(){
-            var s='{"pull_url":"https://www.zhibo18.live/upload/20190227/2ff6f690c09ac85419a8858009e4e61a.mp4","html_url":"http://testzhibo.wewin18.net"}';
+           var s='{"pull_url":"https://www.zhibo18.live/upload/20190227/2ff6f690c09ac85419a8858009e4e61a.mp4","html_url":"http://testzhibo.wewin18.net","share_url":"http://testzhibo.wewin18.net","share_title":"标题","share_content":"测试分享的内容","share_image":"http://www.sxzf.org.cn/wp-content/uploads/2019/04/201904011554159980.jpg"}';
              app.jsPlayOrLogin(s);
          }
 
@@ -49,6 +49,12 @@
         function jsScrollChanged(){
              app.jsScrollChanged("1","2");
          }
+         function jsAnimation(){
+             app.jsAnimation("https://assets2.lottiefiles.com/temp/lf20_hT22rr.json","lf20_hT22rr");
+         }
+         function jsIsShowShare(){
+             app.jsIsShowShare(1);
+         }
     </script>
 </head>
 <body>
@@ -64,5 +70,9 @@
 <button type="button" id="button8" onclick="jsShowDialog1()">弹出提示，重新加载</button>
 
 <button type="button" id="button9" onclick="jsScrollChanged()">滚动获取按下位置，和滚动位置</button>
+
+<button type="button" id="button10" onclick="jsAnimation()">传递动画信息</button>
+
+<button type="button" id="button11" onclick="jsIsShowShare()">是否显示分享</button>
 </body>
 </html>

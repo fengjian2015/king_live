@@ -171,10 +171,10 @@ public class ShareDialog extends Dialog {
         int name=(int)menunames.get(position).get(BaseInfoConstants.NAME);
         if(name==ShareUtil.content[0]){
             //微信
-            WXUtil.getInstance().shareUrlToWx(context,url,title,dese,SendMessageToWX.Req.WXSceneSession);
+            WXUtil.getInstance().shareUrlToWx(context,url,title,dese,imageUrl,SendMessageToWX.Req.WXSceneSession);
         }else if(name==ShareUtil.content[1]){
             //微信朋友圈
-            WXUtil.getInstance().shareUrlToWx(context,url,title,dese,SendMessageToWX.Req.WXSceneTimeline);
+            WXUtil.getInstance().shareUrlToWx(context,url,title,dese,imageUrl,SendMessageToWX.Req.WXSceneTimeline);
         }else if(name==ShareUtil.content[2]){
             //qq 传入图片
             QqShare.getInstance().shareFriendImageAndText(context,title,dese,url,imageUrl);
@@ -183,10 +183,11 @@ public class ShareDialog extends Dialog {
             QqShare.getInstance().shareToQzone(context,title,dese,url,imageUrl);
         }else if(name==ShareUtil.content[4]){
             //新浪
-            WeiBoShare.getInstance().share(context,title,dese,url);
+            WeiBoShare.getInstance().share(context,title,dese,url,imageUrl);
         }else if(name==ShareUtil.content[5]){
             //复制
             UtilTool.copyToClipboard(context,url);
         }
     }
+
 }

@@ -25,7 +25,8 @@ public class MessageEvent {
     public static final int SEARCH_CONTENT=13;//搜索内容
     public static final int UPDATA_SEARCH_OTHER=14;//刷新搜索其余类型
     public static final int WB_SCROLL_HIGHT_CHANGE=15;//webview滑动改变首页控件高度
-
+    public static final int DOWN_ANIMATION=16;//下载动画
+    public static final int START_ANIMATION=17;//下载动画
     public MessageEvent(int msgId) {
         mMsgId = msgId;
     }
@@ -39,7 +40,16 @@ public class MessageEvent {
     private String content;
     private float starY;
     private float scrollY;
+    private String fileName;
     private DownloadService.DownloadCallback mDownloadCallback;
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     public float getStarY() {
         return starY;

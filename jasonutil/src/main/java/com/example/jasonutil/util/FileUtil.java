@@ -28,6 +28,7 @@ public class FileUtil {
     public static final String VIDEO_DIR =  "video/";
     public static final String IMAGE_DIR ="image/";
     public static final String ASSETS_DIR ="assets/";
+    public static final String ANIMATION_DIR ="animation/";
 
     //声明各种类型文件的dataType
     public static final String DATA_TYPE_APK = "application/vnd.android.package-archive";
@@ -51,9 +52,9 @@ public class FileUtil {
     //apk名字
     public static final String FILE_APK_NAME="wangzhezhibo";
 
+
     /**
      * 创建apk下载文件名，传入版本号区分
-     * @param context
      * @param versionName
      * @return
      */
@@ -104,6 +105,17 @@ public class FileUtil {
     public static String getApkLoc(Context context) {
         createFile(getStorageFile(context).getAbsolutePath() + CACH + APK_LOC);
         return getStorageFile(context).getAbsolutePath() + CACH + APK_LOC;
+    }
+
+
+    /**
+     * 获取d动画下载地址
+     *
+     * @return
+     */
+    public static String getAnimationLoc(Context context) {
+        createFile(getStorageFile(context).getAbsolutePath() + CACH + ANIMATION_DIR);
+        return getStorageFile(context).getAbsolutePath() + CACH + ANIMATION_DIR;
     }
 
     /**
@@ -397,6 +409,26 @@ public class FileUtil {
         String root =FileUtil.getApkLoc(context);
         FileUtil.createFile(root);
         File file = new File(root,getAPKFileName(versionName));
+        if (file.exists())
+            file.delete();
+        try {
+            file.createNewFile();
+            return file;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null ;
+    }
+
+    /**
+     * 创建动画json下载文件名
+     * @param context
+     * @param fileName
+     * @return
+     */
+    public static File createAnimationFile(Context context,String fileName) {
+        String root =FileUtil.getAnimationLoc(context);
+        File file = new File(root,fileName+".json" );
         if (file.exists())
             file.delete();
         try {

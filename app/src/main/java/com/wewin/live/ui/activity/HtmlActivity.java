@@ -62,10 +62,10 @@ public class HtmlActivity extends BaseActivity implements HtmlWebView.OnHtmlList
         htmlWebview.setOnHtmlListener(this);
         htmlWebview.setHtml5Url(html5Url);
 //        setIvMore(R.mipmap.icon_collection);
-//        setIvMoreTwo(R.mipmap.icon_share);
+//        setIvMore(R.mipmap.icon_share);
     }
 
-    @OnClick({R.id.iv_finish, R.id.bark,R.id.iv_more,R.id.iv_more_two})
+    @OnClick({R.id.iv_finish, R.id.bark,R.id.iv_more})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_finish:
@@ -79,7 +79,7 @@ public class HtmlActivity extends BaseActivity implements HtmlWebView.OnHtmlList
                     finish();
                 }
                 break;
-            case R.id.iv_more_two:
+            case R.id.iv_more:
                 share();
                 break;
         }
@@ -132,6 +132,11 @@ public class HtmlActivity extends BaseActivity implements HtmlWebView.OnHtmlList
     @Override
     public void setTitle(String title) {
         setTvTitleTop(title);
+    }
+
+    @Override
+    public void setShareView(boolean isShow) {
+
     }
 
 }

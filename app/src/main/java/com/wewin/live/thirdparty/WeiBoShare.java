@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.example.jasonutil.util.UtilTool;
 import com.sina.weibo.sdk.api.ImageObject;
 import com.sina.weibo.sdk.api.TextObject;
 import com.sina.weibo.sdk.api.WeiboMultiMessage;
@@ -52,12 +53,17 @@ public class WeiBoShare {
     }
 
 
-    public void share(Activity activity,String title,String desc,String url){
+    public void share(final Activity activity, final String title, final String desc, final String url, final String imageUrl){
         if(!isSinaInstalled(activity))return;
-        WeiboMultiMessage weiboMessage = new WeiboMultiMessage();//初始化微博的分享消息
-        weiboMessage.textObject = getTextObj(title,desc,url);//文本内容
-        weiboMessage.imageObject=getImageObj(activity);//图片
-        wbShareHandler.shareMessage(weiboMessage,false);
+        new Thread(){
+            @Override
+            public void run() {
+                WeiboMultiMessage weiboMessage = new WeiboMultiMessage();//初始化微博的分享消息
+                weiboMessage.textObject = getTextObj(title,desc,url);//文本内容
+                weiboMessage.imageObject=getImageObj(activity,imageUrl);//图片
+                wbShareHandler.shareMessage(weiboMessage,false);
+            }
+        }.start();
     }
 
     /**
@@ -79,9 +85,9 @@ public class WeiBoShare {
      * 创建图片消息对象。
      * @return 图片消息对象。
      */
-    private  ImageObject getImageObj(Context context) {
+    private  ImageObject getImageObj(Context context,String imageUrl) {
         ImageObject imageObject = new ImageObject();
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.icon_logo);
+        Bitmap bitmap = UtilTool.GetLocalOrNetBitmap(imageUrl);
         imageObject.setImageObject(bitmap);
         return imageObject;
     }
