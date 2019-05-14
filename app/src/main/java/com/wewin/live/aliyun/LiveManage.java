@@ -107,6 +107,7 @@ public class LiveManage {
     }
 
     private void initConfiguration() {
+        if (mPlayer==null)return;
         LiveListenerManage.getInstance().initSeekBar((long) mPlayer.getDuration());
         mPlayer.setCirclePlay(true);
         LiveListenerManage.getInstance().setVolume(getVolume());
@@ -202,7 +203,6 @@ public class LiveManage {
         if(mSurfaceView!=null){
             mSurfaceView.getHolder().removeCallback(mCallback);
         }
-        mPlayer.stop();
         mPlayer.destroy();
         mPlayer=null;
         videoUrl=null;

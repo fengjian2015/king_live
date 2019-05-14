@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import com.example.jasonutil.util.UtilTool;
 import com.sina.weibo.sdk.api.ImageObject;
@@ -16,6 +15,7 @@ import com.sina.weibo.sdk.share.WbShareCallback;
 import com.sina.weibo.sdk.share.WbShareHandler;
 import com.wewin.live.R;
 import com.wewin.live.utils.MessageEvent;
+
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
@@ -75,7 +75,7 @@ public class WeiBoShare {
      */
     private  TextObject getTextObj(String title, String desc, String url) {
         TextObject textObject = new TextObject();
-        textObject.text = desc;
+        textObject.text = desc+url;
         textObject.title = title;
         textObject.actionUrl = url;
         return textObject;

@@ -1,11 +1,7 @@
 package com.wewin.live.ui.widget;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,20 +9,12 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.JavascriptInterface;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.jasonutil.dialog.ConfirmDialog;
-import com.example.jasonutil.util.LogUtil;
-import com.example.jasonutil.util.NetWorkUtil;
+import com.example.jasonutil.util.StringUtils;
 import com.example.jasonutil.util.UtilTool;
 import com.wewin.live.R;
 import com.wewin.live.db.UserInfoDao;
@@ -34,7 +22,6 @@ import com.wewin.live.modle.BaseInfoConstants;
 import com.wewin.live.modle.UserInfo;
 import com.wewin.live.ui.activity.HtmlActivity;
 import com.wewin.live.ui.activity.Live.VideoDetailsActivity;
-import com.wewin.live.utils.AndroidBug5497Workaround;
 import com.wewin.live.utils.IntentStart;
 import com.wewin.live.utils.MessageEvent;
 import com.wewin.live.utils.SignOutUtil;
@@ -43,8 +30,9 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.Map;
 
-import static com.wewin.live.utils.MessageEvent.DOWN_ANIMATION;
+import static com.wewin.live.utils.MessageEvent.SHARE_DATA;
 import static com.wewin.live.utils.MessageEvent.START_ANIMATION;
+import static com.wewin.live.utils.MessageEvent.START_GIF;
 
 /**
  * @author jsaon
@@ -56,7 +44,7 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
     ExtendedWebView mWebView;
 
     private Context mContext;
-    private boolean isError = false;
+
     private View view;
     private String html5Url;
 
@@ -90,6 +78,7 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
         mErrorView = new ErrorView(mContext, view);
         mErrorView.setTvError(mContext.getString(R.string.error));
         mErrorView.setOnContinueListener(this);
+
     }
 
     public void setHtml5Url(String url) {
@@ -108,52 +97,16 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
     }
 
     private void initWebView() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mWebView.setWebContentsDebuggingEnabled(true);
-        }
-
-        mWebView.getSettings().setUserAgentString(mWebView.getSettings().getUserAgentString() + "zhibo18.app");
-        mWebView.getSettings().setTextZoom(100);
-        AndroidBug5497Workaround.assistActivity((Activity) mContext);
-        //设置WebView支持JavaScript
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        if (NetWorkUtil.isNetworkAvailable(getContext())) {
-            mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
-        } else {
-            mWebView.getSettings().setCacheMode(
-                    WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        }
-        // 把图片加载放在最后来加载渲染
-        mWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
-        // 支持多窗口
-        mWebView.getSettings().setSupportMultipleWindows(true);
-        // 开启 DOM storage API 功能
-        mWebView.getSettings().setDomStorageEnabled(true);
-        // 开启 Application Caches 功能
-        mWebView.getSettings().setAppCacheEnabled(true);
-        mWebView.getSettings().setBlockNetworkImage(false);
-
-
-        mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        }
+        mWebView.initWebView();
         addJs();
-        mWebView.setWebViewClient(new WebViewClient() {
+        mWebView.loadUrl(html5Url);
+        mWebView.setOnWebViewListeren(new ExtendedWebView.OnWebViewListeren() {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                LogUtil.Log("网页链接：" + url);
-                isError = false;
-                return super.shouldOverrideUrlLoading(view, url);
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
+            public void onPageFinished(String url) {
                 if (mProgressBar == null) {
                     return;
                 }
-                if (isError) {
+                if (mWebView.isError) {
                     mProgressBar.setVisibility(View.GONE);
                 } else {
                     hintError();
@@ -161,55 +114,27 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
                     if (mWebView.canGoBack()) {
                         if (mOnHtmlListener != null)
                             mOnHtmlListener.goBack();
-
                     }
                 }
-            }
-
-            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-                LogUtil.Log(errorResponse.getStatusCode() + "" + errorResponse.getData() + "   " + request.getUrl() + "  isForMainFrame: " + request.isForMainFrame());
-                super.onReceivedHttpError(view, request, errorResponse);
-                if (request.isForMainFrame()) {
-                    setError();
-                }
-
+                mWebView.writeData();
             }
 
             @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                super.onReceivedError(view, errorCode, description, failingUrl);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) return;
+            public void onError() {
                 if (mWebView == null) return;
-                setError();
+                showError();
             }
 
             @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                super.onReceivedError(view, request, error);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    if (request.isForMainFrame()) {// 在这里加上个判断
-                        if (mWebView == null) return;
-                        setError();
-                    }
-                }
-
-            }
-
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
+            public void onPageStarted() {
                 if (mProgressBar == null) {
                     return;
                 }
                 mProgressBar.setVisibility(View.VISIBLE);
             }
 
-
-        });
-        mWebView.setWebChromeClient(new WebChromeClient() {
-            public void onProgressChanged(WebView view, int progress) {
+            @Override
+            public void onProgressChanged(int progress) {
                 if (mProgressBar == null) {
                     return;
                 }
@@ -218,53 +143,22 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
             }
 
             @Override
-            public void onReceivedTitle(WebView view, String title) {
-                super.onReceivedTitle(view, title);
-                if (view == null) {
-                    return;
-                }
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                    if (title.contains("502 Bad Gateway") || title.contains("异常捕获")) {
-                        //报错
-                        setError();
-                    }
-                }
-
+            public void onReceivedTitle(String title) {
                 if (mOnHtmlListener != null) {
                     title = title.replace("王者体育直播-", "");
                     mOnHtmlListener.setTitle(title);
                 }
             }
-
         });
-        mWebView.loadUrl(html5Url);
     }
 
     public ExtendedWebView getWebView() {
         return mWebView;
     }
 
-    /**
-     * 设置报错
-     */
-    private void setError() {
-        isError = true;
-        showError();
-
-    }
-
-
-    /**
-     * 重新加载
-     */
-    private void againLoad() {
-        isError = false;
-        mWebView.reload();
-    }
-
     @Override
     public void again() {
-        againLoad();
+        mWebView.reloadLoad();
     }
 
     /**
@@ -280,9 +174,8 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
      * 回退
      */
     public void goBack() {
-        mWebView.goBack();
+        mWebView.back();
         hintError();
-        isError = false;
     }
 
     /**
@@ -382,10 +275,9 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
     private final int SHOW_DIALOG_RELOAD = 6;//弹窗提示,重新刷新
     private final int IS_LONG = 7;//判断是否登录
     private final int IS_SHOW_SHARE = 8;//是否显示分享按钮
-    @SuppressLint("HandlerLeak")
-    Handler handler = new Handler() {
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(final Message msg) {
+        public boolean handleMessage(Message msg) {
             final int what = msg.what;
             switch (what) {
                 case GET_USER_INFO:
@@ -406,7 +298,7 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
                                 @Override
                                 public void onClick() {
                                     if (what == SHOW_DIALOG_RELOAD)
-                                        againLoad();
+                                        again();
                                 }
                             }).showDialog();
                     break;
@@ -418,17 +310,18 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
                     }
                     break;
                 case IS_SHOW_SHARE:
-                    if (mOnHtmlListener==null)return;
-                    int isShow= (int) msg.obj;
-                    if(1==isShow){
+                    if (mOnHtmlListener == null) break;
+                    int isShow = (int) msg.obj;
+                    if (1 == isShow) {
                         mOnHtmlListener.setShareView(true);
-                    }else {
+                    } else {
                         mOnHtmlListener.setShareView(false);
                     }
                     break;
             }
+            return false;
         }
-    };
+    });
 
     /**
      * * 视频播放
@@ -445,10 +338,7 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
             bundle.putString(BaseInfoConstants.WECHAT, map.get(BaseInfoConstants.WECHAT) + "");
             bundle.putString(BaseInfoConstants.ADSCONTENT, map.get(BaseInfoConstants.ADSCONTENT) + "");
             bundle.putString(BaseInfoConstants.WXIMAGE, map.get(BaseInfoConstants.WXIMAGE) + "");
-            bundle.putString(BaseInfoConstants.SHARE_URL, map.get(BaseInfoConstants.SHARE_URL) + "");
-            bundle.putString(BaseInfoConstants.SHARE_TITLE, map.get(BaseInfoConstants.SHARE_TITLE) + "");
-            bundle.putString(BaseInfoConstants.SHARE_CONTENT, map.get(BaseInfoConstants.SHARE_CONTENT) + "");
-            bundle.putString(BaseInfoConstants.SHARE_IMAGE, map.get(BaseInfoConstants.SHARE_IMAGE) + "");
+            bundle.putString(BaseInfoConstants.TITLE, map.get(BaseInfoConstants.TITLE) + "");
             if (isNeesLogin) {
                 IntentStart.starLogin(mContext, VideoDetailsActivity.class, bundle);
             } else {
@@ -469,17 +359,21 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
         if (userInfo == null) {
             userInfo = new UserInfo();
         }
-//        userInfo.setToken(SignOutUtil.getToken());
-//        HashMap hashMap=new HashMap();
-//        hashMap.put("uid",SignOutUtil.getUserId());
-//        hashMap.put("token",SignOutUtil.getToken());
-//        String content=JSONObject.toJSONString(userInfo);
+        if (mWebView == null) return;
         mWebView.loadUrl("javascript:appGetUserInfo('" + userInfo.getJson() + " ');");
     }
 
+    /*-----------------------------------以下是java调用js,并且返回值-------------------------------------------------*/
+    /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        mWebView.evaluateJavascript("javascript:appGetUserInfo('" + userInfo.getJson() + " ')", new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+                LogUtil.Log("返回值"+value);
+            }
+        });
+    }*/
 
     /*------------------------------------以下是h5调用java方法--------------------------------------------*/
-
     @SuppressLint("JavascriptInterface")
     private void addJs() {
         mWebView.addJavascriptInterface(this, "app");
@@ -576,8 +470,8 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
      * 获取页面滚动
      */
     @JavascriptInterface
-    public void jsScrollChanged(String starY,String scrollY ) {
-        onWbScrollChanged.onScrollChanged(UtilTool.parseFloat(starY),UtilTool.parseFloat(scrollY));
+    public void jsScrollChanged(String starY, String scrollY) {
+        onWbScrollChanged.onScrollChanged(UtilTool.parseFloat(starY), UtilTool.parseFloat(scrollY));
     }
 
 
@@ -585,21 +479,39 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
      * 获取动画，下载和展示动画
      */
     @JavascriptInterface
-    public void jsAnimation(String url,String fileName) {
-        MessageEvent messageEvent=new MessageEvent(START_ANIMATION);
+    public void jsAnimation(String url, String fileName) {
+        MessageEvent messageEvent = new MessageEvent(START_ANIMATION);
         messageEvent.setUrl(url);
         messageEvent.setFileName(fileName);
         EventBus.getDefault().post(messageEvent);
     }
 
     /**
-     * 获取动画，下载和展示动画
+     * 获取动画，下载和展示动画GIF
      */
     @JavascriptInterface
-    public void jsIsShowShare(int isShow) {
-        Message message = new Message();
-        message.what = IS_SHOW_SHARE;
-        message.obj = isShow;
-        handler.sendMessage(message);
+    public void jsAnimationGif(String url, String fileName) {
+        MessageEvent messageEvent = new MessageEvent(START_GIF);
+        messageEvent.setUrl(url);
+        messageEvent.setFileName(fileName);
+        EventBus.getDefault().post(messageEvent);
     }
+
+    /**
+     * 是否显示分享按钮
+     */
+    @JavascriptInterface
+    public void jsIsShowShare(int isShow, String shareData) {
+        if (!StringUtils.isEmpty(shareData)) {
+            MessageEvent messageEvent = new MessageEvent(SHARE_DATA);
+            Map map = JSONObject.parseObject(shareData, Map.class);
+            messageEvent.setMap(map);
+            EventBus.getDefault().post(messageEvent);
+            Message message = new Message();
+            message.what = IS_SHOW_SHARE;
+            message.obj = isShow;
+            handler.sendMessage(message);
+        }
+    }
+
 }

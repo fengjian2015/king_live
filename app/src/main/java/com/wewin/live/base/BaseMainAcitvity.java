@@ -24,7 +24,6 @@ import com.example.jasonutil.permission.Rigger;
 import com.example.jasonutil.util.ActivityManage;
 import com.example.jasonutil.util.ActivityUtil;
 import com.example.jasonutil.util.FileUtil;
-import com.example.jasonutil.util.LogUtil;
 import com.example.jasonutil.util.MyLifecycleHandler;
 import com.example.jasonutil.util.MySharedPreferences;
 import com.example.jasonutil.util.ScreenTools;
@@ -35,13 +34,8 @@ import com.umeng.analytics.MobclickAgent;
 import com.wewin.live.R;
 import com.wewin.live.db.UserInfoDao;
 import com.wewin.live.modle.UserInfo;
-import com.wewin.live.thirdparty.UMMessage;
-import com.wewin.live.ui.Fragment.AboutFragment;
 import com.wewin.live.ui.Fragment.HomeFragment;
 import com.wewin.live.ui.Fragment.LiveFragment;
-import com.wewin.live.ui.Fragment.MyFragment;
-import com.wewin.live.ui.Fragment.ReviewFragment;
-import com.wewin.live.ui.activity.MainActivity;
 import com.wewin.live.ui.activity.person.AboutActivity;
 import com.wewin.live.ui.activity.person.AccountSettingsActivity;
 import com.wewin.live.ui.activity.person.AssetRecordActivity;
@@ -49,7 +43,6 @@ import com.wewin.live.ui.activity.person.FeedbackActivity;
 import com.wewin.live.ui.activity.person.PersonalActivity;
 import com.wewin.live.ui.activity.person.PhoneChangeActivity;
 import com.wewin.live.ui.activity.person.ReleaseRecordActivity;
-import com.wewin.live.ui.activity.person.SecurityPrivacyActivity;
 import com.wewin.live.ui.activity.person.SettingsActivity;
 import com.wewin.live.ui.activity.person.TaskCenterActivity;
 import com.wewin.live.ui.adapter.HomeMainAdapter;
@@ -60,8 +53,8 @@ import com.wewin.live.utils.IntentStart;
 import com.wewin.live.utils.MessageEvent;
 import com.wewin.live.utils.MobclickAgentUtil;
 import com.wewin.live.utils.MySharedConstants;
+import com.wewin.live.utils.NotificationUtil;
 import com.wewin.live.utils.SignOutUtil;
-import com.wewin.live.utils.UiUtil;
 import com.wewin.live.utils.down.DownloadService;
 
 import org.greenrobot.eventbus.EventBus;
@@ -153,9 +146,7 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
         init();
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
-        if(SignOutUtil.getIsLogin()){
-            UMMessage.getInstance().setAlias();
-        }
+        NotificationUtil.clearNotification(this);
     }
 
 

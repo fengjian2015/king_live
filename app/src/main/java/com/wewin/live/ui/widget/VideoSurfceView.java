@@ -89,7 +89,10 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
     //判断是否继续滚动seekbar
     private boolean isSeekPlay=true;
 
+    //监听横竖屏切换点击
     private onSwitchScreenListener mSwitchScreenListener;
+    //监听控制面板是否隐藏
+    private OnControlShowOrHint mOnControlShowOrHint;
 
 
     public VideoSurfceView(Context context) {
@@ -140,6 +143,14 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
 
     public void setSwitchScreenListener(onSwitchScreenListener onSwitchScreenListener) {
         mSwitchScreenListener = onSwitchScreenListener;
+    }
+
+    /**
+     * 设置控件面板监听
+     * @param onControlShowOrHint
+     */
+    public void setOnControlShowOrHint(OnControlShowOrHint onControlShowOrHint){
+        mOnControlShowOrHint=onControlShowOrHint;
     }
 
     /**
@@ -384,6 +395,16 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
             mRlTransparent.setVisibility(GONE);
         }
         showOrHideMarqueeAndRightPrompt(!isShow);
+        if (mOnControlShowOrHint!=null)
+            mOnControlShowOrHint.control(isShow);
+    }
+
+    public boolean getTransparentShow(){
+        if(mRlTransparent.isShown()){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     /**
@@ -653,5 +674,9 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
 
     public interface onSwitchScreenListener {
         void amplificationOrNarrow();
+    }
+
+    public interface OnControlShowOrHint{
+        void control(boolean isShow);
     }
 }

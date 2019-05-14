@@ -2,27 +2,21 @@ package com.wewin.live.ui.activity;
 
 import android.os.Bundle;
 
-import com.example.jasonutil.util.LogUtil;
+import com.example.jasonutil.util.MySharedPreferences;
+import com.example.jasonutil.util.StringUtils;
+import com.example.jasonutil.util.UtilTool;
 import com.wewin.live.base.BaseMainAcitvity;
-import com.wewin.live.modle.BaseInfoConstants;
 import com.wewin.live.newtwork.OnSuccess;
 import com.wewin.live.presenter.PersenterLogin;
 import com.wewin.live.presenter.PersenterPersonal;
-import com.wewin.live.rxjava.RxJavaObserver;
-import com.wewin.live.ui.activity.Live.VideoDetailsActivity;
-import com.wewin.live.utils.IntentStart;
+import com.wewin.live.thirdparty.UMMessage;
 import com.wewin.live.utils.MessageEvent;
-import com.example.jasonutil.util.UtilTool;
+import com.wewin.live.utils.MySharedConstants;
+import com.wewin.live.utils.SignOutUtil;
 import com.wewin.live.utils.down.DownloadService;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends BaseMainAcitvity {
 
@@ -36,7 +30,13 @@ public class MainActivity extends BaseMainAcitvity {
 
     private void init() {
         //获取状态栏
-        PersenterLogin.getInstance().getNavMenu(new OnSuccess(this));
+        String menuString=MySharedPreferences.getInstance().getString(MySharedConstants.MAIN_MENU);
+        if(StringUtils.isEmpty(menuString)){
+            PersenterLogin.getInstance().getNavMenu(true,new OnSuccess(this));
+        }else {
+            PersenterLogin.getInstance().getNavMenu(false,new OnSuccess(this));
+        }
+
         checkVersionHttp(false);
     }
 
@@ -44,7 +44,19 @@ public class MainActivity extends BaseMainAcitvity {
     public void onResume() {
         super.onResume();
         //获取用户信息配置
-        PersenterPersonal.getInstance().getBaseInfo(new OnSuccess(this));
+        PersenterPersonal.getInstance().getBaseInfo(new OnSuccess(this, new OnSuccess.OnSuccessListener() {
+            @Override
+            public void onSuccess(Object content) {
+                if(SignOutUtil.getIsLogin()){
+                    UMMessage.getInstance().setAlias();
+                }
+            }
+
+            @Override
+            public void onFault(String error) {
+
+            }
+        }));
     }
 
     /**

@@ -12,18 +12,12 @@ import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebStorage;
-import android.widget.TextView;
 
 import com.example.jasonutil.R;
 
@@ -37,6 +31,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -370,6 +365,7 @@ public class UtilTool {
             CookieSyncManager.getInstance().sync();
         }
         WebStorage.getInstance().deleteAllData(); //清空WebView的localStorage
+        LogUtil.Log("清空缓存");
     }
 
     /**
@@ -383,7 +379,11 @@ public class UtilTool {
         InputStream in = null;
         BufferedOutputStream out = null;
         try {
-            in = new BufferedInputStream(new URL(url).openStream(), 1024);
+            URL myURL = new URL(url);
+            URLConnection conn = myURL.openConnection();
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            in = new BufferedInputStream(is, 1024);
             final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
             out = new BufferedOutputStream(dataStream, 1024);
             copy(in, out);
@@ -396,6 +396,7 @@ public class UtilTool {
             e.printStackTrace();
             return null;
         }
+
     }
 
     private static void copy(InputStream in, OutputStream out)

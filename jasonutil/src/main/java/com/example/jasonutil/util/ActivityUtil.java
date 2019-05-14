@@ -60,7 +60,7 @@ public class ActivityUtil {
 		ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
 		List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(100);
 		boolean isAppRunning = false;
-		String MY_PKG_NAME = "com.wewin.live";
+		String MY_PKG_NAME = context.getPackageName();
 		for (ActivityManager.RunningTaskInfo info : list) {
 			if (info.topActivity.getPackageName().equals(MY_PKG_NAME) || info.baseActivity.getPackageName().equals(MY_PKG_NAME)) {
 				isAppRunning = true;

@@ -65,9 +65,6 @@ public class SignOutUtil {
      */
     public static void setLogin(boolean isLogin){
         MySharedPreferences.getInstance().setBoolean(MySharedConstants.IS_LOGIN,isLogin);
-        if(isLogin){
-            UMMessage.getInstance().setAlias();
-        }
     }
 
     /**

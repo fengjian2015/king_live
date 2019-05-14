@@ -48,7 +48,8 @@ public class FileUtil {
     /*-------文件后缀---------*/
     public static final String FILE_VIDEO_MP4 = ".mp4";
     public static final String FILE_IMAGE_PNG = ".png";
-
+    public static final String FILE_JSON = ".json";
+    public static final String FILE_GIF = ".gif";
     //apk名字
     public static final String FILE_APK_NAME="wangzhezhibo";
 
@@ -421,14 +422,14 @@ public class FileUtil {
     }
 
     /**
-     * 创建动画json下载文件名
+     * 创建动画下载文件名
      * @param context
      * @param fileName
      * @return
      */
     public static File createAnimationFile(Context context,String fileName) {
         String root =FileUtil.getAnimationLoc(context);
-        File file = new File(root,fileName+".json" );
+        File file = new File(root,fileName);
         if (file.exists())
             file.delete();
         try {

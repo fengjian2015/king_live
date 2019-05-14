@@ -7,7 +7,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.jasonutil.keyboard.EmoticonsKeyboardUtils;
 import com.example.jasonutil.util.AnimatorTool;
+import com.example.jasonutil.util.LogUtil;
 import com.example.jasonutil.util.MySharedPreferences;
 import com.example.jasonutil.util.StringUtils;
 import com.example.jasonutil.util.ToastShow;
@@ -52,6 +54,7 @@ public class LoginActivity extends BaseActivity {
         setTitle(getString(R.string.login));
 //        initCode();
         initHttp(false);
+        LogUtil.Log("高度:"+EmoticonsKeyboardUtils.getDefKeyboardHeight(this));
     }
 
     /**

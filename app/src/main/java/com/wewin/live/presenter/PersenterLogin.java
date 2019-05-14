@@ -15,8 +15,6 @@ import com.wewin.live.modle.BaseMapInfo2;
 import com.wewin.live.modle.UserInfo;
 import com.wewin.live.newtwork.OnPersenterListener;
 import com.wewin.live.newtwork.OnSuccess;
-import com.wewin.live.ui.activity.MainActivity;
-import com.wewin.live.utils.IntentStart;
 import com.wewin.live.utils.MessageEvent;
 import com.wewin.live.utils.MySharedConstants;
 import com.wewin.live.utils.SignOutUtil;
@@ -46,7 +44,7 @@ public class PersenterLogin {
     /**
      * 获取顶部栏
      */
-    public void getNavMenu(OnSuccess onSuccess) {
+    public void getNavMenu(boolean isShow,OnSuccess onSuccess) {
         onSuccess.setInfoType(OnSuccess.BASEMAPINFO2)
                 .setOnPersenterListener(new OnPersenterListener() {
                     @Override
@@ -63,7 +61,7 @@ public class PersenterLogin {
                         EventBus.getDefault().post(new MessageEvent(MessageEvent.MAIN_MENU_UPDATA));
                     }
                 })
-                .sendHttp(onSuccess.getMyServer().getNavMenu());
+                .sendHttp(onSuccess.getMyServer().getNavMenu(),isShow);
     }
 
     /**

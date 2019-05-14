@@ -19,11 +19,11 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/d200dp"
         android:layout_below="@+id/main_root"/>
-    <RelativeLayout
-        android:id="@+id/rl_title_top"
+    <LinearLayout
+        android:id="@+id/rl_title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/d50dp"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_below="@+id/main_root">
         <ImageView
             android:id="@+id/bark"
@@ -31,31 +31,30 @@
             android:layout_height="match_parent"
             android:padding="@dimen/d10dp"
             android:src="@mipmap/icon_bark1" />
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_marginRight="@dimen/d15dp"
+            android:singleLine="true"
+            android:layout_toRightOf="@+id/bark"
+            style="@style/TextWhiteStyle16sp"
+            />
         <ImageView
             android:id="@+id/iv_more_two"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingRight="@dimen/d10dp"
-            android:paddingLeft="@dimen/d5dp"
+            android:paddingLeft="@dimen/d10dp"
             android:paddingTop="@dimen/d12dp"
             android:paddingBottom="@dimen/d12dp"
             android:src="@mipmap/icon_share"
             android:layout_alignParentRight="true"
             android:visibility="gone"
             />
-        <ImageView
-            android:id="@+id/iv_more"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:paddingRight="@dimen/d10dp"
-            android:paddingLeft="@dimen/d5dp"
-            android:paddingTop="@dimen/d12dp"
-            android:paddingBottom="@dimen/d12dp"
-            android:visibility="gone"
-            android:src="@mipmap/icon_collection"
-            />
-    </RelativeLayout>
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/ll_data"
         android:layout_width="match_parent"
@@ -72,6 +71,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:visibility="gone"
+        />
+
+    <com.wewin.live.ui.widget.GifImageView
+        android:id="@+id/gif_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:end_last_frame="true"
+        app:play_count="1"
         android:visibility="gone"
         />
 </RelativeLayout>

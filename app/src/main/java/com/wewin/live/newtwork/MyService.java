@@ -250,4 +250,21 @@ public interface MyService {
     Observable<ResponseBody> getHotKeywords(
             @Query("number") int number
     );
+
+
+    //是否关注
+    @GET(base+"User.isAttent")
+    Observable<ResponseBody> isAttent(
+            @Query("uid") int uid,
+            @Query("token") String token,
+            @Query("touid") String touid
+    );
+
+    //是否关注
+    @GET(base+"User.setAttent")
+    Observable<ResponseBody> setAttent(
+            @Query("uid") int uid,
+            @Query("token") String token,
+            @Query("touid") String touid
+    );
 }

@@ -23,6 +23,7 @@ public class BaseInfoConstants {
     public final static String TRUENAME = "truename";
     public final static String USER_EMAIL = "user_email";
     public final static String ID = "id";
+    public final static String UID = "uid";
     public final static String STATUS = "status";
     public final static String CODE = "code";
     public final static String MSG = "msg";
@@ -99,4 +100,10 @@ public class BaseInfoConstants {
     public static final String SHARE_TITLE="share_title";
     public static final String SHARE_CONTENT="share_content";
     public static final String SHARE_IMAGE="share_image";
+    public static final String BODY="body";
+    public static final String ISSHOW="isshow";
+    public static final String ISATTENT="isattent";
+    public static final String WANGZHE_TYPE="wangzhe_type";
+    public static final String WANGZHE_HTML_ACTIVITY="wangzhe_html_activity";
+    public static final String WANGZHE_PLAY_LIVE_ACTIVITY="wangzhe_play_live_activity";
 }

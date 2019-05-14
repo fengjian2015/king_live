@@ -62,8 +62,7 @@ public class DownloadService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (!EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -102,7 +101,10 @@ public class DownloadService extends Service {
             downApk(event.getUrl(), event.getDownloadCallback());
         } else if (msgId == MessageEvent.DOWN_ANIMATION) {
             //开始下载apk
-            downAnimation(event.getUrl(), event.getFileName(), event.getDownloadCallback());
+            downAnimation(event.getUrl(), event.getFileName() + FileUtil.FILE_JSON, event.getDownloadCallback());
+        } else if (msgId == MessageEvent.DOWN_GIF) {
+            //开始下载apk
+            downAnimation(event.getUrl(), event.getFileName() + FileUtil.FILE_GIF, event.getDownloadCallback());
         }
     }
 
@@ -233,8 +235,8 @@ public class DownloadService extends Service {
             complete("下载路径错误");
             return;
         }
-        String root =FileUtil.getAnimationLoc(this);
-        File file = new File(root,fileName+".json" );
+        String root = FileUtil.getAnimationLoc(this);
+        File file = new File(root, fileName);
         if (file.exists() && callback != null) {
             LogUtil.Log("动画文件已存在");
             callback.onComplete(file);
@@ -243,6 +245,7 @@ public class DownloadService extends Service {
         Request request = new Request.Builder().url(url).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
             File file = FileUtil.createAnimationFile(DownloadService.this, fileName);
+
             @Override
             public void onFailure(Call call, IOException e) {
                 file.delete();

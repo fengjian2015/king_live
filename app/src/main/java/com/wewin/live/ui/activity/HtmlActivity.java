@@ -21,7 +21,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
@@ -54,6 +53,7 @@ public class HtmlActivity extends BaseActivity implements HtmlWebView.OnHtmlList
 
     private void initIntent(){
         Bundle bundle=getIntent().getExtras();
+        if(bundle==null)return;
         html5Url = bundle.getString(BaseInfoConstants.URL);
     }
 

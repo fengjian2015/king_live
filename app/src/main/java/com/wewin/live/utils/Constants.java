@@ -8,9 +8,9 @@ public class Constants {
     //全局控制开关
     public static final boolean isDebug = true;
     //本app
-    public static final String BASE_URL=isDebug ? "http://testzhibo.wewin18.net/" : "https://www.zhibo16.live/";//测试
+//    public static final String BASE_URL=isDebug ? "http://testzhibo.wewin18.net/" : "https://www.zhibo16.live/";//测试
 //    public static final String BASE_URL=isDebug ? "http://dev.zhibo18.live/" : "https://www.zhibo16.live/";//tong
-//    public static final String BASE_URL=isDebug ? "http://tong.wewin18.net/" : "https://www.zhibo16.live/";//tong
+    public static final String BASE_URL=isDebug ? "http://tong.wewin18.net/" : "https://www.zhibo16.live/";//tong
 //    public static final String BASE_URL=isDebug ? "http://wzzb.wewin18.net/" : "https://www.zhibo16.live/";//callan
 //    public static final String BASE_URL = isDebug ? "http://tim.wewin18.net/" : "https://www.zhibo16.live/";//tim
 //    public static final String BASE_URL = isDebug ? "http://jeffrey.wewin18.net:8081/" : "https://www.zhibo16.live/";//tim

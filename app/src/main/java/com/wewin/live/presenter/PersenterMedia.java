@@ -158,4 +158,19 @@ public class PersenterMedia {
                 ,UtilTool.parseInt(hashMap.get(BaseInfoConstants.ZBTYPE)+""),hashMap.get(BaseInfoConstants.ZBTYPE_DETAIL)+""));
     }
 
+    /**
+     * 是否关注
+     * @param onSuccess
+     */
+    public void isAttent(String touid,final OnSuccess onSuccess) {
+        onSuccess.sendHttp(onSuccess.getMyServer().isAttent(UtilTool.parseInt(SignOutUtil.getUserId()),SignOutUtil.getToken(),touid),false);
+    }
+
+    /**
+     * 设置关注或取关
+     * @param onSuccess
+     */
+    public void setAttent(String touid,final OnSuccess onSuccess) {
+        onSuccess.sendHttp(onSuccess.getMyServer().setAttent(UtilTool.parseInt(SignOutUtil.getUserId()),SignOutUtil.getToken(),touid));
+    }
 }

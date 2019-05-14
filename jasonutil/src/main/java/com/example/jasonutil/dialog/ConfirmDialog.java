@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.jasonutil.R;
+import com.example.jasonutil.util.ActivityUtil;
 import com.example.jasonutil.util.StringUtils;
 
 /**
@@ -23,14 +24,17 @@ public class ConfirmDialog extends Dialog {
 
     private OnClickListener onClickListener;
     private View view;
+    private Context context;
 
     public ConfirmDialog( Context context) {
         super(context, R.style.dialog);
+        this.context=context;
         createDialog(context);
     }
 
     public ConfirmDialog( Context context, int themeResId) {
         super(context, themeResId);
+        this.context=context;
         createDialog(context);
     }
 
@@ -43,13 +47,11 @@ public class ConfirmDialog extends Dialog {
         init();
     }
 
-    /**
-     * 先show再设置其他控件
-     * @return
-     */
     public ConfirmDialog showDialog(){
-        setCanceledOnTouchOutside(false);
-        show();
+        if (ActivityUtil.isActivityOnTop(context)) {
+            setCanceledOnTouchOutside(false);
+            show();
+        }
         return this;
     }
 

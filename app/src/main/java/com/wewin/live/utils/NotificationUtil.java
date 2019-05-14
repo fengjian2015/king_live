@@ -9,7 +9,11 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
+import com.example.jasonutil.util.ActivityUtil;
 import com.wewin.live.R;
+import com.wewin.live.ui.activity.MainActivity;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 /*
  *   author:jason
@@ -31,7 +35,7 @@ public class NotificationUtil {
     public NotificationUtil setNotification(Context c) {
         this.context = c;
         if (mNotificationManager == null)
-            mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         mBuilder = new NotificationCompat.Builder(context, CHANNEL);
         return this;
     }
@@ -73,6 +77,26 @@ public class NotificationUtil {
     }
 
     /**
+     * 添加跳转,判断app是否打开
+     *
+     * @param intent
+     */
+    public NotificationUtil setIntent(Intent intent, boolean isAppOpen) {
+        if (mBuilder == null) return this;
+        PendingIntent pendingIntent;
+        if (isAppOpen) {
+            pendingIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        } else {
+            Intent[] intents = new Intent[2];
+            intents[0]=new Intent(context,MainActivity.class);
+            intents[1]=intent;
+            pendingIntent = PendingIntent.getActivities(context, (int) System.currentTimeMillis(), intents, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+        mBuilder.setContentIntent(pendingIntent);
+        return this;
+    }
+
+    /**
      * 显示通知
      *
      * @return
@@ -81,5 +105,10 @@ public class NotificationUtil {
         if (mNotificationManager == null) return this;
         mNotificationManager.notify((int) System.currentTimeMillis(), mBuilder.build());
         return this;
+    }
+
+    public static void clearNotification(Context context) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
     }
 }

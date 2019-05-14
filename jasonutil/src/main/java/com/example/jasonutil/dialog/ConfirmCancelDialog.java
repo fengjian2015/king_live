@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.jasonutil.R;
+import com.example.jasonutil.util.ActivityUtil;
 import com.example.jasonutil.util.StringUtils;
 
 /**
@@ -24,14 +25,17 @@ public class ConfirmCancelDialog extends Dialog {
 
     private OnClickListener onClickListener;
     private View view;
+    private Context context;
 
     public ConfirmCancelDialog( Context context) {
         super(context, R.style.dialog);
+        this.context=context;
         createDialog(context);
     }
 
     public ConfirmCancelDialog( Context context, int themeResId) {
         super(context, themeResId);
+        this.context=context;
         createDialog(context);
     }
 
@@ -53,8 +57,10 @@ public class ConfirmCancelDialog extends Dialog {
      * @return
      */
     public ConfirmCancelDialog showDialog(){
-        setCanceledOnTouchOutside(false);
-        show();
+        if (ActivityUtil.isActivityOnTop(context)) {
+            setCanceledOnTouchOutside(false);
+            show();
+        }
         return this;
     }
 

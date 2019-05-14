@@ -3,6 +3,8 @@ package com.wewin.live.utils;
 
 import com.wewin.live.utils.down.DownloadService;
 
+import java.util.Map;
+
 
 /**
  * Created by GA on 2017/11/22.
@@ -26,7 +28,10 @@ public class MessageEvent {
     public static final int UPDATA_SEARCH_OTHER=14;//刷新搜索其余类型
     public static final int WB_SCROLL_HIGHT_CHANGE=15;//webview滑动改变首页控件高度
     public static final int DOWN_ANIMATION=16;//下载动画
-    public static final int START_ANIMATION=17;//下载动画
+    public static final int START_ANIMATION=17;//开始动画
+    public static final int DOWN_GIF=18;//下载GIF动画
+    public static final int START_GIF=19;//开始动画
+    public static final int SHARE_DATA=20;//分享内容
     public MessageEvent(int msgId) {
         mMsgId = msgId;
     }
@@ -41,7 +46,16 @@ public class MessageEvent {
     private float starY;
     private float scrollY;
     private String fileName;
+    private Map map;
     private DownloadService.DownloadCallback mDownloadCallback;
+
+    public Map getMap() {
+        return map;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
+    }
 
     public String getFileName() {
         return fileName;

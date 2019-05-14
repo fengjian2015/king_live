@@ -49,8 +49,9 @@ public abstract class BaseActivity extends BaseLiveActivity {
 
         setContentView(getLayoutId());
         ButterKnife.inject(this);
+        getIntentData();
         init();
-
+        setListener();
     }
 
 
@@ -86,6 +87,20 @@ public abstract class BaseActivity extends BaseLiveActivity {
      */
     protected abstract int getLayoutId();
 
+
+    /**
+     * 获取传递数据
+     *
+     * @return
+     */
+    protected void getIntentData(){}
+
+    /**
+     * 监听
+     *
+     * @return
+     */
+    protected void setListener(){}
     /**
      *
      */
