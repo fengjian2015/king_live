@@ -428,6 +428,10 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(!mCustomSideMenu.getIsClose()){
+                mCustomSideMenu.sideMenuScroll(false);
+                return false;
+            }
             exitBy2Click();      //调用双击退出函数
         }
         return false;

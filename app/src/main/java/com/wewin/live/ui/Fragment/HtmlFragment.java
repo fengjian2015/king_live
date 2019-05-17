@@ -8,15 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.jasonutil.util.LogUtil;
-import com.example.jasonutil.util.StringUtils;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.api.ScrollBoundaryDecider;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wewin.live.R;
 import com.wewin.live.modle.BaseInfoConstants;
-import com.wewin.live.ui.widget.ExtendedWebView;
-import com.wewin.live.ui.widget.HtmlWebView;
+import com.wewin.live.ui.widget.web.HtmlWebView;
 import com.wewin.live.utils.MessageEvent;
 
 import org.greenrobot.eventbus.EventBus;

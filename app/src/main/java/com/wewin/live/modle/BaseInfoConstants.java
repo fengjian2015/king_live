@@ -106,4 +106,5 @@ public class BaseInfoConstants {
     public static final String WANGZHE_TYPE="wangzhe_type";
     public static final String WANGZHE_HTML_ACTIVITY="wangzhe_html_activity";
     public static final String WANGZHE_PLAY_LIVE_ACTIVITY="wangzhe_play_live_activity";
+    public static final String IS_SELF="is_self";
 }

@@ -133,7 +133,7 @@ public class PhoneChangeActivity extends BaseActivity {
             initHttp(true);
             return;
         }
-        UtilTool.hideKeyBoard(this, tvAreaCode);
+        UtilTool.closeKeybord(this);
         if (tvAreaCode.isChecked()) {
             pickerViewUtil.show();
         }

@@ -19,9 +19,12 @@ import com.wewin.live.listener.live.LiveListener;
 import com.wewin.live.listener.live.LiveListenerManage;
 import com.example.jasonutil.util.DateUtil;
 import com.example.jasonutil.util.LogUtil;
+import com.wewin.live.utils.BarrageUtil;
 import com.wewin.live.utils.GlideUtil;
 import com.wewin.live.utils.MySharedConstants;
 import com.example.jasonutil.util.MySharedPreferences;
+
+import master.flame.danmaku.ui.widget.DanmakuView;
 
 /**
  * @author jsaon
@@ -45,7 +48,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
     //各种提示控件
     private TextView mTvPrompt;
     //状态栏控件
-    private RelativeLayout mRlTransparent;
+    private LinearLayout mRlTransparent;
     //进度条控件
     private SeekBar mSeekBar;
     //开始和暂停控件
@@ -68,7 +71,10 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
     private TextView tvRightPrompt;
     private LinearLayout llRightPrompt;
     private ImageView ivRightPrompt;
-
+    //弹幕控件
+    private DanmakuView mDanmakuView;
+    //弹幕开关
+    private ImageView mIvBarrage;
     //----------------功能块参数
     //当前进度
     private long current = 0;
@@ -88,6 +94,8 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
     private int brightness_slide=0;
     //判断是否继续滚动seekbar
     private boolean isSeekPlay=true;
+    //弹幕工具类
+    private BarrageUtil barrageUtil;
 
     //监听横竖屏切换点击
     private onSwitchScreenListener mSwitchScreenListener;
@@ -127,6 +135,9 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
         tvRightPrompt=relativeLayout.findViewById(R.id.tv_right_prompt);
         llRightPrompt=relativeLayout.findViewById(R.id.ll_right_prompt);
         ivRightPrompt=relativeLayout.findViewById(R.id.iv_right_prompt);
+        mDanmakuView=relativeLayout.findViewById(R.id.sv_danmaku);
+        mIvBarrage=relativeLayout.findViewById(R.id.iv_barrage);
+        barrageUtil =new BarrageUtil(mContext,mDanmakuView);
         setListener();
         addView(relativeLayout);
         showOrHideTransparent(true);
@@ -140,6 +151,9 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
         return mSurfaceView;
     }
 
+    public BarrageUtil getBarrageUtil(){
+        return barrageUtil;
+    }
 
     public void setSwitchScreenListener(onSwitchScreenListener onSwitchScreenListener) {
         mSwitchScreenListener = onSwitchScreenListener;
@@ -168,7 +182,8 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
      */
     public void setSmall(){
         mTvTime.setVisibility(GONE);
-        mSeekBar.setVisibility(GONE);
+        mSeekBar.setVisibility(INVISIBLE);
+        mIvBarrage.setVisibility(GONE);
 //        mSurfaceView.setZOrderOnTop(true);
     }
 
@@ -220,6 +235,17 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
      * 初始化进度条
      */
     public void initSeekBar(long duration) {
+        if(duration<=0){
+            mIvBarrage.setVisibility(VISIBLE);
+            barrageUtil.start();
+            mSeekBar.setVisibility(INVISIBLE);
+            mTvTime.setVisibility(GONE);
+            return;
+        }else {
+            mIvBarrage.setVisibility(GONE);
+            mSeekBar.setVisibility(VISIBLE);
+            mTvTime.setVisibility(VISIBLE);
+        }
         mSeekBar.setMax((int) duration);
         mSeekBar.setProgress(0);
         if (duration <= 0) {
@@ -379,6 +405,20 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
         } else {
             mRlVoluem.setVisibility(GONE);
         }
+    }
+
+    /**
+     * 打开或者关闭弹幕
+     */
+    public void openOrCloseBarrage(){
+        if(mIvBarrage.isSelected()){
+            //打开
+            mIvBarrage.setSelected(false);
+        }else{
+            //关闭
+            mIvBarrage.setSelected(true);
+        }
+        barrageUtil.showOrHide(!mIvBarrage.isSelected());
     }
 
     /**
@@ -561,7 +601,9 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
             case R.id.iv_amplification:
                 setSwitchScreen();
                 break;
-
+            case R.id.iv_barrage:
+                openOrCloseBarrage();
+                break;
         }
     }
 
@@ -583,7 +625,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
 
             }
         });
-
+        mIvBarrage.setOnClickListener(this);
         mSurfaceView.setOnClickListener(this);
         mIvSwitch.setOnClickListener(this);
         mIvAmplification.setOnClickListener(this);

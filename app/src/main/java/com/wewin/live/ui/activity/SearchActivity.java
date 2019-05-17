@@ -190,7 +190,7 @@ public class SearchActivity extends BaseActivity {
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     // 隐藏键盘
-                    UtilTool.hideKeyBoard(SearchActivity.this,etSearch);
+                    UtilTool.closeKeybord(SearchActivity.this);
                     String content=etSearch.getText().toString();
                     if (!StringUtils.isEmpty(content)) {
                         addRecordingList(content);
@@ -308,7 +308,7 @@ public class SearchActivity extends BaseActivity {
 
     @Override
     public void finish() {
-        UtilTool.hideKeyBoard(this,etSearch);
+        UtilTool.closeKeybord(this);
         super.finish();
     }
 }

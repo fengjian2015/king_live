@@ -1,86 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.jasonutil.keyboard.AutoHeightLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.activity.Live.VideoDetailsActivity">
-    <View
-        android:id="@+id/main_root"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:background="@color/black"
-        />
-
-
-    <com.wewin.live.ui.widget.VideoSurfceView
-        android:id="@+id/live_surfce"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/d200dp"
-        android:layout_below="@+id/main_root"/>
-    <LinearLayout
-        android:id="@+id/rl_title"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/d50dp"
-        android:orientation="horizontal"
-        android:layout_below="@+id/main_root">
-        <ImageView
-            android:id="@+id/bark"
+        android:layout_height="match_parent">
+        <View
+            android:id="@+id/main_root"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:padding="@dimen/d10dp"
-            android:src="@mipmap/icon_bark1" />
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:layout_marginRight="@dimen/d15dp"
-            android:singleLine="true"
-            android:layout_toRightOf="@+id/bark"
-            style="@style/TextWhiteStyle16sp"
+            android:layout_height="0dp"
+            android:background="@color/black"
             />
-        <ImageView
-            android:id="@+id/iv_more_two"
-            android:layout_width="wrap_content"
+        <com.wewin.live.ui.widget.VideoSurfceView
+            android:id="@+id/live_surfce"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d200dp"
+            android:layout_below="@+id/main_root"/>
+        <LinearLayout
+            android:id="@+id/rl_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d50dp"
+            android:orientation="horizontal"
+            android:layout_below="@+id/main_root">
+            <ImageView
+                android:id="@+id/bark"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="@dimen/d10dp"
+                android:src="@mipmap/icon_bark1" />
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_marginRight="@dimen/d15dp"
+                android:singleLine="true"
+                android:layout_toRightOf="@+id/bark"
+                style="@style/TextWhiteStyle16sp"
+                />
+            <ImageView
+                android:id="@+id/iv_more_two"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingRight="@dimen/d10dp"
+                android:paddingLeft="@dimen/d10dp"
+                android:paddingTop="@dimen/d12dp"
+                android:paddingBottom="@dimen/d12dp"
+                android:src="@mipmap/icon_share"
+                android:layout_alignParentRight="true"
+                android:visibility="gone"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_data"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingRight="@dimen/d10dp"
-            android:paddingLeft="@dimen/d10dp"
-            android:paddingTop="@dimen/d12dp"
-            android:paddingBottom="@dimen/d12dp"
-            android:src="@mipmap/icon_share"
-            android:layout_alignParentRight="true"
+            android:layout_below="@+id/live_surfce"
+            android:orientation="vertical">
+            <com.wewin.live.ui.widget.web.HtmlWebView
+                android:id="@+id/html_webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animation_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:visibility="gone"
             />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/ll_data"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/live_surfce"
-        android:orientation="vertical">
-        <com.wewin.live.ui.widget.HtmlWebView
-            android:id="@+id/html_webview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </LinearLayout>
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/animation_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        />
-
-    <com.wewin.live.ui.widget.GifImageView
-        android:id="@+id/gif_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        app:end_last_frame="true"
-        app:play_count="1"
-        android:visibility="gone"
-        />
-</RelativeLayout>
+        <com.wewin.live.ui.widget.GifImageView
+            android:id="@+id/gif_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:end_last_frame="true"
+            app:play_count="1"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+</com.example.jasonutil.keyboard.AutoHeightLayout>

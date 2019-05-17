@@ -80,6 +80,16 @@
             var result=prompt(data);
             alert(result);
         }
+        function jsMyAddBarrage(){
+            // 调用prompt（）
+            var data='king{"type":"add_barrage","is_self":1,"content":"本人发的弹幕"}';
+            prompt(data);
+        }
+        function jsAddBarrage(){
+            // 调用prompt（）
+            var data='king{"type":"add_barrage","is_self":0,"content":"扎起发生的减肥发士大夫艰苦士大夫"}';
+            prompt(data);
+        }
     </script>
 </head>
 <body>
@@ -105,5 +115,7 @@
 <button type="button" id="button14" onclick="jsClickKeyboard()">返回键盘高度</button>
 
 <button type="button" id="button15" onclick="jsSetKeyboard()">设置键盘高度</button>
+<button type="button" id="button16" onclick="jsAddBarrage()">添加其余人弹幕</button>
+<button type="button" id="button17" onclick="jsMyAddBarrage()">添加本人弹幕</button>
 </body>
 </html>

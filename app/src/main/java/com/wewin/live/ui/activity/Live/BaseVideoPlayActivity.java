@@ -23,6 +23,7 @@ import com.wewin.live.base.BaseActivity;
 import com.wewin.live.modle.BaseInfoConstants;
 import com.wewin.live.ui.widget.GifImageView;
 import com.wewin.live.ui.widget.VideoSurfceView;
+import com.wewin.live.utils.BarrageUtil;
 import com.wewin.live.utils.MySharedConstants;
 import com.wewin.live.utils.OrientationWatchDog;
 import com.wewin.live.utils.down.DownloadService;
@@ -31,8 +32,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Random;
 
 import butterknife.InjectView;
+import master.flame.danmaku.danmaku.util.SystemClock;
 
 /*
  *   author:jason
@@ -56,6 +59,7 @@ public abstract class BaseVideoPlayActivity extends BaseActivity {
 
     private int layoutId;
     protected Bundle bundle;
+    protected BarrageUtil barrageUtil;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,7 +90,27 @@ public abstract class BaseVideoPlayActivity extends BaseActivity {
         initGifView();
         initNetWork();
         initVideo();
+        initDanmaku();
         initChildData();
+    }
+
+    private void initDanmaku() {
+        barrageUtil =liveSurfce.getBarrageUtil();
+//        new Thread(){
+//            @Override
+//            public void run() {
+//                Random random=new Random();
+//                while (true) {
+//                    int randomInt=random.nextInt(20);
+//                    if (randomInt%2==1) {
+//                        barrageUtil.addBarrage(true, "啦啦啦<img src=\"/public/front/images/face/0.gif\">啦啦啦<img src=\"/public/front/images/face/1.gif\">啦啦啦<img src=\"/public/front/images/face/2.gif\">");
+//                    }else {
+//                        barrageUtil.addBarrage(false, "随机：" + randomInt + "时间：" + System.currentTimeMillis());
+//                    }
+//                    SystemClock.sleep(randomInt*50);
+//                }
+//            }
+//        }.start();
     }
 
     protected abstract void initChildData();
@@ -292,6 +316,18 @@ public abstract class BaseVideoPlayActivity extends BaseActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        barrageUtil.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        barrageUtil.onResume();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         if (animationView==null)return;
@@ -301,7 +337,7 @@ public abstract class BaseVideoPlayActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         //设置可以显示小窗口界面
-
+        barrageUtil.onDestroy();
         netWorkUtil.stopWatch();
         super.onDestroy();
     }

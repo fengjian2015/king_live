@@ -9,6 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <master.flame.danmaku.ui.widget.DanmakuView
+        android:id="@+id/sv_danmaku"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <LinearLayout
         android:id="@+id/ll_load"
         android:layout_width="wrap_content"
@@ -124,11 +129,12 @@
             />
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/rl_transparent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
         android:background="@color/black2">
 
         <ImageView
@@ -147,11 +153,13 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/iv_switch"
             android:gravity="center_vertical"
+            android:visibility="gone"
             android:text="00:00/00:00" />
 
         <SeekBar
             android:id="@+id/seekBar"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/d10dp"
@@ -159,8 +167,15 @@
             android:layout_toRightOf="@+id/tv_time"
             android:progressBackgroundTint="@color/white"
             android:progressTint="@color/red"
+            android:visibility="invisible"
             android:secondaryProgressTint="@color/gray4" />
-
+        <ImageView
+            android:id="@+id/iv_barrage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="@dimen/d5dp"
+            android:visibility="gone"
+            android:src="@drawable/selector_live_barrage"/>
         <ImageView
             android:id="@+id/iv_amplification"
             android:layout_width="@dimen/d30dp"
@@ -171,5 +186,6 @@
             android:padding="@dimen/d5dp"
             android:src="@drawable/selector_live_amplification_pause" />
 
-    </RelativeLayout>
+    </LinearLayout>
+
 </RelativeLayout>

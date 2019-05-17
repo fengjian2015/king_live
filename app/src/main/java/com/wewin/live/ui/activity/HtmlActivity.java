@@ -11,7 +11,7 @@ import com.wewin.live.dialog.LoadingProgressDialog;
 import com.wewin.live.dialog.ShareDialog;
 import com.wewin.live.modle.BaseInfoConstants;
 import com.wewin.live.thirdparty.WeiBoShare;
-import com.wewin.live.ui.widget.HtmlWebView;
+import com.wewin.live.ui.widget.web.HtmlWebView;
 import com.wewin.live.utils.MessageEvent;
 
 import org.greenrobot.eventbus.EventBus;

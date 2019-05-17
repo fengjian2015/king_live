@@ -31,6 +31,8 @@ public class CustomSideMenu extends RelativeLayout{
 	private int moveY;
 	//判断是否正在关闭中
 	private boolean isBeingClose=false;
+	//是否关闭
+	private boolean isClose=true;
 
 	Handler handler=new Handler();
 
@@ -116,8 +118,10 @@ public class CustomSideMenu extends RelativeLayout{
 					break;
 				} else {
 					if(getScrollX() < (-mWidthOfSideMenu/2)) {
+						isClose=false;
 						mScroller.startScroll(getScrollX(), 0, (int) (-mWidthOfSideMenu - getScrollX()), 0, 500);
 					} else {
+						isClose=false;
 						mScroller.startScroll(getScrollX(), 0, (int) (0 - getScrollX()), 0, 500);
 					}
 					long moveTime = System.currentTimeMillis() - currentMS;//移动时间
@@ -150,6 +154,7 @@ public class CustomSideMenu extends RelativeLayout{
 	 */
 	public void sideMenuScroll(boolean isLeftToRight) {
 		if(isLeftToRight) {
+			isClose=false;
 			mScroller.startScroll(0, 0, 0-mWidthOfSideMenu, 0, 500);
 		} else {
 			isBeingClose=true;
@@ -165,8 +170,10 @@ public class CustomSideMenu extends RelativeLayout{
 	 */
 	public void sideMenuScrollNoDuration(boolean isLeftToRight) {
 		if(isLeftToRight) {
+			isClose=false;
 			mScroller.startScroll(0, 0, 0-mWidthOfSideMenu, 0, 0);
 		} else {
+			isClose=true;
 			mScroller.startScroll(0 - mWidthOfSideMenu, 0, mWidthOfSideMenu, 0, 0);
 		}
 		invalidate();
@@ -176,6 +183,7 @@ public class CustomSideMenu extends RelativeLayout{
 
 		@Override
 		public void run() {
+			isClose=true;
 			isBeingClose=false;
 		}
 
@@ -186,6 +194,14 @@ public class CustomSideMenu extends RelativeLayout{
 	public void doScroll(int sx, int sy, int dx, int dy) {
 		mScroller.startScroll(sx, sy, dx, dy, 500);
 		invalidate();
+	}
+
+	/**
+	 * 返回是否关闭
+	 * @return
+	 */
+	public boolean getIsClose(){
+		return isClose;
 	}
 	
 	public int getShadowAlpha() {

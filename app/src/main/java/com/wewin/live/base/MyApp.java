@@ -18,6 +18,7 @@ import com.wewin.live.utils.Constants;
 import com.example.jasonutil.util.FileUtil;
 import com.example.jasonutil.util.MyLifecycleHandler;
 import com.example.jasonutil.util.MySharedPreferences;
+import com.wewin.live.utils.EmoticonUtil;
 
 /**
  * @author jsaon
@@ -56,6 +57,8 @@ public class MyApp extends Application {
         CookieSyncManager.createInstance(this);
         //初始化友盟
         UMMessage.getInstance().init(this);
+        //表情包管理初始化
+        EmoticonUtil.init(getApplicationContext());
 
     }
 

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.example.jasonutil.util.ScreenTools;
 import com.example.jasonutil.util.StringUtils;
 import com.example.jasonutil.util.ToastShow;
@@ -21,21 +22,27 @@ import com.wewin.live.R;
 import com.wewin.live.dialog.LoadingProgressDialog;
 import com.wewin.live.dialog.ShareDialog;
 import com.wewin.live.modle.BaseInfoConstants;
+import com.wewin.live.rxjava.OnRxJavaProcessListener;
+import com.wewin.live.rxjava.RxJavaObserver;
+import com.wewin.live.rxjava.RxJavaScheduler;
 import com.wewin.live.thirdparty.QqShare;
 import com.wewin.live.thirdparty.WeiBoShare;
-import com.wewin.live.ui.widget.HtmlWebView;
+import com.wewin.live.ui.widget.web.HtmlWebView;
 import com.wewin.live.ui.widget.VideoSurfceView;
 import com.wewin.live.utils.MessageEvent;
 import com.wewin.live.utils.OrientationWatchDog;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
+import io.reactivex.ObservableEmitter;
 
 import static com.wewin.live.utils.MessageEvent.DOWN_ANIMATION;
 import static com.wewin.live.utils.MessageEvent.DOWN_GIF;
@@ -55,6 +62,8 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
     ImageView ivMoreTwo;
     @InjectView(R.id.tv_title)
     TextView tvTitle;
+    @InjectView(R.id.bark)
+    ImageView bark;
 
 
     private String html5Url;//网页链接
@@ -96,6 +105,7 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
             public void control(boolean isShow) {
                 setIvMoreTwo(isShow);
                 setTitle(false);
+                setBack(isShow);
             }
         });
     }
@@ -152,7 +162,6 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
             }
         });
     }
-
 
 
     @OnClick({R.id.bark, R.id.iv_more_two})
@@ -217,9 +226,30 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
             EventBus.getDefault().post(event);
         } else if (msgId == MessageEvent.SHARE_DATA) {
             shareMap = event.getMap();
+        }else if (msgId==MessageEvent.ADD_BARRAGE){
+            addBarrage(event.getIsSelf(),event.getContent());
         }
     }
 
+    /**
+     * 添加弹幕
+     * @param isSelf
+     * @param content
+     */
+    private void addBarrage(final int isSelf, final String content){
+        RxJavaScheduler.execute(new OnRxJavaProcessListener() {
+            @Override
+            public void process(ObservableEmitter<Object> emitter) {
+                if(isSelf==0){
+                    //对方
+                    barrageUtil.addBarrage(false,content);
+                }else {
+                    //自己
+                    barrageUtil.addBarrage(true,content);
+                }
+            }
+        },new RxJavaObserver<Object>());
+    }
 
     /**
      * 界面改变
@@ -282,6 +312,15 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
             ivMoreTwo.setVisibility(View.VISIBLE);
         } else {
             ivMoreTwo.setVisibility(View.GONE);
+        }
+    }
+
+    private void setBack(boolean isShow) {
+        if (bark == null) return;
+        if (isShow) {
+            bark.setVisibility(View.VISIBLE);
+        } else {
+            bark.setVisibility(View.GONE);
         }
     }
 

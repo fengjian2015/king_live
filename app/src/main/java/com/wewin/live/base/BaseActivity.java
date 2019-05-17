@@ -118,7 +118,6 @@ public abstract class BaseActivity extends BaseLiveActivity {
         bark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UtilTool.hideKeyBoard(BaseActivity.this,bark);
                 finish();
             }
         });
@@ -189,6 +188,12 @@ public abstract class BaseActivity extends BaseLiveActivity {
         mTvRight = findViewById(R.id.tv_right);
         mTvRight.setText(content);
         mTvRight.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onPause() {
+        UtilTool.closeKeybord(BaseActivity.this);
+        super.onPause();
     }
 
     @Override

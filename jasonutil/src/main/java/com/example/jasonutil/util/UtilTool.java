@@ -35,6 +35,7 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -146,6 +147,17 @@ public class UtilTool {
                     .hideSoftInputFromWindow(context.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 自动关闭软键盘
+     * @param activity
+     */
+    public static void closeKeybord(Activity activity) {
+        InputMethodManager imm =  (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(imm != null) {
+            imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
         }
     }
 
@@ -406,6 +418,34 @@ public class UtilTool {
         while ((read = in.read(b)) != -1) {
             out.write(b, 0, read);
         }
+    }
+
+    /**
+     * 生成一个startNum 到 endNum之间的随机数(不包含endNum的随机数)
+     * @param startNum
+     * @param endNum
+     * @return
+     */
+    public static int getNum(int startNum,int endNum){
+        if(endNum > startNum){
+            Random random = new Random();
+            return random.nextInt(endNum - startNum) + startNum;
+        }
+        return 0;
+    }
+
+
+    /**
+     * 生成一个startNum 到 endNum之间的随机数(不包含endNum的随机数)
+     * @param startNum
+     * @param endNum
+     * @return
+     */
+    public static float getNum(float startNum,float endNum){
+        if(endNum > startNum){
+            return startNum + ((endNum - startNum) * new Random().nextFloat());
+        }
+        return 0;
     }
 
 }

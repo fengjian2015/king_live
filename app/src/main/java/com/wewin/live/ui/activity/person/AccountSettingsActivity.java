@@ -125,18 +125,20 @@ public class AccountSettingsActivity extends BaseActivity {
         }else{
             setEt(etEmailAddress,mUserInfo.getEmail());
         }
-        setEt(etNickName,mUserInfo.getNickName());
         setEt(etActualName,mUserInfo.getActualName());
         setEt(etGender,mUserInfo.getSex());
         setEt(etSignature,mUserInfo.getSignature());
         setEt(etDateBirth,mUserInfo.getBirth());
+        setEt(etNickName,mUserInfo.getNickName());
+        etNickName.setSelection(mUserInfo.getNickName().length());
+        etNickName.requestFocus();
         setOnClick();
     }
 
     public void setOnClick() {
-        etNickName.addTextChangedListener(textWatcher);
         etActualName.addTextChangedListener(textWatcher);
         etSignature.addTextChangedListener(textWatcher);
+        etNickName.addTextChangedListener(textWatcher);
     }
 
     TextWatcher textWatcher=new TextWatcher() {
@@ -177,7 +179,7 @@ public class AccountSettingsActivity extends BaseActivity {
             case R.id.rl_avatar:
                 isChange=true;
                 //选择头像
-                UtilTool.hideKeyBoard(AccountSettingsActivity.this, ivAvatar);
+                UtilTool.closeKeybord(AccountSettingsActivity.this);
                 PictureSelectorUtil.selectImage(AccountSettingsActivity.this, selectList, true, 1, PictureConfig.CHOOSE_REQUEST);
                 break;
             case R.id.rl_gender:
@@ -185,14 +187,14 @@ public class AccountSettingsActivity extends BaseActivity {
                 isChange=true;
                 //选择性别
                 selectGenderDialog();
-                UtilTool.hideKeyBoard(AccountSettingsActivity.this, etGender);
+                UtilTool.closeKeybord(AccountSettingsActivity.this);
                 break;
             case R.id.rl_date_birth:
             case R.id.et_date_birth:
                 isChange=true;
                 //出生日期
                 selectBirth();
-                UtilTool.hideKeyBoard(AccountSettingsActivity.this, etDateBirth);
+                UtilTool.closeKeybord(AccountSettingsActivity.this);
                 break;
             case R.id.rl_wechat:
                 isChange=true;
