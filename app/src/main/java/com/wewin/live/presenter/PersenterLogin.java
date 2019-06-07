@@ -15,6 +15,7 @@ import com.wewin.live.modle.BaseMapInfo2;
 import com.wewin.live.modle.UserInfo;
 import com.wewin.live.newtwork.OnPersenterListener;
 import com.wewin.live.newtwork.OnSuccess;
+import com.wewin.live.utils.Constants;
 import com.wewin.live.utils.MessageEvent;
 import com.wewin.live.utils.MySharedConstants;
 import com.wewin.live.utils.SignOutUtil;
@@ -67,7 +68,7 @@ public class PersenterLogin {
     /**
      * 登录
      */
-    public void login(final String user_login, String user_pass, final OnSuccess onSuccess) {
+    public void login(final String userLogin, String userPass, final OnSuccess onSuccess) {
         onSuccess.setOnPersenterListener(new OnPersenterListener() {
             @Override
             public void onFault(String content) {
@@ -96,8 +97,8 @@ public class PersenterLogin {
                 userInfo.setSignature(data.get(BaseInfoConstants.SIGNATURE) + "");
                 userInfo.setUser_id(data.get(BaseInfoConstants.ID) + "");
                 userInfo.setBirth(data.get(BaseInfoConstants.BIRTHDAY) + "");
-                userInfo.setAvatar(data.get(BaseInfoConstants.AVATAR) + "");
-                userInfo.setAvatar_thumb(data.get(BaseInfoConstants.AVATAR_THUMB) + "");
+                userInfo.setAvatar(Constants.BASE_URL+data.get(BaseInfoConstants.AVATAR) );
+                userInfo.setAvatar_thumb(Constants.BASE_URL+data.get(BaseInfoConstants.AVATAR_THUMB));
                 userInfo.setCoin(data.get(BaseInfoConstants.COIN) + "");
                 userInfo.setWeixin(data.get(BaseInfoConstants.WEIXIN) + "");
                 userInfo.setLevel(data.get(BaseInfoConstants.LEVEL) + "");
@@ -113,10 +114,9 @@ public class PersenterLogin {
                 SignOutUtil.setToken(data.get(BaseInfoConstants.TOKEN) + "");
 
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.LOGIN));
-//                IntentStart.starNoAnimtorFinishAll(context, MainActivity.class);
                 ((Activity) context).finish();
             }
-        }).sendHttp(onSuccess.getMyServer().sendlogin(user_login, user_pass));
+        }).sendHttp(onSuccess.getMyServer().sendlogin(userLogin, userPass));
     }
 
     /**
@@ -145,12 +145,12 @@ public class PersenterLogin {
      *
      * @param mobile
      * @param password
-     * @param user_nicename
+     * @param userNiceName
      * @param code
      * @param onSuccess
      */
-    public void userReg(String mobile, String password, String user_nicename, String code, final OnSuccess onSuccess) {
-        onSuccess.sendHttp(onSuccess.getMyServer().registeren(mobile, password, user_nicename, code));
+    public void userReg(String mobile, String password, String userNiceName, String code, final OnSuccess onSuccess) {
+        onSuccess.sendHttp(onSuccess.getMyServer().registeren(mobile, password, userNiceName, code));
     }
 
     /**
@@ -187,4 +187,25 @@ public class PersenterLogin {
                     }
                 });
     }
+
+
+    /**
+     * 退出登录
+     * @param onSuccess
+     */
+    public void userLogout( final OnSuccess onSuccess) {
+        onSuccess.sendHttp(onSuccess.getMyServer().userLogout(UtilTool.parseInt(SignOutUtil.getUserId()), SignOutUtil.getToken()))
+            .setOnPersenterListener(new OnPersenterListener() {
+            @Override
+            public void onSuccess(Object content) {
+                SignOutUtil.signOut();
+            }
+
+            @Override
+            public void onFault(String content) {
+
+            }
+        });
+    }
+
 }

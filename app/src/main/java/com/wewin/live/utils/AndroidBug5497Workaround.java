@@ -34,6 +34,7 @@ public class AndroidBug5497Workaround {
 
         //界面出现变动都会调用这个监听事件
         mChildOfContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
             public void onGlobalLayout() {
                 if (isfirst) {
                     contentHeight = mChildOfContent.getHeight();//兼容华为等机型

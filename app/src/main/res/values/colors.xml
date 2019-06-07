@@ -8,6 +8,8 @@
     <color name="white">#FFFFFF</color>
     <color name="white1">#66FFFFFF</color><!--40%-->
     <color name="white2">#E6FFFFFF</color><!--90%-->
+    <color name="white3">#4DFFFFFF</color><!--30%-->
+    <color name="white4">#FF4095</color>
     <color name="white_bg">#F5F5F5</color>
 
     <color name="home_red">#FE454F</color>

@@ -70,6 +70,8 @@ public class SecurityPrivacyActivity extends BaseActivity {
             case R.id.rl_emil:
                 IntentStart.star(SecurityPrivacyActivity.this,AccountSettingsActivity.class);
                 break;
+            default:
+                break;
         }
     }
 }

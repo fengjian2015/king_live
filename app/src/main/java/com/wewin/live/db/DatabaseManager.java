@@ -73,8 +73,11 @@ public class DatabaseManager {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-                    if (mWritableDatabase != null)
+                    if (mWritableDatabase != null) {
                         mWritableDatabase.close();
+                    }
+                    break;
+                default:
                     break;
             }
         }

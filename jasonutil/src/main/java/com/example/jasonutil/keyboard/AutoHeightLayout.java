@@ -60,8 +60,9 @@ public class AutoHeightLayout extends SoftKeyboardSizeWatchLayout implements Sof
     protected void onFinishInflate() {
         super.onFinishInflate();
 //        onSoftKeyboardHeightChanged(mSoftKeyboardHeight);
-        if(maxParentHeightChangeListener!=null)
+        if(maxParentHeightChangeListener!=null) {
             maxParentHeightChangeListener.onMaxParentHeightChange(mSoftKeyboardHeight);
+        }
     }
 
     @Override
@@ -90,18 +91,21 @@ public class AutoHeightLayout extends SoftKeyboardSizeWatchLayout implements Sof
     }
 
     @Override
-    public void OnSoftPop(final int height) {
+    public void onSoftPop(final int height) {
         if (mSoftKeyboardHeight != height) {
             mSoftKeyboardHeight = height;
             EmoticonsKeyboardUtils.setDefKeyboardHeight(mContext, mSoftKeyboardHeight);
 //            onSoftKeyboardHeightChanged(mSoftKeyboardHeight);
-            if(maxParentHeightChangeListener!=null)
+            if(maxParentHeightChangeListener!=null) {
                 maxParentHeightChangeListener.onMaxParentHeightChange(mSoftKeyboardHeight);
+            }
         }
     }
 
     @Override
-    public void OnSoftClose() { }
+    public void onSoftClose() {
+
+    }
 
 //    public abstract void onSoftKeyboardHeightChanged(int height);
 

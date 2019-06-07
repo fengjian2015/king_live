@@ -103,18 +103,24 @@ public class OnSuccess implements OnSuccessAndFaultListener{
 
     @Override
     public void onFault(String content) {
-        if (!ActivityUtil.isActivityOnTop(mContext)) return;
+        if (!ActivityUtil.isActivityOnTop(mContext)) {
+            return;
+        }
         ToastShow.showToast2(mContext, content);
         //业务处理类使用
-        if(mOnPersenterListener!=null)
+        if(mOnPersenterListener!=null) {
             mOnPersenterListener.onFault(content);
-        if(mOnSuccessListener!=null)
+        }
+        if(mOnSuccessListener!=null) {
             mOnSuccessListener.onFault(content);
+        }
     }
 
     @Override
     public void onSuccess(String content) {
-        if (!ActivityUtil.isActivityOnTop(mContext)) return;
+        if (!ActivityUtil.isActivityOnTop(mContext)) {
+            return;
+        }
         if(infoType==BASEMAPINFO2){
             baseMapInfo2(content);
             return;
@@ -133,21 +139,25 @@ public class OnSuccess implements OnSuccessAndFaultListener{
         BaseMapInfo map = BaseMapInfo.getBaseMap(content);
         if (BaseMapInfo.getSuccess(map)) {
             //业务处理类使用
-            if(mOnPersenterListener!=null)
+            if(mOnPersenterListener!=null) {
                 mOnPersenterListener.onSuccess(map);
+            }
 
-            if(mOnSuccessListener!=null)
+            if(mOnSuccessListener!=null) {
                 mOnSuccessListener.onSuccess(map);
+            }
         } else {
             if (BaseMapInfo.isTokenInvalid(map)){
                 SignOutUtil.signOut();
             }
             ToastShow.showToast2(mContext, BaseMapInfo.getMsg(map));
             //业务处理类使用
-            if(mOnPersenterListener!=null)
+            if(mOnPersenterListener!=null) {
                 mOnPersenterListener.onFault(BaseMapInfo.getMsg(map));
-            if(mOnSuccessListener!=null)
+            }
+            if(mOnSuccessListener!=null) {
                 mOnSuccessListener.onFault(BaseMapInfo.getMsg(map));
+            }
         }
     }
 
@@ -159,21 +169,25 @@ public class OnSuccess implements OnSuccessAndFaultListener{
         BaseMapInfo2 map = BaseMapInfo2.getBaseMap(content);
         if (BaseMapInfo2.getSuccess(map)) {
             //业务处理类使用
-            if(mOnPersenterListener!=null)
+            if(mOnPersenterListener!=null) {
                 mOnPersenterListener.onSuccess(map);
+            }
 
-            if(mOnSuccessListener!=null)
+            if(mOnSuccessListener!=null) {
                 mOnSuccessListener.onSuccess(map);
+            }
         } else {
             if (BaseMapInfo2.isTokenInvalid(map)){
                 SignOutUtil.signOut();
             }
             ToastShow.showToast2(mContext, BaseMapInfo2.getMsg(map));
             //业务处理类使用
-            if(mOnPersenterListener!=null)
+            if(mOnPersenterListener!=null) {
                 mOnPersenterListener.onFault(BaseMapInfo2.getMsg(map));
-            if(mOnSuccessListener!=null)
+            }
+            if(mOnSuccessListener!=null) {
                 mOnSuccessListener.onFault(BaseMapInfo2.getMsg(map));
+            }
         }
     }
 

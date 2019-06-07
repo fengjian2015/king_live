@@ -98,7 +98,7 @@ public class AuthorizationCheck {
     public static boolean authorizationPermission(RiggerPresenter presenter,Activity activity,Fragment fragment, String[] checkAuthorization) {
         boolean isAuthorization = true;
         for (int i=0;i< checkAuthorization.length;i++) {
-            if (!authorizationCheck(checkAuthorization, activity)){
+            if (!authorizationCheck(checkAuthorization[i], activity)){
                 isAuthorization=false;
             }else {
                 presenter.getResult().put(checkAuthorization[i],true);
@@ -392,7 +392,9 @@ public class AuthorizationCheck {
             return;
         }
         if (isMustOpen) {
-            if (!ActivityUtil.isActivityOnTop(activity)) return;
+            if (!ActivityUtil.isActivityOnTop(activity)) {
+                return;
+            }
             new ConfirmCancelDialog(activity)
                     .showDialog()
                     .setTvTitle(activity.getString(R.string.accessibility))
@@ -422,7 +424,7 @@ public class AuthorizationCheck {
 
     }
 
-    private static void openApplication(Activity activity) {
+    public static void openApplication(Activity activity) {
         Intent i = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
         String pkg = "com.android.settings";
         String cls = "com.android.settings.applications.InstalledAppDetails";

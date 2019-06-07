@@ -221,4 +221,7 @@
     <string name="not_logged_in">未登录</string>
     <string name="brightness">亮度</string>
     <string name="download_now">正在下载中</string>
+    <string name="my_quiz">我的竞猜</string>
+    <string name="bet_amount">投注钻石</string>
+    <string name="betting">投注</string>
 </resources>

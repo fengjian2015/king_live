@@ -16,12 +16,16 @@ import com.wewin.live.R;
  */
 public class GlideUtil {
     public static void setCircleImg(Context context, Object url, ImageView imageView) {
-        if (!ActivityUtil.isActivityOnTop(context)) return;
+        if (!ActivityUtil.isActivityOnTop(context)) {
+            return;
+        }
         Glide.with(context).load(url).apply(RequestOptions.bitmapTransform(new CircleCrop()).placeholder(R.mipmap.icon_avatar)).into(imageView);
     }
 
     public static void setImg(Context context, Object url, ImageView imageView,int id) {
-        if (!ActivityUtil.isActivityOnTop(context)) return;
+        if (!ActivityUtil.isActivityOnTop(context)) {
+            return;
+        }
         Glide.with(context).load(url).apply(new RequestOptions().placeholder(id)).into(imageView);
     }
 }

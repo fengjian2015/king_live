@@ -60,7 +60,9 @@ public class BaseMapInfo {
      */
     public static int getCode(BaseMapInfo map){
         try {
-            if(map==null)return 100;
+            if(map==null) {
+                return 100;
+            }
             return (int)map.getData().get(BaseInfoConstants.CODE);
         }catch (Exception e){
             e.printStackTrace();
@@ -75,7 +77,9 @@ public class BaseMapInfo {
      */
     public static boolean getSuccess(BaseMapInfo map){
         try {
-            if (map==null)return false;
+            if (map==null) {
+                return false;
+            }
             if((int)map.getData().get(BaseInfoConstants.CODE)==0){
                 return true;
             }else{
@@ -94,7 +98,9 @@ public class BaseMapInfo {
      */
     public static boolean isTokenInvalid(BaseMapInfo map){
         try {
-            if(map==null)return false;
+            if(map==null) {
+                return false;
+            }
             if((int)map.getData().get(BaseInfoConstants.CODE)==700){
                 return true;
             }else{
@@ -113,7 +119,9 @@ public class BaseMapInfo {
      */
     public static String getMsg(BaseMapInfo map){
         try {
-            if (map==null)return "数据异常";
+            if (map==null) {
+                return "数据异常";
+            }
             return map.getData().get(BaseInfoConstants.MSG)+"";
         }catch (Exception e){
             e.printStackTrace();

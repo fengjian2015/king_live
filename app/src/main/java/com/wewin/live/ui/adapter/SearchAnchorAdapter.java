@@ -73,8 +73,9 @@ public class SearchAnchorAdapter extends RecyclerView.Adapter {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(onItemListener!=null)
+                    if(onItemListener!=null) {
                         onItemListener.onItemClick(position);
+                    }
                 }
             });
         }

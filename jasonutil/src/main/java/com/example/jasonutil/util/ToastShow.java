@@ -18,8 +18,12 @@ public class ToastShow {
 
 	public static void showToast(final Context act, final String message, boolean isShowToast) {
 
-		if(!ActivityUtil.isActivityOnTop(act))return;
-		if(StringUtils.isEmpty(message))return;
+		if(!ActivityUtil.isActivityOnTop(act)) {
+            return;
+        }
+		if(StringUtils.isEmpty(message)) {
+            return;
+        }
 		new Handler(Looper.getMainLooper()).post(new Runnable() {
 			@Override
 			public void run() {
@@ -29,8 +33,12 @@ public class ToastShow {
 	}
 
 	public static void showToast(final Context act, final String message) {
-		if(!ActivityUtil.isActivityOnTop(act))return;
-		if(StringUtils.isEmpty(message))return;
+		if(!ActivityUtil.isActivityOnTop(act)) {
+            return;
+        }
+		if(StringUtils.isEmpty(message)) {
+            return;
+        }
 		new Handler(Looper.getMainLooper()).post(new Runnable() {
 			@Override
 			public void run() {
@@ -40,7 +48,9 @@ public class ToastShow {
 	}
 
 	public static void showToastLength(final Context act, final String message) {
-		if(!ActivityUtil.isActivityOnTop(act))return;
+		if(!ActivityUtil.isActivityOnTop(act)) {
+            return;
+        }
 		new Handler(Looper.getMainLooper()).post(new Runnable() {
 			@Override
 			public void run() {
@@ -49,8 +59,12 @@ public class ToastShow {
 		});
 	}
 	public static void showToast2(final Context act, final String message) {
-		if(!ActivityUtil.isActivityOnTop(act))return;
-		if(StringUtils.isEmpty(message))return;
+		if(!ActivityUtil.isActivityOnTop(act)) {
+            return;
+        }
+		if(StringUtils.isEmpty(message)) {
+            return;
+        }
 		new Handler(Looper.getMainLooper()).post(new Runnable() {
 			@Override
 			public void run() {
@@ -59,8 +73,12 @@ public class ToastShow {
 		});
 	}
 	public static void showToastShowCenter(final Context act, final String message) {
-		if(!ActivityUtil.isActivityOnTop(act))return;
-		if(StringUtils.isEmpty(message))return;
+		if(!ActivityUtil.isActivityOnTop(act)) {
+            return;
+        }
+		if(StringUtils.isEmpty(message)) {
+            return;
+        }
 		new Handler(Looper.getMainLooper()).post(new Runnable() {
 			@Override
 			public void run() {

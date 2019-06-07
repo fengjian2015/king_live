@@ -34,8 +34,9 @@ public class NotificationUtil {
      */
     public NotificationUtil setNotification(Context c) {
         this.context = c;
-        if (mNotificationManager == null)
+        if (mNotificationManager == null) {
             mNotificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        }
         mBuilder = new NotificationCompat.Builder(context, CHANNEL);
         return this;
     }
@@ -70,7 +71,9 @@ public class NotificationUtil {
      * @param intent
      */
     public NotificationUtil setIntent(Intent intent) {
-        if (mBuilder == null) return this;
+        if (mBuilder == null) {
+            return this;
+        }
         PendingIntent pendingIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
         return this;
@@ -82,7 +85,9 @@ public class NotificationUtil {
      * @param intent
      */
     public NotificationUtil setIntent(Intent intent, boolean isAppOpen) {
-        if (mBuilder == null) return this;
+        if (mBuilder == null) {
+            return this;
+        }
         PendingIntent pendingIntent;
         if (isAppOpen) {
             pendingIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -102,7 +107,9 @@ public class NotificationUtil {
      * @return
      */
     public NotificationUtil notifyNot() {
-        if (mNotificationManager == null) return this;
+        if (mNotificationManager == null) {
+            return this;
+        }
         mNotificationManager.notify((int) System.currentTimeMillis(), mBuilder.build());
         return this;
     }

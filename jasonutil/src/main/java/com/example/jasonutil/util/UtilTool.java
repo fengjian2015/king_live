@@ -78,9 +78,9 @@ public class UtilTool {
                 list.add(chars[i] + "");
             }
             for (int i = list.size() - 1; i >= 0; i--) {
-                if (list.get(i).equals("0")) {
+                if ("0".equals(list.get(i))) {
                     list.remove(i);
-                } else if (list.get(i).equals(".")) {
+                } else if (".".equals(list.get(i))) {
                     list.remove(i);
                     break;
                 } else {
@@ -141,8 +141,12 @@ public class UtilTool {
      */
     public static void hideKeyBoard(Activity context, View v) {
         try {
-            if(!ActivityUtil.isActivityOnTop(context))return;
-            if(v==null)return;
+            if(!ActivityUtil.isActivityOnTop(context)) {
+                return;
+            }
+            if(v==null) {
+                return;
+            }
             ((InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
                     .hideSoftInputFromWindow(context.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }catch (Exception e){
@@ -246,7 +250,7 @@ public class UtilTool {
         Intent install = new Intent(Intent.ACTION_VIEW);
         install.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Uri uri;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", file);
             install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//添加这一句表示对目标应用临时授权该Uri所代表的文件
         } else {
@@ -273,8 +277,9 @@ public class UtilTool {
     private boolean onFront(Context context) {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
-        if (appProcesses == null || appProcesses.isEmpty())
+        if (appProcesses == null || appProcesses.isEmpty()) {
             return false;
+        }
 
         for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
             if (appProcess.processName.equals(context.getPackageName()) &&
@@ -326,7 +331,9 @@ public class UtilTool {
      * @return
      */
     public static byte[] bitmap2Bytes(Bitmap bitmap, int maxkb) {
-        if(bitmap==null)return null;
+        if(bitmap==null) {
+            return null;
+        }
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
         int options = 100;
@@ -377,7 +384,7 @@ public class UtilTool {
             CookieSyncManager.getInstance().sync();
         }
         WebStorage.getInstance().deleteAllData(); //清空WebView的localStorage
-        LogUtil.Log("清空缓存");
+        LogUtil.log("清空缓存");
     }
 
     /**

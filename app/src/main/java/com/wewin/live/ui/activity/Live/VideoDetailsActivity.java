@@ -1,4 +1,4 @@
-package com.wewin.live.ui.activity.Live;
+package com.wewin.live.ui.activity.live;
 
 
 import android.content.Intent;
@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.jasonutil.util.ScreenTools;
 import com.example.jasonutil.util.StringUtils;
 import com.example.jasonutil.util.ToastShow;
@@ -21,14 +22,15 @@ import com.tencent.tauth.Tencent;
 import com.wewin.live.R;
 import com.wewin.live.dialog.LoadingProgressDialog;
 import com.wewin.live.dialog.ShareDialog;
+import com.wewin.live.listanim.MyGiftModel;
 import com.wewin.live.modle.BaseInfoConstants;
 import com.wewin.live.rxjava.OnRxJavaProcessListener;
 import com.wewin.live.rxjava.RxJavaObserver;
 import com.wewin.live.rxjava.RxJavaScheduler;
 import com.wewin.live.thirdparty.QqShare;
 import com.wewin.live.thirdparty.WeiBoShare;
-import com.wewin.live.ui.widget.web.HtmlWebView;
 import com.wewin.live.ui.widget.VideoSurfceView;
+import com.wewin.live.ui.widget.web.HtmlWebView;
 import com.wewin.live.utils.MessageEvent;
 import com.wewin.live.utils.OrientationWatchDog;
 
@@ -48,6 +50,7 @@ import static com.wewin.live.utils.MessageEvent.DOWN_ANIMATION;
 import static com.wewin.live.utils.MessageEvent.DOWN_GIF;
 
 /**
+ * @author jason
  * 播放器详情
  */
 public class VideoDetailsActivity extends BaseVideoPlayActivity {
@@ -64,13 +67,29 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
     TextView tvTitle;
     @InjectView(R.id.bark)
     ImageView bark;
+    @InjectView(R.id.ll_list_anim)
+    LinearLayout llListAnim;
 
-
-    private String html5Url;//网页链接
-    private boolean is_horizontal = false;//进入界面时是否横屏
-    private Map shareMap;//分享的内容
-    private boolean isShowShare = false;//是否需要显示分享
-    private String title;//标题
+    /**
+     *     网页链接
+     */
+    private String html5Url;
+    /**
+     * 进入界面时是否横屏
+     */
+    private boolean isHorizontal = false;
+    /**
+     * 分享的内容
+     */
+    private Map shareMap;
+    /**
+     * 是否需要显示分享
+     */
+    private boolean isShowShare = false;
+    /**
+     * 标题
+     */
+    private String title;
 
     private LoadingProgressDialog mLoadingProgressDialog;
 
@@ -83,14 +102,17 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (intent == null) return;
+        if (intent == null) {
+            return;
+        }
         WeiBoShare.getInstance().doResultIntent(intent);
     }
 
     @Override
     protected void initChildData() {
-        if (!EventBus.getDefault().isRegistered(this))
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
+        }
         setBar();
         initIntent();
         initHtml();
@@ -108,6 +130,7 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
                 setBack(isShow);
             }
         });
+
     }
 
 
@@ -118,7 +141,7 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
         if (bundle != null) {
             html5Url = bundle.getString(BaseInfoConstants.URL);
             title = bundle.getString(BaseInfoConstants.TITLE);
-            is_horizontal = bundle.getBoolean(BaseInfoConstants.IS_HORIZONTAL);
+            isHorizontal = bundle.getBoolean(BaseInfoConstants.IS_HORIZONTAL);
         }
     }
 
@@ -127,8 +150,8 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
             @Override
             public void onGlobalLayout() {
                 htmlWebview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                if (is_horizontal) {
-                    changeView(is_horizontal);
+                if (isHorizontal) {
+                    changeView(isHorizontal);
                     OrientationWatchDog.changeHorizontalOrverticalScreen(VideoDetailsActivity.this);
                 }
             }
@@ -139,6 +162,7 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
 
     private void initHtml() {
         htmlWebview.setHtml5Url(html5Url);
+//        htmlWebview.setHtml5Url("file:///android_asset/android_js.html");
         htmlWebview.setOnHtmlListener(new HtmlWebView.OnHtmlListener() {
             @Override
             public void goBack() {
@@ -178,6 +202,8 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
             case R.id.iv_more_two:
                 share();
                 break;
+            default:
+                break;
         }
     }
 
@@ -185,7 +211,9 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
      * 分享弹窗
      */
     private void share() {
-        if (shareMap == null) return;
+        if (shareMap == null) {
+            return;
+        }
         mLoadingProgressDialog = LoadingProgressDialog.createDialog(this);
         WeiBoShare.getInstance().init(this);
         final ShareDialog shareDialog = new ShareDialog(VideoDetailsActivity.this, new ArrayList<HashMap>());
@@ -194,9 +222,10 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
                 .showAtLocation()
                 .setListOnClick(new ShareDialog.ListOnClick() {
                     @Override
-                    public void onclickitem(int position) {
-                        if (position != 5)
+                    public void onClickItem(int position) {
+                        if (position != 5) {
                             mLoadingProgressDialog.showDialog();
+                        }
                         shareDialog.goShare(VideoDetailsActivity.this,
                                 shareMap.get(BaseInfoConstants.SHARE_URL) + "", shareMap.get(BaseInfoConstants.SHARE_TITLE) + ""
                                 , shareMap.get(BaseInfoConstants.SHARE_CONTENT) + "", shareMap.get(BaseInfoConstants.SHARE_IMAGE) + "", position);
@@ -226,29 +255,44 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
             EventBus.getDefault().post(event);
         } else if (msgId == MessageEvent.SHARE_DATA) {
             shareMap = event.getMap();
-        }else if (msgId==MessageEvent.ADD_BARRAGE){
-            addBarrage(event.getIsSelf(),event.getContent());
+        } else if (msgId == MessageEvent.ADD_BARRAGE) {
+            addBarrage(event.getIsSelf(), event.getContent());
+        } else if (msgId == MessageEvent.START_LIST_GIF) {
+            addListGift(event.getContent());
         }
     }
 
     /**
+     * 连续的动画
+     */
+    private void addListGift(String content) {
+        MyGiftModel model = JSONObject.parseObject(content, MyGiftModel.class);
+        if (model == null) {
+            return;
+        }
+        model.setSendTime(System.currentTimeMillis());
+        giftController.addGift(model);
+    }
+
+    /**
      * 添加弹幕
+     *
      * @param isSelf
      * @param content
      */
-    private void addBarrage(final int isSelf, final String content){
+    private void addBarrage(final int isSelf, final String content) {
         RxJavaScheduler.execute(new OnRxJavaProcessListener() {
             @Override
             public void process(ObservableEmitter<Object> emitter) {
-                if(isSelf==0){
+                if (isSelf == 0) {
                     //对方
-                    barrageUtil.addBarrage(false,content);
-                }else {
+                    barrageUtil.addBarrage(false, content);
+                } else {
                     //自己
-                    barrageUtil.addBarrage(true,content);
+                    barrageUtil.addBarrage(true, content);
                 }
             }
-        },new RxJavaObserver<Object>());
+        }, new RxJavaObserver<Object>());
     }
 
     /**
@@ -277,9 +321,11 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
         if (OrientationWatchDog.isLandscape(this)) {
             params.height = height - ScreenTools.getStateBar3(this);
             changeView(true);
+            llListAnim.setPadding(0, getResources().getDimensionPixelSize(R.dimen.d60dp), 0, 0);
         } else if (OrientationWatchDog.isPoriratt(this)) {
             changeView(false);
             params.height = getResources().getDimensionPixelSize(R.dimen.d200dp);
+            llListAnim.setPadding(0, getResources().getDimensionPixelSize(R.dimen.d15dp), 0, 0);
         }
         liveSurfce.setLayoutParams(params);
     }
@@ -307,7 +353,9 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
      * @param isShow
      */
     private void setIvMoreTwo(boolean isShow) {
-        if (ivMoreTwo == null) return;
+        if (ivMoreTwo == null) {
+            return;
+        }
         if (isShowShare && isShow) {
             ivMoreTwo.setVisibility(View.VISIBLE);
         } else {
@@ -316,7 +364,9 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
     }
 
     private void setBack(boolean isShow) {
-        if (bark == null) return;
+        if (bark == null) {
+            return;
+        }
         if (isShow) {
             bark.setVisibility(View.VISIBLE);
         } else {
@@ -326,7 +376,9 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
 
 
     private void setTitle(boolean isFist) {
-        if (tvTitle == null) return;
+        if (tvTitle == null) {
+            return;
+        }
         if (liveSurfce.getTransparentShow()) {
             tvTitle.setVisibility(View.VISIBLE);
         } else {

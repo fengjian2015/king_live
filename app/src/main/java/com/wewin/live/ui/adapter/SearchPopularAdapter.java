@@ -68,8 +68,9 @@ public class SearchPopularAdapter extends RecyclerView.Adapter {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(onItemListener!=null)
+                    if(onItemListener!=null) {
                         onItemListener.onItemClick(position);
+                    }
                 }
             });
         }

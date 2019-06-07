@@ -22,7 +22,7 @@ import com.wewin.live.R;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/*
+/**
  *   author:jason
  *   date:2019/4/1810:17
  *   确定按钮点击后动画
@@ -33,24 +33,34 @@ public class ButtonAnimation extends View {
     private static final int FINISHANIMATION = 1;
 
     private Context mContext;
-    //动画进度
+    /**
+     * 动画进度
+     */
     private float fraction;
 
     private int textColor;
     private float textSize;
     private String text;
-    private int bg_color;
+    private int bgColor;
 
-    private int button_Width;
-    private int button_Height;
-    //是否正在进行动画
+    private int buttonWidth;
+    private int buttonHeight;
+    /**
+     * 是否正在进行动画
+     */
     private boolean isAnimation = false;
-    //按下时间
+    /**
+     * 按下时间
+     */
     private long currentMS;
-    //记录是否移动
+    /**
+     * 记录是否移动
+     */
     private int moveX;
     private int moveY;
-    //点击位置
+    /**
+     * 点击位置
+     */
     private float iniEventX;
     private float iniEvnetY;
     private PathMeasure mPathMeasure;
@@ -78,16 +88,16 @@ public class ButtonAnimation extends View {
             textColor = typedArray.getInt(R.styleable.ButtonAnimation_t_color, Color.parseColor("#FFFFFF"));
             textSize = typedArray.getDimension(R.styleable.ButtonAnimation_t_size, mContext.getResources().getDimension(R.dimen.d15dp));
             text =typedArray.getString(R.styleable.ButtonAnimation_text_data);
-            bg_color = typedArray.getInt(R.styleable.ButtonAnimation_bg_color, Color.parseColor("#FE294E"));
+            bgColor = typedArray.getInt(R.styleable.ButtonAnimation_bg_color, Color.parseColor("#FE294E"));
         }
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        button_Width = measureWidth(getMeasuredWidth());
-        button_Height = measureHeight(getMeasuredHeight());
-        setMeasuredDimension(button_Width, button_Height);
+        buttonWidth = measureWidth(getMeasuredWidth());
+        buttonHeight = measureHeight(getMeasuredHeight());
+        setMeasuredDimension(buttonWidth, buttonHeight);
     }
 
     private int measureWidth(int measureSpec) {
@@ -103,6 +113,8 @@ public class ButtonAnimation extends View {
                 break;
             case MeasureSpec.EXACTLY:
                 result = specSize;
+                break;
+            default:
                 break;
         }
         return result;
@@ -121,6 +133,8 @@ public class ButtonAnimation extends View {
                 break;
             case MeasureSpec.EXACTLY:
                 result = specSize;
+                break;
+            default:
                 break;
         }
         return result;
@@ -153,10 +167,10 @@ public class ButtonAnimation extends View {
         canvas.save();
         Paint paint = new Paint();
         paint.setAntiAlias(true);
-        paint.setColor(bg_color);
+        paint.setColor(bgColor);
         paint.setStyle(Paint.Style.FILL);
         //绘制圆角矩形
-        RectF r = new RectF(0, 0, button_Width, button_Height);
+        RectF r = new RectF(0, 0, buttonWidth, buttonHeight);
         canvas.drawRoundRect(r, 8, 8, paint);
         if(text!=null) {
             //绘制文本
@@ -165,7 +179,7 @@ public class ButtonAnimation extends View {
             paint.setTypeface(Typeface.DEFAULT);
             paint.setColor(textColor);
             paint.setTextSize(textSize);
-            canvas.drawText(text, button_Width / 2, button_Height / 2 + (textSize) / 2, paint);
+            canvas.drawText(text, buttonWidth / 2, buttonHeight / 2 + (textSize) / 2, paint);
         }
         canvas.restore();
     }
@@ -176,15 +190,17 @@ public class ButtonAnimation extends View {
         canvas.save();
         Paint paint = new Paint();
         paint.setAntiAlias(true);
-        paint.setColor(bg_color);
+        paint.setColor(bgColor);
         paint.setStyle(Paint.Style.FILL);
-        if (fraction>1)fraction=1;
+        if (fraction>1) {
+            fraction=1;
+        }
         //逐渐显示圆形
-        int radius = button_Height  / 2;
-        int left= (int) (Math.max((fraction*button_Width/2-radius),0));
+        int radius = buttonHeight  / 2;
+        int left= (int) (Math.max((fraction*buttonWidth/2-radius),0));
         int top=0;
-        int right=(int) (Math.min((button_Width/2+(1-fraction)*button_Width/2+radius),button_Width));
-        int bottom=button_Height;
+        int right=(int) (Math.min((buttonWidth/2+(1-fraction)*buttonWidth/2+radius),buttonWidth));
+        int bottom=buttonHeight;
         RectF r = new RectF(left, top, right, bottom);
         canvas.drawRoundRect(r, Math.max(radius * fraction,8), Math.max(radius * fraction,8), paint);
 
@@ -197,10 +213,10 @@ public class ButtonAnimation extends View {
      * @param canvas
      */
     private void drawLine(Canvas canvas){
-        int radius = button_Height  / 2;
+        int radius = buttonHeight  / 2;
         //计算勾所在的正方形范围
         float lineSpacings=radius*2/4;
-        RectF lineF = new RectF(button_Width/2-radius+lineSpacings, lineSpacings, button_Width/2+radius-lineSpacings,  button_Height-lineSpacings);
+        RectF lineF = new RectF(buttonWidth/2-radius+lineSpacings, lineSpacings, buttonWidth/2+radius-lineSpacings,  buttonHeight-lineSpacings);
         Paint linePaint = new Paint();
         linePaint.setAntiAlias(true);
         linePaint.setColor(Color.WHITE);

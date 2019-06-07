@@ -1,4 +1,4 @@
-package com.wewin.live.ui.activity.Live;
+package com.wewin.live.ui.activity.live;
 
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -31,7 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
@@ -229,7 +228,9 @@ public class LiveConfigActivity extends BaseActivity implements ErrorView.OnCont
      */
     private void setDataContent() {
         try {
-            if (mRoomMapList.size() <= 0) return;
+            if (mRoomMapList.size() <= 0) {
+                return;
+            }
             int selectRoom = mRoomAdapter.getSelect();
             int roomType = UtilTool.parseInt(mRoomMapList.get(selectRoom).get(BaseInfoConstants.ID) + "");
             if (roomType == 0) {
@@ -331,6 +332,8 @@ public class LiveConfigActivity extends BaseActivity implements ErrorView.OnCont
                             }
                         });
 
+                break;
+            default:
                 break;
 
         }

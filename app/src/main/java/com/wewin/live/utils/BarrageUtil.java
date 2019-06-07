@@ -2,11 +2,8 @@ package com.wewin.live.utils;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextUtils;
 
 import com.example.jasonutil.util.LogUtil;
@@ -79,10 +76,11 @@ public class BarrageUtil {
 
                 @Override
                 public void prepared() {
-                    LogUtil.Log("弹幕准备完成"+isShow);
+                    LogUtil.log("弹幕准备完成"+isShow);
                     isPrepared=true;
-                    if(isShow)
-                    mDanmakuView.start();
+                    if(isShow) {
+                        mDanmakuView.start();
+                    }
                 }
             });
             mDanmakuView.prepare(parser, mDanmakuContext);
@@ -98,7 +96,9 @@ public class BarrageUtil {
 
 
     public void addBarrage(boolean isSelf,String content) {
-        if(TextUtils.isEmpty(content)||!isPrepared)return;
+        if(TextUtils.isEmpty(content)||!isPrepared) {
+            return;
+        }
         BaseDanmaku danmaku = mDanmakuContext.mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL);
         if (danmaku == null || mDanmakuView == null) {
             return;
@@ -207,14 +207,14 @@ public class BarrageUtil {
     public void onPause() {
         if (mDanmakuView != null && mDanmakuView.isPrepared()) {
             mDanmakuView.pause();
-            LogUtil.Log("弹幕暂停");
+            LogUtil.log("弹幕暂停");
         }
     }
 
     public void onResume() {
         if (mDanmakuView != null && mDanmakuView.isPrepared() && mDanmakuView.isPaused()) {
             mDanmakuView.resume();
-            LogUtil.Log("弹幕重新开始");
+            LogUtil.log("弹幕重新开始");
         }
     }
 
@@ -223,7 +223,7 @@ public class BarrageUtil {
             // dont forget release!
             mDanmakuView.release();
             mDanmakuView = null;
-            LogUtil.Log("弹幕销毁");
+            LogUtil.log("弹幕销毁");
         }
     }
 

@@ -48,7 +48,9 @@ public class PersenterWX {
 
             @Override
             public void onFault(String errorMsg) {//失败的回调
-                if(!ActivityUtil.isActivityOnTop(context))return;
+                if(!ActivityUtil.isActivityOnTop(context)) {
+                    return;
+                }
                 ToastShow.showToast2(context,errorMsg);
             }
         };
@@ -71,7 +73,9 @@ public class PersenterWX {
 
             @Override
             public void onFault(String errorMsg) {//失败的回调
-                if(!ActivityUtil.isActivityOnTop(context))return;
+                if(!ActivityUtil.isActivityOnTop(context)) {
+                    return;
+                }
                 ToastShow.showToast2(context,errorMsg);
             }
         };

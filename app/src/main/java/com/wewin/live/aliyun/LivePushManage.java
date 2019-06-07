@@ -24,11 +24,15 @@ import com.example.jasonutil.util.LogUtil;
  * @date 2019/3/15
  * 推流管理
  */
-public class LivePushManage extends LivePushControl{
+public class LivePushManage extends AbstractLivePushControl {
 
-    //人脸
+    /**
+     * 人脸
+     */
     private TaoFaceFilter taoFaceFilter;
-    //美颜
+    /**
+     * 美颜
+     */
     private TaoBeautyFilter taoBeautyFilter;
 
     private  SurfaceView surfaceView;
@@ -47,7 +51,7 @@ public class LivePushManage extends LivePushControl{
         surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                LogUtil.Log("jason","创建成功");
+                LogUtil.log("jason","创建成功");
                 if(mSurfaceStatus == SurfaceStatus.UNINITED) {
                     mSurfaceStatus = SurfaceStatus.CREATED;
                     preview(context, surfaceView);
@@ -69,7 +73,7 @@ public class LivePushManage extends LivePushControl{
             public void surfaceDestroyed(SurfaceHolder holder) {
                 mSurfaceStatus = SurfaceStatus.DESTROYED;
                 setMute(true);
-                LogUtil.Log("jason","销毁");
+                LogUtil.log("jason","销毁");
                 pause();
             }
         });
@@ -78,23 +82,26 @@ public class LivePushManage extends LivePushControl{
     @Override
     protected void setListener(){
         setBeautyFace();
-        //推流相关信息回调接口
+        /**
+         * 推流相关信息回调接口
+         */
         mAlivcLivePusher.setLivePushInfoListener(new AlivcLivePushInfoListener() {
             @Override
             public void onPreviewStarted(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onPreviewStarted:开始预览");
+                LogUtil.log("onPreviewStarted:开始预览");
             }
 
             @Override
             public void onPreviewStoped(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onPreviewStoped:停止预览");
+                LogUtil.log("onPreviewStoped:停止预览");
             }
 
             @Override
             public void onPushStarted(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onPushStarted:开始推流");
-                if(mOnLicePushListener!=null)
+                LogUtil.log("onPushStarted:开始推流");
+                if(mOnLicePushListener!=null) {
                     mOnLicePushListener.onPushStarted();
+                }
                 ToastShow.showToast(context,context.getString(R.string.push_start_push));
             }
 
@@ -104,23 +111,26 @@ public class LivePushManage extends LivePushControl{
 
             @Override
             public void onPushPauesed(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onPushPauesed:暂停");
-                if(mOnLicePushListener!=null)
+                LogUtil.log("onPushPauesed:暂停");
+                if(mOnLicePushListener!=null) {
                     mOnLicePushListener.onPushPauesed();
+                }
             }
 
             @Override
             public void onPushResumed(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onPushResumed:恢复");
-                if(mOnLicePushListener!=null)
+                LogUtil.log("onPushResumed:恢复");
+                if(mOnLicePushListener!=null) {
                     mOnLicePushListener.onPushResumed();
+                }
             }
 
             @Override
             public void onPushStoped(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onPushStoped:停止推流");
-                if(mOnLicePushListener!=null)
+                LogUtil.log("onPushStoped:停止推流");
+                if(mOnLicePushListener!=null) {
                     mOnLicePushListener.onPushStoped();
+                }
             }
 
             /**
@@ -130,132 +140,138 @@ public class LivePushManage extends LivePushControl{
              */
             @Override
             public void onPushRestarted(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onPushRestarted:重启成功");
-                if(mOnLicePushListener!=null)
+                LogUtil.log("onPushRestarted:重启成功");
+                if(mOnLicePushListener!=null) {
                     mOnLicePushListener.onPushRestarted();
+                }
                 ToastShow.showToast(context,context.getString(R.string.push_restarted_push));
             }
 
             @Override
             public void onFirstFramePreviewed(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onFirstFramePreviewed:首帧渲染");
+                LogUtil.log("onFirstFramePreviewed:首帧渲染");
             }
 
             @Override
             public void onDropFrame(AlivcLivePusher alivcLivePusher, int countBef, int countAft) {
-                LogUtil.Log("onDropFrame:丢帧, 丢帧前："+countBef+", 丢帧后："+countAft);
+                LogUtil.log("onDropFrame:丢帧, 丢帧前："+countBef+", 丢帧后："+countAft);
             }
 
             @Override
             public void onAdjustBitRate(AlivcLivePusher alivcLivePusher, int curBr, int targetBr) {
-//                LogUtil.Log("onAdjustBitRate:调整码率, 当前码率："+curBr+"Kps, 目标码率："+targetBr+"Kps");
+//                LogUtil.log("onAdjustBitRate:调整码率, 当前码率："+curBr+"Kps, 目标码率："+targetBr+"Kps");
             }
 
             @Override
             public void onAdjustFps(AlivcLivePusher alivcLivePusher, int curFps, int targetFps) {
-//                LogUtil.Log("onAdjustFps:调整帧率, 当前帧率："+curFps+", 目标帧率："+targetFps);
+//                LogUtil.log("onAdjustFps:调整帧率, 当前帧率："+curFps+", 目标帧率："+targetFps);
             }
         });
-        //推流网络回调接口
+
+        /**
+         * 推流网络回调接口
+         */
         mAlivcLivePusher.setLivePushNetworkListener(new AlivcLivePushNetworkListener() {
             @Override
             public void onNetworkPoor(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onNetworkPoor:网络差，请退出或者重连");
+                LogUtil.log("onNetworkPoor:网络差，请退出或者重连");
             }
 
             @Override
             public void onNetworkRecovery(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onNetworkRecovery:网络恢复");
+                LogUtil.log("onNetworkRecovery:网络恢复");
             }
 
             @Override
             public void onReconnectStart(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onReconnectStart:重连开始");
+                LogUtil.log("onReconnectStart:重连开始");
             }
 
             @Override
             public void onConnectionLost(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onConnectionLost:推流已断开");
+                LogUtil.log("onConnectionLost:推流已断开");
             }
 
             @Override
             public void onReconnectFail(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onReconnectFail:重连失败");
+                LogUtil.log("onReconnectFail:重连失败");
             }
 
             @Override
             public void onReconnectSucceed(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onReconnectSucceed:重连成功");
+                LogUtil.log("onReconnectSucceed:重连成功");
             }
 
             @Override
             public void onSendDataTimeout(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onSendDataTimeout:发送数据超时");
+                LogUtil.log("onSendDataTimeout:发送数据超时");
             }
 
             @Override
             public void onConnectFail(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onConnectFail:连接失败");
+                LogUtil.log("onConnectFail:连接失败");
             }
 
             @Override
             public String onPushURLAuthenticationOverdue(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("流即将过期，请更换url");
+                LogUtil.log("流即将过期，请更换url");
                 ToastShow.showToast(context,"流即将过期，请更换url");
                 return null;
             }
 
             @Override
             public void onSendMessage(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("alivcLivePusher:"+alivcLivePusher.toString());
+                LogUtil.log("alivcLivePusher:"+alivcLivePusher.toString());
             }
 
             @Override
             public void onPacketsLost(AlivcLivePusher alivcLivePusher) {
-                LogUtil.Log("onPacketsLost:推流丢包通知");
+                LogUtil.log("onPacketsLost:推流丢包通知");
             }
         });
 
-        //背景音乐回调接口
+        /**
+         * 背景音乐回调接口
+         */
         mAlivcLivePusher.setLivePushBGMListener(new AlivcLivePushBGMListener() {
             @Override
             public void onStarted() {
-                LogUtil.Log("开始播放音乐");
+                LogUtil.log("开始播放音乐");
             }
 
             @Override
             public void onStoped() {
-                LogUtil.Log("停止播放音乐");
+                LogUtil.log("停止播放音乐");
             }
 
             @Override
             public void onPaused() {
-                LogUtil.Log("暂停播放音乐");
+                LogUtil.log("暂停播放音乐");
             }
 
             @Override
             public void onResumed() {
-                LogUtil.Log("恢复播放音乐");
+                LogUtil.log("恢复播放音乐");
             }
 
             @Override
             public void onProgress(long progress, long duration) {
-//                LogUtil.Log("播放进度   progress："+progress+"   duration:"+duration);
+//                LogUtil.log("播放进度   progress："+progress+"   duration:"+duration);
             }
 
             @Override
             public void onCompleted() {
-                LogUtil.Log("播放结束");
+                LogUtil.log("播放结束");
             }
 
             @Override
             public void onDownloadTimeout() {
-                LogUtil.Log("播放超时");
+                LogUtil.log("播放超时");
             }
 
             @Override
             public void onOpenFailed() {
-                LogUtil.Log("播放失败");
+                LogUtil.log("播放失败");
             }
         });
         //推流报错回调接口
@@ -263,18 +279,20 @@ public class LivePushManage extends LivePushControl{
             @Override
             public void onSystemError(AlivcLivePusher alivcLivePusher, AlivcLivePushError alivcLivePushError) {
                 //当出现onSystemError系统级错误时，您需要退出直播。
-                LogUtil.Log("报错onSystemError:"+alivcLivePusher.toString()+"     "+alivcLivePushError.toString());
+                LogUtil.log("报错onSystemError:"+alivcLivePusher.toString()+"     "+alivcLivePushError.toString());
                 ToastShow.showToast(context,context.getString(R.string.push_system_error));
-                if(mOnLicePushListener!=null)
+                if(mOnLicePushListener!=null) {
                     mOnLicePushListener.onSystemError();
+                }
             }
 
             @Override
             public void onSDKError(AlivcLivePusher alivcLivePusher, AlivcLivePushError alivcLivePushError) {
                 //当出现onSDKError错误（SDK错误）时，有两种处理方式，选择其一即可：销毁当前直播重新创建、调用restartPush/restartPushAsync重启AlivcLivePusher。
-                LogUtil.Log("报错onSDKError:"+alivcLivePusher.toString()+"     "+alivcLivePushError.toString());
-                if(mOnLicePushListener!=null)
+                LogUtil.log("报错onSDKError:"+alivcLivePusher.toString()+"     "+alivcLivePushError.toString());
+                if(mOnLicePushListener!=null) {
                     mOnLicePushListener.onSDKError();
+                }
                 restartPush();
                 ToastShow.showToast(context,context.getString(R.string.push_sdk_error));
             }
@@ -286,8 +304,12 @@ public class LivePushManage extends LivePushControl{
      * 美颜和人脸检测
      */
     public void setBeautyFace(){
-        if(mAlivcLivePusher==null)return;
-        //人脸识别回调（只接入标准版美颜可不需要调用此接口）
+        if(mAlivcLivePusher==null) {
+            return;
+        }
+        /**
+         * 人脸识别回调（只接入标准版美颜可不需要调用此接口）
+         */
         mAlivcLivePusher.setCustomDetect(new AlivcLivePushCustomDetect()
         {
             @Override
@@ -312,7 +334,9 @@ public class LivePushManage extends LivePushControl{
         });
 
 
-        //美颜回调
+        /**
+         * 美颜回调
+         */
         mAlivcLivePusher.setCustomFilter(new AlivcLivePushCustomFilter() {
             @Override
             public void customFilterCreate() {

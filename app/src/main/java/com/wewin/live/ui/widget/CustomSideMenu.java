@@ -12,6 +12,7 @@ import com.example.jasonutil.util.ScreenTools;
 import com.wewin.live.R;
 
 /**
+ * @author jason
  * 侧滑栏
  */
 public class CustomSideMenu extends RelativeLayout{
@@ -24,14 +25,22 @@ public class CustomSideMenu extends RelativeLayout{
 	private float iniEventX;
 	private float iniEvnetY;
 	private OnSideMenuListen mOnSideMenuListen;
-	//按下时间
+	/**
+	 * 按下时间
+	 */
 	private long currentMS;
-	//记录是否移动
+	/**
+	 * 记录是否移动
+	 */
 	private int moveX;
 	private int moveY;
-	//判断是否正在关闭中
+	/**
+	 * 判断是否正在关闭中
+	 */
 	private boolean isBeingClose=false;
-	//是否关闭
+	/**
+	 * 是否关闭
+	 */
 	private boolean isClose=true;
 
 	Handler handler=new Handler();
@@ -73,8 +82,9 @@ public class CustomSideMenu extends RelativeLayout{
 		// TODO Auto-generated method stub
 		if(mScroller.computeScrollOffset()){
 			scrollTo(mScroller.getCurrX(), 0);
-			if(mOnSideMenuListen!=null)
-		    mOnSideMenuListen.setShadowAlpha(getShadowAlpha());
+			if(mOnSideMenuListen!=null) {
+                mOnSideMenuListen.setShadowAlpha(getShadowAlpha());
+            }
 			invalidate();
 		}
 	}
@@ -94,21 +104,26 @@ public class CustomSideMenu extends RelativeLayout{
 			case MotionEvent.ACTION_DOWN:
 				iniEventX = event.getX();
 				iniEvnetY = event.getY();
-				currentMS = System.currentTimeMillis();//long currentMS     获取系统时间
+				//long currentMS     获取系统时间
+				currentMS = System.currentTimeMillis();
 				moveX = 0;
 				moveY = 0;
 				return true;
 		    case MotionEvent.ACTION_MOVE:
-				moveX += Math.abs(event.getX() - iniEventX);//X轴距离
-				moveY += Math.abs(event.getY() - iniEvnetY);//y轴距离
+				//X轴距离
+				moveX += Math.abs(event.getX() - iniEventX);
+				//y轴距离
+				moveY += Math.abs(event.getY() - iniEvnetY);
 		    	float tmp = event.getX() - iniEventX;
 				iniEventX = event.getX();
-				if(getScrollX()-tmp < -mWidthOfSideMenu)
-					scrollTo((int) (-mWidthOfSideMenu), 0);
-				else 
-				    scrollTo((int) (getScrollX()-tmp), 0);
-				if(mOnSideMenuListen!=null)
-				mOnSideMenuListen.setShadowAlpha(getShadowAlpha());
+				if(getScrollX()-tmp < -mWidthOfSideMenu) {
+                    scrollTo((int) (-mWidthOfSideMenu), 0);
+                } else {
+                    scrollTo((int) (getScrollX()-tmp), 0);
+                }
+				if(mOnSideMenuListen!=null) {
+                    mOnSideMenuListen.setShadowAlpha(getShadowAlpha());
+                }
 				break;
 			case MotionEvent.ACTION_UP:
 				int endX = (int) event.getX();
@@ -124,7 +139,8 @@ public class CustomSideMenu extends RelativeLayout{
 						isClose=false;
 						mScroller.startScroll(getScrollX(), 0, (int) (0 - getScrollX()), 0, 500);
 					}
-					long moveTime = System.currentTimeMillis() - currentMS;//移动时间
+					//移动时间
+					long moveTime = System.currentTimeMillis() - currentMS;
 					//判断是否继续传递信号
 					if(moveTime<=200&&moveX<20&&moveY<20&&!isBeingClose&&iniEventX> mEdge){
 						sideMenuScroll(false);
@@ -203,13 +219,23 @@ public class CustomSideMenu extends RelativeLayout{
 	public boolean getIsClose(){
 		return isClose;
 	}
-	
+
+	/**
+	 * 返回是否正在关闭中
+	 * @return
+	 */
+	public boolean isBeingClose() {
+		return isBeingClose;
+	}
+
 	public int getShadowAlpha() {
 		int currentScroll = getScrollX();
-		if(currentScroll > 0)
-			currentScroll = 0;
-		if(-currentScroll > mWidthOfSideMenu)
-			currentScroll = -mWidthOfSideMenu;
+		if(currentScroll > 0) {
+            currentScroll = 0;
+        }
+		if(-currentScroll > mWidthOfSideMenu) {
+            currentScroll = -mWidthOfSideMenu;
+        }
 		int alpha = (int) (-currentScroll*1.0/mWidthOfSideMenu * 100);
 		return alpha;
 	}

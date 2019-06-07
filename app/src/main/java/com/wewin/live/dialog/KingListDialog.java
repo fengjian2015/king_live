@@ -32,12 +32,18 @@ import butterknife.ButterKnife;
  */
 public class KingListDialog extends Dialog implements View.OnClickListener,View.OnTouchListener {
     private Context context;
-    //更多状态
-    private RecyclerView recycler_attention;
-    //更多推荐
-    private RecyclerView recycler_recommendations;
-    private ImageView iv_finish;
-    //数据外层
+    /**
+     * 更多状态
+     */
+    private RecyclerView recyclerAttention;
+    /**
+     * 更多推荐
+     */
+    private RecyclerView recyclerRecommendations;
+    private ImageView ivFinish;
+    /**
+     * 数据外层
+     */
     private ScrollView scrollView;
 
     private List<Map> attentionList=new ArrayList<>();
@@ -59,7 +65,9 @@ public class KingListDialog extends Dialog implements View.OnClickListener,View.
         //将设置好的属性set回去
         window.setAttributes(lp);
         window.setGravity(Gravity.BOTTOM);
-        if (!ActivityUtil.isActivityOnTop(context)) return;
+        if (!ActivityUtil.isActivityOnTop(context)) {
+            return;
+        }
         window.setWindowAnimations(R.style.BottomDialog1);
         setContentView(view);
     }
@@ -70,27 +78,29 @@ public class KingListDialog extends Dialog implements View.OnClickListener,View.
             attentionList.add(new HashMap());
         }
 
-        recycler_attention = view.findViewById(R.id.recycler_attention);
-        recycler_recommendations = view.findViewById(R.id.recycler_recommendations);
-        iv_finish=view.findViewById(R.id.iv_finish);
+        recyclerAttention = view.findViewById(R.id.recycler_attention);
+        recyclerRecommendations = view.findViewById(R.id.recycler_recommendations);
+        ivFinish=view.findViewById(R.id.iv_finish);
         scrollView=view.findViewById(R.id.scrollView);
-        iv_finish.setOnClickListener(this);
+        ivFinish.setOnClickListener(this);
         scrollView.setOnTouchListener(this);
 
-        recycler_attention.setLayoutManager(new GridLayoutManager(context,5));
-        recycler_attention.addItemDecoration(new GridSpacingItemDecoration(5,context.getResources().getDimensionPixelOffset(R.dimen.d5dp),false));
+        recyclerAttention.setLayoutManager(new GridLayoutManager(context,5));
+        recyclerAttention.addItemDecoration(new GridSpacingItemDecoration(5,context.getResources().getDimensionPixelOffset(R.dimen.d5dp),false));
         AttentionAdapter attentionAdapter = new AttentionAdapter();
-        recycler_attention.setAdapter(attentionAdapter);
+        recyclerAttention.setAdapter(attentionAdapter);
 
 
-        recycler_recommendations.setLayoutManager(new GridLayoutManager(context,5));
-        recycler_recommendations.addItemDecoration(new GridSpacingItemDecoration(5,context.getResources().getDimensionPixelOffset(R.dimen.d5dp),false));
+        recyclerRecommendations.setLayoutManager(new GridLayoutManager(context,5));
+        recyclerRecommendations.addItemDecoration(new GridSpacingItemDecoration(5,context.getResources().getDimensionPixelOffset(R.dimen.d5dp),false));
         AttentionAdapter attentionAdapter1 = new AttentionAdapter();
-        recycler_recommendations.setAdapter(attentionAdapter1);
+        recyclerRecommendations.setAdapter(attentionAdapter1);
     }
 
     public void showAtLocation() {
-        if (!ActivityUtil.isActivityOnTop(context)) return;
+        if (!ActivityUtil.isActivityOnTop(context)) {
+            return;
+        }
         show();
     }
 
@@ -100,10 +110,15 @@ public class KingListDialog extends Dialog implements View.OnClickListener,View.
         switch (view.getId()) {
             case R.id.iv_finish:
                 dismiss();
+                break;
+            default:
+                break;
         }
     }
 
-    //触摸数据
+    /**
+     * 触摸数据
+     */
     private float y1, y2;
     private float oldY;
     @Override
@@ -129,6 +144,8 @@ public class KingListDialog extends Dialog implements View.OnClickListener,View.
                     }else {
                         changeY(0);
                     }
+                    break;
+                default:
                     break;
             }
         }

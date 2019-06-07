@@ -1,6 +1,5 @@
 package com.wewin.live.ui.widget;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Build;
@@ -10,21 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.example.jasonutil.permission.AuthorizationCheck;
-import com.example.jasonutil.permission.Permission;
-import com.example.jasonutil.permission.PermissionCallback;
-import com.example.jasonutil.permission.Rigger;
 import com.example.jasonutil.util.LogUtil;
 import com.example.jasonutil.util.MySharedPreferences;
 import com.wewin.live.R;
 import com.wewin.live.aliyun.LiveManage;
 import com.wewin.live.base.MyApp;
-import com.wewin.live.ui.activity.person.SettingsActivity;
 import com.wewin.live.utils.MySharedConstants;
-import com.wewin.live.utils.UiUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -78,15 +70,18 @@ public class SmallViewLayout {
     }
 
     public void setSV(){
-        windowView.getSufceView().changeSufaceView();
+        windowView.getSurfceView().changeSufaceView();
     }
 
-    public void alertWindow(Activity activity) {
+    public void alertWindow() {
         try {
-            if(mViewList.size()>0)return;
-            if(!MySharedPreferences.getInstance().getBoolean(MySharedConstants.ON_OFF_SHOW_WINDOW)
-                    ||!MySharedPreferences.getInstance().getBoolean(MySharedConstants.ON_OFF_LITTLE_WINDOW))
+            if(mViewList.size()>0) {
                 return;
+            }
+            if(!MySharedPreferences.getInstance().getBoolean(MySharedConstants.ON_OFF_SHOW_WINDOW)
+                    ||!MySharedPreferences.getInstance().getBoolean(MySharedConstants.ON_OFF_LITTLE_WINDOW)) {
+                return;
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (Settings.canDrawOverlays(mContext)) {
                     show();
@@ -120,8 +115,12 @@ public class SmallViewLayout {
     // 移除window
     public void dismissWindow(boolean isDestroyLive) {
         try {
-            if(isDestroyLive) MySharedPreferences.getInstance().setBoolean(MySharedConstants.ON_OFF_SHOW_WINDOW, false);
-            if(windowView==null)return;
+            if(isDestroyLive) {
+                MySharedPreferences.getInstance().setBoolean(MySharedConstants.ON_OFF_SHOW_WINDOW, false);
+            }
+            if(windowView==null) {
+                return;
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 if (wm != null && windowView != null&&windowView.getWindowId() != null) {
                     wm.removeView(windowView);
@@ -137,7 +136,7 @@ public class SmallViewLayout {
                 LiveManage.getInstance().release();
             }
             windowView=null;
-            LogUtil.Log("弹窗数量："+mViewList.size());
+            LogUtil.log("弹窗数量："+mViewList.size());
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -48,7 +48,9 @@ public class PickerViewUtil {
                     @Override
                     public void onOptionsSelect(int options1, int options2, int options3, View v) {
                         //返回的分别是三个级别的选中位置
-                        if (onPickerReturnListener == null) return;
+                        if (onPickerReturnListener == null) {
+                            return;
+                        }
                         onPickerReturnListener.getData(options1,options2,options3, JSONArray.parseArray(jsonArray.getString(options1)).getString(1));
                     }
                 })
@@ -70,7 +72,9 @@ public class PickerViewUtil {
             pvOptions.setOnDismissListener(new OnDismissListener() {
                 @Override
                 public void onDismiss(Object o) {
-                    if (onPickerReturnListener == null) return;
+                    if (onPickerReturnListener == null) {
+                        return;
+                    }
                     onPickerReturnListener.onDismiss();
                 }
             });
@@ -94,12 +98,14 @@ public class PickerViewUtil {
     }
 
     public void show(){
-        if (pvOptions != null)
-        pvOptions.show();
+        if (pvOptions != null) {
+            pvOptions.show();
+        }
     }
 
     public void dismiss() {
-        if (pvOptions != null)
+        if (pvOptions != null) {
             pvOptions.dismiss();
+        }
     }
 }

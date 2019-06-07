@@ -50,7 +50,9 @@ class IdentifiableCookie {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof IdentifiableCookie)) return false;
+        if (!(other instanceof IdentifiableCookie)) {
+            return false;
+        }
         IdentifiableCookie that = (IdentifiableCookie) other;
         return that.cookie.name().equals(this.cookie.name())
                 && that.cookie.domain().equals(this.cookie.domain())

@@ -24,9 +24,9 @@ android {
         applicationId "com.wewin.live"
         minSdkVersion 18
         targetSdkVersion 27
-        versionCode 6
+        versionCode 9
         //<主版本号>.<子版本号>.<阶段版本号>1.0.0
-        versionName "1.0.5"
+        versionName "1.0.9"
         multiDexEnabled = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
@@ -59,11 +59,11 @@ android {
         release {
             buildConfigField "boolean", "LOG_DEBUG", "false" //不显示log
             //是否优化zip
-            zipAlignEnabled true
+            zipAlignEnabled false
             // 移除无用的resource文件
-            shrinkResources true
+            shrinkResources false
             //启用代码混淆
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

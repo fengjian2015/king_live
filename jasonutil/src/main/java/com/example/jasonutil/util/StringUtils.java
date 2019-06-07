@@ -36,10 +36,9 @@ public class StringUtils {
 	 * @param str
 	 * @return
 	 */
-	
+	private static  Pattern pattern = Pattern.compile("[0-9]*");
 	public static boolean isNumeric(String str){
-	    Pattern pattern = Pattern.compile("[0-9]*");
-	    return pattern.matcher(str).matches();    
+	    return pattern.matcher(str).matches();
 	 }
 
 	public static int StringToInt(String str){

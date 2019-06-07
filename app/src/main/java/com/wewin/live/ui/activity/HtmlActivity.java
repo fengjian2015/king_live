@@ -47,13 +47,16 @@ public class HtmlActivity extends BaseActivity implements HtmlWebView.OnHtmlList
     protected void init() {
         initIntent();
         initView();
-        if (!EventBus.getDefault().isRegistered(this))
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
+        }
     }
 
     private void initIntent(){
         Bundle bundle=getIntent().getExtras();
-        if(bundle==null)return;
+        if(bundle==null) {
+            return;
+        }
         html5Url = bundle.getString(BaseInfoConstants.URL);
     }
 
@@ -82,6 +85,8 @@ public class HtmlActivity extends BaseActivity implements HtmlWebView.OnHtmlList
             case R.id.iv_more:
                 share();
                 break;
+            default:
+                break;
         }
     }
 
@@ -97,9 +102,10 @@ public class HtmlActivity extends BaseActivity implements HtmlWebView.OnHtmlList
                 .showAtLocation()
                 .setListOnClick(new ShareDialog.ListOnClick() {
                     @Override
-                    public void onclickitem(int position) {
-                        if(position!=5)
-                        mLoadingProgressDialog.showDialog();
+                    public void onClickItem(int position) {
+                        if(position!=5) {
+                            mLoadingProgressDialog.showDialog();
+                        }
                         shareDialog.goShare(HtmlActivity.this,"http://testzhibo.wewin18.net","标题","描述","图片地址",position);
                     }
                 });

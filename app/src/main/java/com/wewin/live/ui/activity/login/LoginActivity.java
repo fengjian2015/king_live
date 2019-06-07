@@ -54,7 +54,7 @@ public class LoginActivity extends BaseActivity {
         setTitle(getString(R.string.login));
 //        initCode();
         initHttp(false);
-        LogUtil.Log("高度:"+EmoticonsKeyboardUtils.getDefKeyboardHeight(this));
+        LogUtil.log("高度:"+EmoticonsKeyboardUtils.getDefKeyboardHeight(this));
     }
 
     /**
@@ -117,7 +117,8 @@ public class LoginActivity extends BaseActivity {
                 //显示区号弹窗
 //                showCode();
                 break;
-
+            default:
+                break;
         }
     }
 

@@ -3,6 +3,7 @@ package com.wewin.live.ui.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -14,12 +15,20 @@ import com.wewin.live.R;
  * @date 2019/3/8
  * 可设置hint的textview
  */
-public class HintTextView extends TextView {
+public class HintTextView extends AppCompatTextView {
     private Context mContext;
-
-    private int hint_color;//未设置的字体颜色
-    private int text_color;//设置后的颜色
-    private String hint_text;//未设置的文本
+    /**
+     * 未设置的字体颜色
+     */
+    private int hintColor;
+    /**
+     * 设置后的颜色
+     */
+    private int textColor;
+    /**
+     * 未设置的文本
+     */
+    private String hintText;
     private boolean isHint=true;
 
     public HintTextView(Context context) {
@@ -35,12 +44,12 @@ public class HintTextView extends TextView {
         mContext = context;
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.HintText);
-            hint_color = typedArray.getColor(R.styleable.HintText_hintText_color, mContext.getResources().getColor(R.color.gray1));
-            hint_text = typedArray.getString(R.styleable.HintText_hintText_hint);
-            text_color= typedArray.getColor(R.styleable.HintText_text_color, mContext.getResources().getColor(R.color.black1));
+            hintColor = typedArray.getColor(R.styleable.HintText_hintText_color, mContext.getResources().getColor(R.color.gray1));
+            hintText = typedArray.getString(R.styleable.HintText_hintText_hint);
+            textColor= typedArray.getColor(R.styleable.HintText_text_color, mContext.getResources().getColor(R.color.black1));
             typedArray.recycle();
         }
-        if(!StringUtils.isEmpty(hint_text)){
+        if(!StringUtils.isEmpty(hintText)){
             setHint();
         }
     }
@@ -54,17 +63,21 @@ public class HintTextView extends TextView {
     }
 
     public void setHint(String content){
-        if(StringUtils.isEmpty(content))return;
-        hint_text=content;
-        setText(hint_text);
-        setTextColor(hint_color);
+        if(StringUtils.isEmpty(content)) {
+            return;
+        }
+        hintText=content;
+        setText(hintText);
+        setTextColor(hintColor);
         isHint=true;
     }
 
     public void setHint(){
-        if(StringUtils.isEmpty(hint_text))return;
-        setText(hint_text);
-        setTextColor(hint_color);
+        if(StringUtils.isEmpty(hintText)) {
+            return;
+        }
+        setText(hintText);
+        setTextColor(hintColor);
         isHint=true;
     }
 
@@ -74,7 +87,7 @@ public class HintTextView extends TextView {
             isHint=true;
         }else{
             setText(content);
-            setTextColor(text_color);
+            setTextColor(textColor);
             isHint=false;
         }
     }

@@ -153,14 +153,17 @@ public class SerializableCookie implements Serializable {
 
         builder.path((String) in.readObject());
 
-        if (in.readBoolean())
+        if (in.readBoolean()) {
             builder.secure();
+        }
 
-        if (in.readBoolean())
+        if (in.readBoolean()) {
             builder.httpOnly();
+        }
 
-        if (in.readBoolean())
+        if (in.readBoolean()) {
             builder.hostOnlyDomain(domain);
+        }
 
         cookie = builder.build();
     }

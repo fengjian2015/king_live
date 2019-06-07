@@ -1,4 +1,4 @@
-package com.wewin.live.ui.Fragment;
+package com.wewin.live.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

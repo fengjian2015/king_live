@@ -7,9 +7,9 @@ import android.os.Bundle;
 import com.alibaba.fastjson.JSONObject;
 import com.example.jasonutil.util.ActivityUtil;
 import com.example.jasonutil.util.LogUtil;
+import com.example.jasonutil.util.MySharedPreferences;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
-import com.umeng.commonsdk.debug.E;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UTrack;
@@ -17,9 +17,7 @@ import com.umeng.message.UmengMessageHandler;
 import com.umeng.message.entity.UMessage;
 import com.wewin.live.modle.BaseInfoConstants;
 import com.wewin.live.ui.activity.HtmlActivity;
-import com.wewin.live.ui.activity.Live.VideoDetailsActivity;
-import com.wewin.live.ui.activity.MainActivity;
-import com.wewin.live.ui.activity.SearchActivity;
+import com.wewin.live.ui.activity.live.VideoDetailsActivity;
 import com.wewin.live.utils.Constants;
 import com.wewin.live.utils.NotificationUtil;
 import com.wewin.live.utils.SignOutUtil;
@@ -33,10 +31,9 @@ import java.util.Map;
  */
 public class UMMessage {
     public static UMMessage instance = null;
-    PushAgent mPushAgent;
+    private PushAgent mPushAgent;
     private NotificationUtil notificationUtil;
-    private final String PLAY_LIVE = "playLive";
-    private final String NEW_HTML= "newHtml";
+
     //单例
     public static UMMessage getInstance() {
         if (instance == null) {
@@ -62,12 +59,13 @@ public class UMMessage {
         mPushAgent.register(new IUmengRegisterCallback() {
             @Override
             public void onSuccess(String s) {
-                LogUtil.UMLog(s);
+                LogUtil.umlog(s);
+                MySharedPreferences.getInstance().setString(BaseInfoConstants.DEVICE_TOKEN,s);
             }
 
             @Override
             public void onFailure(String s, String s1) {
-                LogUtil.UMLog(s + "   " + s1);
+                LogUtil.umlog(s + "   " + s1);
             }
         });
         setMessageHandler();
@@ -77,7 +75,9 @@ public class UMMessage {
      * 初始化透传消息
      */
     private void setMessageHandler() {
-        if (mPushAgent == null) return;
+        if (mPushAgent == null) {
+            return;
+        }
         mPushAgent.setMessageHandler(umengMessageHandler);
     }
 
@@ -89,7 +89,7 @@ public class UMMessage {
         mPushAgent.setAlias(SignOutUtil.getUserId(), "king", new UTrack.ICallBack() {
             @Override
             public void onMessage(boolean isSuccess, String message) {
-                LogUtil.UMLog("别名绑定：" + isSuccess + "  " + message);
+                LogUtil.umlog("别名绑定：" + isSuccess + "  " + message);
             }
         });
     }
@@ -103,7 +103,7 @@ public class UMMessage {
         mPushAgent.deleteAlias(SignOutUtil.getUserId(), "king", new UTrack.ICallBack() {
             @Override
             public void onMessage(boolean isSuccess, String message) {
-                LogUtil.UMLog("别名移除：" + isSuccess + "  " + message);
+                LogUtil.umlog("别名移除：" + isSuccess + "  " + message);
             }
         });
     }
@@ -111,10 +111,12 @@ public class UMMessage {
     /**
      * 消息透传
      */
-    UmengMessageHandler umengMessageHandler = new UmengMessageHandler() {
+    private UmengMessageHandler umengMessageHandler = new UmengMessageHandler() {
+        String PLAY_LIVE = "playLive";
+        String NEW_HTML = "newHtml";
         @Override
         public void dealWithCustomMessage(Context context, UMessage uMessage) {
-            LogUtil.UMLog(uMessage.custom);
+            LogUtil.umlog(uMessage.custom);
             try {
                 Map map = JSONObject.parseObject(uMessage.custom, Map.class);
                 notificationUtil.setContent(map.get(BaseInfoConstants.TITLE) + "", map.get(BaseInfoConstants.CONTENT) + "");
@@ -129,7 +131,9 @@ public class UMMessage {
                 } else {
                     //打开应用
                     Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-                    intent.setComponent(null);
+                    if(intent!=null) {
+                        intent.setPackage(null); // 加上这句代码
+                    }
                     notificationUtil.setIntent(intent);
                 }
                 notificationUtil.notifyNot();
@@ -139,6 +143,14 @@ public class UMMessage {
         }
     };
 
+
+
+    /**
+     * 跳转到H5
+     * @param context
+     * @param map
+     * @return
+     */
     private Intent newHtml(Context context, Map map){
         Intent intent = new Intent(context,HtmlActivity.class);
         try {
@@ -153,6 +165,12 @@ public class UMMessage {
         return intent;
     }
 
+    /**
+     * 跳转到播放器界面
+     * @param context
+     * @param map
+     * @return
+     */
     private Intent playLive(Context context, Map map) {
         Intent intent=null;
         try {

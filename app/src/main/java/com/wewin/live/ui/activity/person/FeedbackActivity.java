@@ -64,7 +64,8 @@ public class FeedbackActivity extends BaseActivity {
             case R.id.tv_submit:
                 submit();
                 break;
-
+            default:
+                break;
         }
     }
 }

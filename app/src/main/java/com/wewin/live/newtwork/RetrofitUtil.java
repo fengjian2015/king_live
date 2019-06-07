@@ -30,6 +30,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
+ * @author jason
  * Created by dada on 2017/6/14.
  * okhttp网络配置
  */
@@ -85,7 +86,8 @@ public class RetrofitUtil {
     public class CacheInterceptor implements Interceptor {
         @Override
         public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();//获取请求
+            //获取请求
+            Request request = chain.request();
             //这里就是说判读我们的网络条件，要是有网络的话我么就直接获取网络上面的数据，要是没有网络的话我么就去缓存里面取数据
             if (!NetWorkUtil.isNetworkAvailable(mContext)) {
                 request = request.newBuilder()
@@ -109,7 +111,7 @@ public class RetrofitUtil {
             } else if (code == 502) {
             } else {
             }
-            LogUtil.Log(request.url() + "接口返回碼： " + code + "----接口返回消息： " + message);
+            LogUtil.log(request.url() + "接口返回碼： " + code + "----接口返回消息： " + message);
             if (NetWorkUtil.isNetworkAvailable(mContext)) {
                 //这里大家看点开源码看看.header .removeHeader做了什么操作很简答，就是的加字段和减字段的。
                 String cacheControl = request.cacheControl().toString();
@@ -131,23 +133,29 @@ public class RetrofitUtil {
 
     /**
      * 配置信息
-     * @param Context
+     * @param context
      * @param time
      * @param url
      */
-    private RetrofitUtil(Context Context, int time,String url) {
-        mContext = Context;//设置缓存路径
+    private RetrofitUtil(Context context, int time,String url) {
+        mContext = context;
+        //设置缓存路径
         File cacheFile = new File(mContext.getCacheDir(), "caheData");
         //设置cookie,退出时清除
         cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(mContext));
         //设置缓存大小
         Cache cache = new Cache(cacheFile, DEFAULT_DIR_CACHE);
         OkHttpClient client = new OkHttpClient.Builder()
-                .retryOnConnectionFailure(true)//连接失败后是否重新连接
-                .connectTimeout(time, TimeUnit.SECONDS)//超时时间20S
-                .readTimeout(time, TimeUnit.SECONDS)//超时时间20S
-                .writeTimeout(time, TimeUnit.SECONDS)//超时时间20S
-                .addInterceptor(new CacheInterceptor())//也就这里不同
+                //连接失败后是否重新连接
+                .retryOnConnectionFailure(true)
+                //超时时间20S
+                .connectTimeout(time, TimeUnit.SECONDS)
+                //超时时间20S
+                .readTimeout(time, TimeUnit.SECONDS)
+                //超时时间20S
+                .writeTimeout(time, TimeUnit.SECONDS)
+                //也就这里不同
+                .addInterceptor(new CacheInterceptor())
 //                .addNetworkInterceptor(new CacheInterceptor())//也就这里不同
                 .cache(cache)
                 .cookieJar(cookieJar)
@@ -156,7 +164,8 @@ public class RetrofitUtil {
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .client(client)
-                .addConverterFactory(factory)//json转换成JavaBean
+                //json转换成JavaBean
+                .addConverterFactory(factory)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }

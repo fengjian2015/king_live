@@ -19,9 +19,9 @@ import com.wewin.live.R;
 public class ErrorView implements View.OnClickListener {
     private AnimationDrawable animationDrawable;
     private RelativeLayout mRlLoadError;
-    private TextView tv_error;
-    private ImageView iv_loading;
-    private Button btn_confirm;
+    private TextView tvError;
+    private ImageView ivLoading;
+    private Button btnConfirm;
 
     private Context context;
     private OnContinueListener mOnContinueListener;
@@ -32,25 +32,25 @@ public class ErrorView implements View.OnClickListener {
     public ErrorView(Context context, View view) {
         this.context = context;
         mRlLoadError = view.findViewById(R.id.rl_error);
-        tv_error = view.findViewById(R.id.tv_error);
-        btn_confirm = view.findViewById(R.id.btn_confirm);
-        iv_loading = view.findViewById(R.id.iv_loading);
+        tvError = view.findViewById(R.id.tv_error);
+        btnConfirm = view.findViewById(R.id.btn_confirm);
+        ivLoading = view.findViewById(R.id.iv_loading);
 
 
-        btn_confirm.setOnClickListener(this);
-        animationDrawable = (AnimationDrawable) iv_loading.getBackground();
+        btnConfirm.setOnClickListener(this);
+        animationDrawable = (AnimationDrawable) ivLoading.getBackground();
     }
 
     public ErrorView(Activity activity) {
         this.context = activity;
         mRlLoadError = activity.findViewById(R.id.rl_error);
-        tv_error = activity.findViewById(R.id.tv_error);
-        btn_confirm = activity.findViewById(R.id.btn_confirm);
-        iv_loading = activity.findViewById(R.id.iv_loading);
+        tvError = activity.findViewById(R.id.tv_error);
+        btnConfirm = activity.findViewById(R.id.btn_confirm);
+        ivLoading = activity.findViewById(R.id.iv_loading);
 
 
-        btn_confirm.setOnClickListener(this);
-        animationDrawable = (AnimationDrawable) iv_loading.getBackground();
+        btnConfirm.setOnClickListener(this);
+        animationDrawable = (AnimationDrawable) ivLoading.getBackground();
     }
 
 
@@ -62,8 +62,11 @@ public class ErrorView implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_confirm:
-                if (mOnContinueListener != null)
+                if (mOnContinueListener != null) {
                     mOnContinueListener.again();
+                }
+                break;
+            default:
                 break;
         }
     }
@@ -74,7 +77,9 @@ public class ErrorView implements View.OnClickListener {
      * @param error
      */
     public void setTvError(String error) {
-        if (tv_error == null) return;
+        if (tvError == null) {
+            return;
+        }
         errorContent = error;
     }
 
@@ -84,9 +89,11 @@ public class ErrorView implements View.OnClickListener {
      * @param noData
      */
     public void setTvNoData(String noData) {
-        if (tv_error == null) return;
+        if (tvError == null) {
+            return;
+        }
         notDataContent = noData;
-        tv_error.setText(notDataContent);
+        tvError.setText(notDataContent);
     }
 
     /**
@@ -96,11 +103,11 @@ public class ErrorView implements View.OnClickListener {
     public void errorShow(boolean isShowButton) {
         mRlLoadError.setVisibility(View.VISIBLE);
         animationDrawable.start();
-        tv_error.setText(errorContent);
+        tvError.setText(errorContent);
         if (isShowButton) {
-            btn_confirm.setVisibility(View.VISIBLE);
+            btnConfirm.setVisibility(View.VISIBLE);
         } else {
-            btn_confirm.setVisibility(View.GONE);
+            btnConfirm.setVisibility(View.GONE);
         }
 
     }
@@ -113,11 +120,11 @@ public class ErrorView implements View.OnClickListener {
     public void notDataShow(boolean isShowButton) {
         mRlLoadError.setVisibility(View.VISIBLE);
         animationDrawable.start();
-        tv_error.setText(notDataContent);
+        tvError.setText(notDataContent);
         if (isShowButton) {
-            btn_confirm.setVisibility(View.VISIBLE);
+            btnConfirm.setVisibility(View.VISIBLE);
         } else {
-            btn_confirm.setVisibility(View.GONE);
+            btnConfirm.setVisibility(View.GONE);
         }
 
     }

@@ -1,4 +1,4 @@
-package com.wewin.live.ui.activity.Live;
+package com.wewin.live.ui.activity.live;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +13,7 @@ import com.example.jasonutil.util.MySharedPreferences;
 import com.example.jasonutil.util.NetWorkUtil;
 import com.wewin.live.R;
 import com.wewin.live.aliyun.LiveManage;
-import com.wewin.live.aliyun.LivePushControl;
+import com.wewin.live.aliyun.AbstractLivePushControl;
 import com.wewin.live.aliyun.LivePushManage;
 import com.wewin.live.base.BaseActivity;
 import com.wewin.live.dialog.BeautyDialog;
@@ -25,31 +25,40 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 /**
+ * @author jason
  * 直播界面和播放界面
  * 由于直播播放界面和视频播放界面不同，所以使用两个界面编写
  */
-public class LiveStartActivity extends BaseActivity implements LivePushControl.OnLicePushListener {
+public class LiveStartActivity extends BaseActivity implements AbstractLivePushControl.OnLicePushListener {
 
 
     @InjectView(R.id.surfceview)
-    LiveSurfceView surfceview;
+    LiveSurfceView surfceView;
     @InjectView(R.id.bt_start)
     Button btStart;
     @InjectView(R.id.ll_live)
     LinearLayout llLive;
     @InjectView(R.id.seekbar_bgm)
-    SeekBar seekbarBgm;
+    SeekBar seekBarBgm;
     @InjectView(R.id.seekbar_capture)
-    SeekBar seekbarCapture;
+    SeekBar seekBarCapture;
 
 
-    //直播工具类
+    /**
+     * 直播工具类
+     */
     private LivePushManage livePushManage;
-    //网络监听
+    /**
+     * 网络监听
+     */
     private NetWorkUtil netWorkUtil;
-    //判断进入是直播还是观众，true直播
+    /**
+     * 判断进入是直播还是观众，true直播
+     */
     private boolean isLive = true;
-    //直播推流地址或者播放推流地址
+    /**
+     * 直播推流地址或者播放推流地址
+     */
     private String url;
 
     @Override
@@ -85,11 +94,11 @@ public class LiveStartActivity extends BaseActivity implements LivePushControl.O
      */
     private void initLive() {
         llLive.setVisibility(View.VISIBLE);
-        surfceview.setIsLive(true);
-        livePushManage = new LivePushManage(this, surfceview.getSurfaceView());
+        surfceView.setIsLive(true);
+        livePushManage = new LivePushManage(this, surfceView.getSurfaceView());
         livePushManage.setOnLicePushListener(this);
         livePushManage.setPushUrl(url);
-        seekbarBgm.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekBarBgm.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
@@ -108,7 +117,7 @@ public class LiveStartActivity extends BaseActivity implements LivePushControl.O
             }
         });
 
-        seekbarCapture.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekBarCapture.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
@@ -132,9 +141,9 @@ public class LiveStartActivity extends BaseActivity implements LivePushControl.O
      * 初始化观众界面
      */
     private void audience() {
-        surfceview.setIsLive(false);
+        surfceView.setIsLive(false);
         llLive.setVisibility(View.GONE);
-        LiveManage.getInstance().setLiveSurfce(this, surfceview.getSurfaceView(), url);
+        LiveManage.getInstance().setLiveSurfce(this, surfceView.getSurfaceView(), url);
         initNetWork();
     }
 
@@ -191,7 +200,6 @@ public class LiveStartActivity extends BaseActivity implements LivePushControl.O
             case R.id.bt_startMusic:
                 //打开背景音乐
                 livePushManage.startBGMAsync(FileUtil.getAssetsDirString(LiveStartActivity.this) + "test.mp3");
-//                livePushManage.startBGMAsync("/storage/emulated/0/alivc_resource/Pas de Deux.mp3");
                 break;
             case R.id.bt_pauseMusic:
                 //暂停
@@ -200,6 +208,8 @@ public class LiveStartActivity extends BaseActivity implements LivePushControl.O
             case R.id.bt_resumeMusic:
                 //恢复
                 livePushManage.resumeBGM();
+                break;
+            default:
                 break;
         }
     }
@@ -233,11 +243,13 @@ public class LiveStartActivity extends BaseActivity implements LivePushControl.O
         super.finish();
         try {
             LiveManage.getInstance().release();
-            if (netWorkUtil != null)
+            if (netWorkUtil != null) {
                 netWorkUtil.stopWatch();
+            }
             //销毁
-            if (livePushManage != null)
+            if (livePushManage != null) {
                 livePushManage.release();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -42,6 +42,7 @@ public class LoadingProgressDialog extends Dialog {
         return sLoadingProgressDialog;
     }
 
+    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         if (sLoadingProgressDialog == null) {
             return;
@@ -79,15 +80,20 @@ public class LoadingProgressDialog extends Dialog {
     }
 
     public void showDialog(){
-        if(!ActivityUtil.isActivityOnTop(context))return;
+        if(!ActivityUtil.isActivityOnTop(context)) {
+            return;
+        }
         show();
     }
 
 
     public void hideDialog(){
-        if(!ActivityUtil.isActivityOnTop(context))return;
-        if(mProgressCancelListener!=null)
-        mProgressCancelListener.onCancelProgress();
+        if(!ActivityUtil.isActivityOnTop(context)) {
+            return;
+        }
+        if(mProgressCancelListener!=null) {
+            mProgressCancelListener.onCancelProgress();
+        }
         dismiss();
     }
 

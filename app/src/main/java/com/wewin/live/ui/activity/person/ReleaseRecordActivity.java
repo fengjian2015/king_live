@@ -142,7 +142,8 @@ public class ReleaseRecordActivity extends BaseActivity {
             case R.id.tv_article:
                 changeHight(false);
                 break;
-
+            default:
+                break;
         }
     }
 

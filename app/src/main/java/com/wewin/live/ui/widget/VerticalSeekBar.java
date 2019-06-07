@@ -26,6 +26,7 @@ public class VerticalSeekBar extends SeekBar {
     }
 
     //这是一个重点,高宽倒置
+    @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(h, w, oldh, oldw);
     }
@@ -38,6 +39,7 @@ public class VerticalSeekBar extends SeekBar {
     }
 
     //这是一个重点
+    @Override
     protected void onDraw(Canvas c) {
         c.rotate(-90);
         c.translate(-getHeight(), 0);
@@ -67,6 +69,8 @@ public class VerticalSeekBar extends SeekBar {
                 break;
 
             case MotionEvent.ACTION_CANCEL:
+                break;
+            default:
                 break;
         }
         return true;

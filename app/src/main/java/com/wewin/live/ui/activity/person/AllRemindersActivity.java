@@ -87,6 +87,8 @@ public class AllRemindersActivity extends BaseActivity {
             case R.id.on_off_y:
                 UiUtil.changeOnOff(MySharedConstants.ON_OFF_ALL_REMINDERS,onOffY);
                 break;
+            default:
+                break;
 
         }
     }

@@ -77,7 +77,9 @@ public class GifImageView extends AppCompatImageView {
         endLastFrame = a.getBoolean(R.styleable.GifImageView_end_last_frame, false);
         if (srcID > 0) {
             setGifResource(srcID, null);
-            if (authPlay) play(counts);
+            if (authPlay) {
+                play(counts);
+            }
         }
         a.recycle();
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -110,13 +112,17 @@ public class GifImageView extends AppCompatImageView {
     }
 
     public void setGifResource(final String path, OnPlayListener onPlayListener) {
-        if (path==null)return;
+        if (path==null) {
+            return;
+        }
         try {
             movie = Movie.decodeStream(new FileInputStream(path));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        if(movie==null)return;
+        if(movie==null) {
+            return;
+        }
         if (onPlayListener != null) {
             mOnPlayListener = onPlayListener;
         }
@@ -178,8 +184,9 @@ public class GifImageView extends AppCompatImageView {
     }
 
     public void play() {
-        if (movie == null)
+        if (movie == null) {
             return;
+        }
         if (hasStart) {
             if (mPaused && mMoviePauseTime > 0) {
                 mPaused = false;
@@ -210,8 +217,9 @@ public class GifImageView extends AppCompatImageView {
     }
 
     private int getCurrentFrameTime() {
-        if (movieDuration == 0)
+        if (movieDuration == 0) {
             return 0;
+        }
         long now = SystemClock.uptimeMillis() - offsetTime;
         int nowCount = (int) ((now - mMovieStart) / movieDuration);
         if (counts != -1 && nowCount >= counts) {
@@ -317,7 +325,9 @@ public class GifImageView extends AppCompatImageView {
     public int getDuration() {
         if (movie != null) {
             return movie.duration();
-        } else return 0;
+        } else {
+            return 0;
+        }
     }
 
     @Override

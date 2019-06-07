@@ -143,7 +143,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
         showOrHideTransparent(true);
         selectPlayOrPause(true);
         LiveListenerManage.getInstance().registerLiveListener(this);
-        LogUtil.Log("走到了播放器的注册监听");
+        LogUtil.log("走到了播放器的注册监听");
     }
 
 
@@ -192,6 +192,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
      *
      * @param isShow
      */
+    @Override
     public void showOrHideProgressBar(boolean isShow) {
         if (isShow && LiveManage.getInstance().getIsPlaying()) {
             if (mLlLoad.getVisibility() != VISIBLE) {
@@ -209,6 +210,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
      *
      * @param proportion
      */
+    @Override
     public void setLoadProgress(int proportion) {
         if(LiveManage.getInstance().getIsPlaying()) {
             mLlLoad.setVisibility(VISIBLE);
@@ -224,8 +226,11 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
      *
      * @param content
      */
+    @Override
     public void setError(String content) {
-        if (StringUtils.isEmpty(content)) return;
+        if (StringUtils.isEmpty(content)) {
+            return;
+        }
         mTvPrompt.setVisibility(VISIBLE);
         mTvPrompt.setText(content);
         mLlLoad.setVisibility(GONE);
@@ -234,6 +239,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
     /**
      * 初始化进度条
      */
+    @Override
     public void initSeekBar(long duration) {
         if(duration<=0){
             mIvBarrage.setVisibility(VISIBLE);
@@ -298,6 +304,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
     /**
      * 暂停
      */
+    @Override
     public void pause(){
         selectPlayOrPause(false);
         LiveManage.getInstance().pause();
@@ -368,8 +375,9 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
      */
     public void setSwitchScreen() {
         //全屏和小屏
-        if (mSwitchScreenListener != null)
+        if (mSwitchScreenListener != null) {
             mSwitchScreenListener.amplificationOrNarrow();
+        }
         showOrHideTransparent(true);
     }
 
@@ -378,6 +386,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
      *
      * @param progress
      */
+    @Override
     public void setVolume(int progress) {
         mTvVolume.setText(mContext.getString(R.string.volume)+progress + "%");
     }
@@ -435,8 +444,9 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
             mRlTransparent.setVisibility(GONE);
         }
         showOrHideMarqueeAndRightPrompt(!isShow);
-        if (mOnControlShowOrHint!=null)
+        if (mOnControlShowOrHint!=null) {
             mOnControlShowOrHint.control(isShow);
+        }
     }
 
     public boolean getTransparentShow(){
@@ -477,8 +487,12 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
         float max = mSurfaceView.getMeasuredHeight() / 3;
         int seek = (int) ((100 / max) * x / 2);
         int last = volume_slide - seek;
-        if (last > 100) last = 100;
-        if (last < 0) last = 0;
+        if (last > 100) {
+            last = 100;
+        }
+        if (last < 0) {
+            last = 0;
+        }
         setVolume(last);
         LiveManage.getInstance().setVolume(last);
     }
@@ -491,8 +505,12 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
         float max = mSurfaceView.getMeasuredHeight() / 3;
         int seek = (int) ((100 / max) * x / 2);
         int last = brightness_slide - seek;
-        if (last > 100) last = 100;
-        if (last < 0) last = 0;
+        if (last > 100) {
+            last = 100;
+        }
+        if (last < 0) {
+            last = 0;
+        }
         setBrightness(last);
         LiveManage.getInstance().setScreenBrightness(last);
     }
@@ -509,9 +527,12 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
         int seek = (int) ((LiveManage.getInstance().getDuration() / max) * x);
         long last = seek_slide + seek;
 
-        if (last > LiveManage.getInstance().getDuration())
+        if (last > LiveManage.getInstance().getDuration()) {
             last = LiveManage.getInstance().getDuration();
-        if (last < 0) last = 0;
+        }
+        if (last < 0) {
+            last = 0;
+        }
         LiveManage.getInstance().setSeek((int) last);
         setSeekBar(last);
 
@@ -580,6 +601,8 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
                 case HIDE_STATUS_VOLUME:
                     showOrHideVolume(false);
                     break;
+                default:
+                    break;
             }
         }
     };
@@ -604,6 +627,8 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
             case R.id.iv_barrage:
                 openOrCloseBarrage();
                 break;
+            default:
+                break;
         }
     }
 
@@ -611,8 +636,9 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (b)
+                if (b) {
                     LiveManage.getInstance().setSeek(i);
+                }
             }
 
             @Override
@@ -651,23 +677,23 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
                         LR_UD = 2;
                         brightness_slide=LiveManage.getInstance().getScreenBrightness();
                         volume_slide = LiveManage.getInstance().getVolume();
-//                        LogUtil.Log("向上滑");
+//                        LogUtil.log("向上滑");
                     } else if (y2 - y1 > 50) {
                         y1 = y2;
                         LR_UD = 2;
                         brightness_slide=LiveManage.getInstance().getScreenBrightness();
                         volume_slide = LiveManage.getInstance().getVolume();
-//                        LogUtil.Log("向下滑");
+//                        LogUtil.log("向下滑");
                     } else if (x1 - x2 > 50) {
                         x1 = x2;
                         LR_UD = 1;
                         seek_slide = LiveManage.getInstance().getCurrentPosition();
-//                        LogUtil.Log("向左滑");
+//                        LogUtil.log("向左滑");
                     } else if (x2 - x1 > 50) {
                         x1 = x2;
                         LR_UD = 1;
                         seek_slide = LiveManage.getInstance().getCurrentPosition();
-//                        LogUtil.Log("向右滑");
+//                        LogUtil.log("向右滑");
                     }
                 } else {
                     if (y1 - y2 > 1 && LR_UD == 2) {
@@ -677,7 +703,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
                             setSlideBrightness(y2-y1);
                         }
                         showOrHideVolume(true);
-//                        LogUtil.Log("向上滑");
+//                        LogUtil.log("向上滑");
                     } else if (y2 - y1 > 1 && LR_UD == 2) {
                         if(x1<=getMeasuredWidth()/2) {
                             setSlideVolume(y2 - y1);
@@ -685,21 +711,25 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
                             setSlideBrightness(y2-y1);
                         }
                         showOrHideVolume(true);
-//                        LogUtil.Log("向下滑");
+//                        LogUtil.log("向下滑");
                     } else if (x1 - x2 > 1 && LR_UD == 1) {
                         setSlideSeek(x2 - x1);
                         showOrHideTransparent(true);
-//                        LogUtil.Log("向左滑");
+//                        LogUtil.log("向左滑");
                     } else if (x2 - x1 > 1 && LR_UD == 1) {
                         setSlideSeek(x2 - x1);
                         showOrHideTransparent(true);
-//                        LogUtil.Log("向右滑");
+//                        LogUtil.log("向右滑");
                     }
 
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                if (LR_UD != 0) return true;
+                if (LR_UD != 0) {
+                    return true;
+                }
+                break;
+            default:
                 break;
         }
         return false;
@@ -710,7 +740,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
         super.destroyDrawingCache();
         LiveListenerManage.getInstance().unregisterLiveListener(this);
         isSeekPlay=false;
-        LogUtil.Log("走到了播放器的destroyDrawingCache");
+        LogUtil.log("走到了播放器的destroyDrawingCache");
     }
 
 

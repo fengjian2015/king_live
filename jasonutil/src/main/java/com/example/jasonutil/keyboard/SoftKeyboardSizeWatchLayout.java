@@ -35,14 +35,14 @@ public class SoftKeyboardSizeWatchLayout extends RelativeLayout {
                         mIsSoftKeyboardPop = true;
                         if (mListenerList != null) {
                             for (OnResizeListener l : mListenerList) {
-                                l.OnSoftPop(mNowh);
+                                l.onSoftPop(mNowh);
                             }
                         }
                     } else {
                         mIsSoftKeyboardPop = false;
                         if (mListenerList != null) {
                             for (OnResizeListener l : mListenerList) {
-                                l.OnSoftClose();
+                                l.onSoftClose();
                             }
                         }
                     }
@@ -69,11 +69,11 @@ public class SoftKeyboardSizeWatchLayout extends RelativeLayout {
         /**
          * 软键盘弹起
          */
-        void OnSoftPop(int height);
+        void onSoftPop(int height);
 
         /**
          * 软键盘关闭
          */
-        void OnSoftClose();
+        void onSoftClose();
     }
 }

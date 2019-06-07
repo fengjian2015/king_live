@@ -33,6 +33,7 @@ public class MessageEvent {
     public static final int START_GIF=19;//开始动画
     public static final int SHARE_DATA=20;//分享内容
     public static final int ADD_BARRAGE=21;//添加弹幕
+    public static final int START_LIST_GIF=22;//开始集合连击动画
     public MessageEvent(int msgId) {
         mMsgId = msgId;
     }

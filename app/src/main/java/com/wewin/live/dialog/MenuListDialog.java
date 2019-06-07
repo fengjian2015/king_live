@@ -18,6 +18,7 @@ import com.wewin.live.R;
 import java.util.List;
 
 /**
+ * @author jason
  * Created by xingyun on 2016/7/19.
  * 列表，从下往上，底部显示
  */
@@ -28,16 +29,16 @@ public class MenuListDialog extends Dialog {
          * 0是最底下的取消按钮选项，1-n是从上往下的各个选项
          * @param position
          */
-        public void onclickitem(int position);
+         void onClickItem(int position);
     }
 
-    private ListView lv_menu;
+    private ListView lvMenu;
     /**
      * 取消按钮
      */
-    private Button button_common3;
+    private Button buttonCommon3;
     private ListOnClick listOnClick;
-    private LinearLayout quit_popupwindows_bg;
+    private LinearLayout quitPopupwindowsBg;
     private List<String> menunames;
     private Context context;
     private int color = 0;
@@ -47,25 +48,25 @@ public class MenuListDialog extends Dialog {
         View view = View.inflate(context, R.layout.menulist_popwindow, null);
         this.menunames = menunames;
         this.context = context;
-        lv_menu = (ListView) view.findViewById(R.id.lv_menu);
-        lv_menu.setAdapter(new MyMenuAdapter());
-        button_common3 = (Button) view.findViewById(R.id.button_common3);
-        quit_popupwindows_bg = (LinearLayout) view.findViewById(R.id.quit_popupwindows_bg);
+        lvMenu = (ListView) view.findViewById(R.id.lv_menu);
+        lvMenu.setAdapter(new MyMenuAdapter());
+        buttonCommon3 = (Button) view.findViewById(R.id.button_common3);
+        quitPopupwindowsBg = (LinearLayout) view.findViewById(R.id.quit_popupwindows_bg);
 
-        button_common3.setOnClickListener(new View.OnClickListener() {
+        buttonCommon3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (listOnClick != null) {
-                    listOnClick.onclickitem(0);
+                    listOnClick.onClickItem(0);
                 }
             }
         });
 
-        quit_popupwindows_bg.setOnClickListener(new View.OnClickListener() {
+        quitPopupwindowsBg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (listOnClick != null) {
-                    listOnClick.onclickitem(0);
+                    listOnClick.onClickItem(0);
                 }
             }
         });
@@ -80,13 +81,17 @@ public class MenuListDialog extends Dialog {
         //将设置好的属性set回去
         window.setAttributes(lp);
         window.setGravity(Gravity.BOTTOM);
-        if(!ActivityUtil.isActivityOnTop(context))return;
+        if(!ActivityUtil.isActivityOnTop(context)) {
+            return;
+        }
         window.setWindowAnimations(R.style.BottomDialog);
         setContentView(view);
 
     }
     public void showAtLocation(){
-        if(!ActivityUtil.isActivityOnTop(context))return;
+        if(!ActivityUtil.isActivityOnTop(context)) {
+            return;
+        }
         show();
     }
 
@@ -123,7 +128,7 @@ public class MenuListDialog extends Dialog {
                 @Override
                 public void onClick(View v) {
                     if (listOnClick != null) {
-                        listOnClick.onclickitem(position + 1);
+                        listOnClick.onClickItem(position + 1);
                     }
                 }
             });

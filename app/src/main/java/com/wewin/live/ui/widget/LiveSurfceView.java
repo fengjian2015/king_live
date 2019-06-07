@@ -67,7 +67,7 @@ public class LiveSurfceView extends RelativeLayout implements LiveListener {
 
         addView(relativeLayout);
         LiveListenerManage.getInstance().registerLiveListener(this);
-        LogUtil.Log("走到了播放器的注册监听");
+        LogUtil.log("走到了播放器的注册监听");
 
     }
 
@@ -138,7 +138,9 @@ public class LiveSurfceView extends RelativeLayout implements LiveListener {
 
     @Override
     public void setError(String content) {
-        if (StringUtils.isEmpty(content)) return;
+        if (StringUtils.isEmpty(content)) {
+            return;
+        }
         mTvPrompt.setVisibility(VISIBLE);
         mTvPrompt.setText(content);
         mLlLoad.setVisibility(GONE);
@@ -183,7 +185,7 @@ public class LiveSurfceView extends RelativeLayout implements LiveListener {
     public void destroyDrawingCache() {
         super.destroyDrawingCache();
         LiveListenerManage.getInstance().unregisterLiveListener(this);
-        LogUtil.Log("走到了播放器的destroyDrawingCache");
+        LogUtil.log("走到了播放器的destroyDrawingCache");
     }
 }
 

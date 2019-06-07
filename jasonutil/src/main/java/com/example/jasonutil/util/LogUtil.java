@@ -8,15 +8,21 @@ import android.util.Log;
  * 日志管理
  */
 public class LogUtil {
-    public static final String Jason="jason-";
+    public static final String JASON="jason-";
     private static boolean isDebug=false;
-    public static void setIsDebug(boolean isdebug){
-        isDebug=isdebug;
+    public static void setIsDebug(boolean mIsDebug){
+        isDebug=mIsDebug;
     }
 
-    //打印日志
-    public static void Log(String clazzName, String s) {
-        if (!isDebug) return;
+    /**
+     * 打印日志
+     * @param clazzName
+     * @param s
+     */
+    public static void log(String clazzName, String s) {
+        if (!isDebug) {
+            return;
+        }
         String name = getFunctionName();
         if (name != null) {
             Log.e(clazzName, name + " - " + s);
@@ -25,37 +31,52 @@ public class LogUtil {
         }
     }
 
-    //打印日志
-    public static void Log(String s) {
-        if (!isDebug) return;
+    /**
+     * 打印日志
+     * @param s
+     */
+    public static void log(String s) {
+        if (!isDebug) {
+            return;
+        }
         String name = getFunctionName();
         if (name != null) {
-            Log.e(Jason, name + " - " + s);
+            Log.e(JASON, name + " - " + s);
         } else {
-            Log.e(Jason, s);
+            Log.e(JASON, s);
         }
     }
 
 
-    //打印日志
-    public static void SocketLog(String s) {
-        if (!isDebug) return;
+    /**
+     * 打印日志
+     * @param s
+     */
+    public static void socketLog(String s) {
+        if (!isDebug) {
+            return;
+        }
         String name = getFunctionName();
         if (name != null) {
-            Log.e(Jason+"Socket：", name + " - " + s);
+            Log.e(JASON+"Socket：", name + " - " + s);
         } else {
-            Log.e(Jason+"Socket：", s);
+            Log.e(JASON+"Socket：", s);
         }
     }
 
-    //打印日志
-    public static void UMLog(String s) {
-        if (!isDebug) return;
+    /**
+     * 打印日志
+     * @param s
+     */
+    public static void umlog(String s) {
+        if (!isDebug) {
+            return;
+        }
         String name = getFunctionName();
         if (name != null) {
-            Log.e(Jason+"UM：", name + " - " + s);
+            Log.e(JASON+"UM：", name + " - " + s);
         } else {
-            Log.e(Jason+"UM：", s);
+            Log.e(JASON+"UM：", s);
         }
     }
 
@@ -76,7 +97,7 @@ public class LogUtil {
             if (st.getClassName().equals(Thread.class.getName())) {
                 continue;
             }
-            if (st.getClassName().equals("com.example.jasonutil.util.LogUtil")) {
+            if ("com.example.jasonutil.util.LogUtil".equals(st.getClassName())) {
                 continue;
             }
             return "[ " + Thread.currentThread().getName() + ": "

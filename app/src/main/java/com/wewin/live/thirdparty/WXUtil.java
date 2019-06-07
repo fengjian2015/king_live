@@ -4,7 +4,10 @@ package com.wewin.live.thirdparty;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.HandlerThread;
 
+import com.sina.weibo.sdk.api.WeiboMultiMessage;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
@@ -55,8 +58,9 @@ public class WXUtil {
      * @return true 安装
      */
     public boolean isWeiXinAppInstall(Context context) {
-        if (wxapi == null)
+        if (wxapi == null) {
             wxapi = WXAPIFactory.createWXAPI(MyApp.getInstance(), Constants.WX_APP_ID);
+        }
         if (wxapi.isWXAppInstalled()) {
             return true;
         } else {
@@ -149,8 +153,13 @@ public class WXUtil {
      * @param type 类型
      */
     public void shareUrlToWx(final Context context, final String url, final String title, final String desc, final String imageUrl, final int type) {
-        if(!isWeiXinAppInstall(context))return;
-        new Thread(){
+        if(!isWeiXinAppInstall(context)) {
+            return;
+        }
+        HandlerThread workerThread = new HandlerThread("shareThread");
+        workerThread.start();
+        Handler mHandler = new Handler(workerThread.getLooper());
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 TYPE=SHARE;
@@ -171,7 +180,7 @@ public class WXUtil {
                 //调用api接口，发送数据到微信
                 wxapi.sendReq(req);
             }
-        }.start();
+        });
     }
 
     private String buildTransaction(final String type) {

@@ -44,7 +44,7 @@ public class MyApp extends Application {
         initCreateFile();
         initAli();
         initSmallViewLayout();
-        LogUtil.setIsDebug(Constants.isDebug);
+        LogUtil.setIsDebug(Constants.IS_DEBUG);
         //用于获取是否处于后台状态
         registerActivityLifecycleCallbacks(new MyLifecycleHandler());
         //初始化数据库

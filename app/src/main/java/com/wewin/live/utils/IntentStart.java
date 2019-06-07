@@ -149,7 +149,9 @@ public class IntentStart {
      * 拍摄视频
      */
     public static void takeVideo(final Activity context, final int request) {
-        if (!UtilTool.hasCamera(context)) return;
+        if (!UtilTool.hasCamera(context)) {
+            return;
+        }
         Rigger.on(context)
                 .permissions(Permission.CAMERA,Permission.WRITE_EXTERNAL_STORAGE)
                 .isShowDialog(true)

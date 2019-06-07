@@ -1,4 +1,4 @@
-package com.wewin.live.ui.Fragment;
+package com.wewin.live.ui.fragment;
 
 
 import android.view.View;
@@ -88,6 +88,8 @@ public class ReviewFragment extends BaseMainFragment {
             case R.id.iv_avatar:
                 //跳转侧栏
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.CUSTONM_SIDE));
+                break;
+            default:
                 break;
         }
     }

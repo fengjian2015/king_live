@@ -36,6 +36,8 @@ public class DBHelper extends SQLiteOpenHelper {
             case 1:
                 db.execSQL("ALTER TABLE "+UserInfoDao.TABLE_NAME +" ADD "+ UserInfoDao.JSON+" TEXT");
                 break;
+            default:
+                break;
         }
     }
 

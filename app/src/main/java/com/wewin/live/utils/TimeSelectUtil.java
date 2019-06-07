@@ -52,7 +52,9 @@ public class TimeSelectUtil {
     }
 
     public void setDefault(String date){
-        if(StringUtils.isEmpty(date))return;
+        if(StringUtils.isEmpty(date)) {
+            return;
+        }
         try {
             String[] split = date.split("-");
             y=options1Items.indexOf(split[0]);
@@ -77,7 +79,9 @@ public class TimeSelectUtil {
                         mDate= options1Items.get(options1)
                                 + "-" + options2Items.get(options1).get(options2)
                                 + "-" + options3Items.get(options1).get(options2).get(options3);
-                        if (mOnTimeReturnListener == null) return;
+                        if (mOnTimeReturnListener == null) {
+                            return;
+                        }
                         mOnTimeReturnListener.getTime(mDate);
                     }
                 })
@@ -178,7 +182,8 @@ public class TimeSelectUtil {
     }
 
     public void dismiss() {
-        if (pvOptions != null)
+        if (pvOptions != null) {
             pvOptions.dismiss();
+        }
     }
 }

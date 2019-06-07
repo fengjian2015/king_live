@@ -1,4 +1,4 @@
-package com.wewin.live.ui.Fragment;
+package com.wewin.live.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,7 +25,7 @@ import butterknife.InjectView;
  * @date 2019/2/28
  * 网页
  */
-public class HtmlFragment extends LazyFragment {
+public class HtmlFragment extends AbstractLazyFragment {
 
     @InjectView(R.id.html_webview)
     HtmlWebView htmlWebview;
@@ -44,8 +44,9 @@ public class HtmlFragment extends LazyFragment {
     @Override
     protected void lazyLoad() {
         init();
-        if (!EventBus.getDefault().isRegistered(this))
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
+        }
     }
 
     private void init() {
@@ -53,7 +54,7 @@ public class HtmlFragment extends LazyFragment {
         if (arguments != null) {
             html5Url = arguments.getString(BaseInfoConstants.URL);
             type=arguments.getString(BaseInfoConstants.TYPE);
-            LogUtil.Log("html:"+html5Url+"   type:"+type);
+            LogUtil.log("html:"+html5Url+"   type:"+type);
         }
         htmlWebview.setHtml5Url(html5Url);
         if(getString(R.string.home).equals(type)) {

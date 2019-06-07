@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by xingyun on 2016/7/19.
+ * @author jason
  * 分享弹窗，点击操作都在本内完成，通过eventBus通知
  */
 public class ShareDialog extends Dialog {
@@ -40,16 +40,16 @@ public class ShareDialog extends Dialog {
          * 0是最底下的取消按钮选项，1-n是从上往下的各个选项
          * @param position
          */
-        public void onclickitem(int position);
+         void onClickItem(int position);
     }
 
-    private GridView lv_menu;
+    private GridView lvMenu;
     /**
      * 取消按钮
      */
-    private Button button_common3;
+    private Button buttonCommon3;
     private ListOnClick listOnClick;
-    private LinearLayout quit_popupwindows_bg;
+    private LinearLayout quitPopupwindowsBg;
     private List<HashMap> menunames;
     private Activity context;
     private  MyMenuAdapter myMenuAdapter;
@@ -70,27 +70,29 @@ public class ShareDialog extends Dialog {
         //将设置好的属性set回去
         window.setAttributes(lp);
         window.setGravity(Gravity.BOTTOM);
-        if(!ActivityUtil.isActivityOnTop(context))return;
+        if(!ActivityUtil.isActivityOnTop(context)) {
+            return;
+        }
         window.setWindowAnimations(R.style.BottomDialog);
         setContentView(view);
 
     }
 
     private void initView(){
-        button_common3 = (Button) view.findViewById(R.id.button_common3);
-        quit_popupwindows_bg = (LinearLayout) view.findViewById(R.id.quit_popupwindows_bg);
-        lv_menu = (GridView) view.findViewById(R.id.lv_menu);
+        buttonCommon3 = (Button) view.findViewById(R.id.button_common3);
+        quitPopupwindowsBg = (LinearLayout) view.findViewById(R.id.quit_popupwindows_bg);
+        lvMenu = (GridView) view.findViewById(R.id.lv_menu);
         myMenuAdapter = new MyMenuAdapter();
-        lv_menu.setAdapter(myMenuAdapter);
+        lvMenu.setAdapter(myMenuAdapter);
 
-        button_common3.setOnClickListener(new View.OnClickListener() {
+        buttonCommon3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
             }
         });
 
-        quit_popupwindows_bg.setOnClickListener(new View.OnClickListener() {
+        quitPopupwindowsBg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
@@ -102,7 +104,9 @@ public class ShareDialog extends Dialog {
      * 显示
      */
     public ShareDialog showAtLocation(){
-        if(!ActivityUtil.isActivityOnTop(context))return this;
+        if(!ActivityUtil.isActivityOnTop(context)) {
+            return this;
+        }
         show();
 
         return this;
@@ -135,16 +139,16 @@ public class ShareDialog extends Dialog {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             View view = View.inflate(context, R.layout.item_share, null);
-            ImageView iv_head=view.findViewById(R.id.iv_head);
-            TextView tv_name=view.findViewById(R.id.tv_name);
-            GlideUtil.setCircleImg(context,(int)menunames.get(position).get(BaseInfoConstants.AVATAR),iv_head);
-            tv_name.setText(context.getResources().getString((int) menunames.get(position).get(BaseInfoConstants.NAME)) );
+            ImageView ivHead=view.findViewById(R.id.iv_head);
+            TextView tvName=view.findViewById(R.id.tv_name);
+            GlideUtil.setCircleImg(context,(int)menunames.get(position).get(BaseInfoConstants.AVATAR),ivHead);
+            tvName.setText(context.getResources().getString((int) menunames.get(position).get(BaseInfoConstants.NAME)) );
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dismiss();
                     if (listOnClick != null) {
-                        listOnClick.onclickitem(position);
+                        listOnClick.onClickItem(position);
                     }
                 }
             });

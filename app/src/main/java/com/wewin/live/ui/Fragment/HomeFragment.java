@@ -1,19 +1,14 @@
-package com.wewin.live.ui.Fragment;
+package com.wewin.live.ui.fragment;
 
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.os.Bundle;
-import android.support.annotation.UiThread;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.example.jasonutil.util.LogUtil;
 import com.example.jasonutil.util.ScreenTools;
 import com.example.jasonutil.util.ToastShow;
 import com.wewin.live.R;
@@ -69,7 +64,9 @@ public class HomeFragment extends BaseMainFragment {
      * 显示王者号弹窗
      */
     private void showKing() {
-        if (IntentStart.starLogin(getActivity())) return;
+        if (IntentStart.starLogin(getActivity())) {
+            return;
+        }
         new KingListDialog(getContext()).showAtLocation();
     }
 
@@ -77,7 +74,9 @@ public class HomeFragment extends BaseMainFragment {
      * 显示功能盘弹窗
      */
     private void shouFeatures() {
-        if (IntentStart.starLogin(getActivity())) return;
+        if (IntentStart.starLogin(getActivity())) {
+            return;
+        }
         new FeaturesListDialog(getActivity()).showAtLocation();
     }
 
@@ -112,6 +111,8 @@ public class HomeFragment extends BaseMainFragment {
             case R.id.iv_king:
                 //王者号下拉窗
                 showKing();
+                break;
+            default:
                 break;
         }
     }
@@ -148,12 +149,16 @@ public class HomeFragment extends BaseMainFragment {
     }
 
     private void hintSearch() {
-        if (isInAnim || llSearchOut.getHeight() < ScreenTools.dip2px(getActivity(), 60)) return;
+        if (isInAnim || llSearchOut.getHeight() < ScreenTools.dip2px(getActivity(), 60)) {
+            return;
+        }
         animHeightToView(llSearchOut, ScreenTools.dip2px(getActivity(), 60), 0, 300);
     }
 
     private void showSearch() {
-        if (isInAnim || llSearchOut.getHeight() != 0) return;
+        if (isInAnim || llSearchOut.getHeight() != 0) {
+            return;
+        }
         animHeightToView(llSearchOut, 0, ScreenTools.dip2px(getActivity(), 60), 300);
     }
 

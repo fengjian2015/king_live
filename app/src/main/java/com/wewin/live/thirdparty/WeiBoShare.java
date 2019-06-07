@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.HandlerThread;
 
 import com.example.jasonutil.util.UtilTool;
 import com.sina.weibo.sdk.api.ImageObject;
@@ -48,23 +50,34 @@ public class WeiBoShare {
     }
 
     public void doResultIntent(Intent intent){
-        if (wbShareHandler==null)return;
+        if (wbShareHandler==null) {
+            return;
+        }
         wbShareHandler.doResultIntent(intent,mWbShareCallback);
     }
 
 
     public void share(final Activity activity, final String title, final String desc, final String url, final String imageUrl){
-        if(!isSinaInstalled(activity))return;
-        new Thread(){
+        if(!isSinaInstalled(activity)) {
+            return;
+        }
+        HandlerThread workerThread = new HandlerThread("shareThread");
+        workerThread.start();
+        Handler mHandler = new Handler(workerThread.getLooper());
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
-                WeiboMultiMessage weiboMessage = new WeiboMultiMessage();//初始化微博的分享消息
-                weiboMessage.textObject = getTextObj(title,desc,url);//文本内容
-                weiboMessage.imageObject=getImageObj(activity,imageUrl);//图片
+                ////初始化微博的分享消息
+                WeiboMultiMessage weiboMessage = new WeiboMultiMessage();
+                //文本内容
+                weiboMessage.textObject = getTextObj(title,desc,url);
+                //图片
+                weiboMessage.imageObject=getImageObj(activity,imageUrl);
                 wbShareHandler.shareMessage(weiboMessage,false);
             }
-        }.start();
+        });
     }
+
 
     /**
      * 创建文本消息对象
@@ -114,12 +127,14 @@ public class WeiBoShare {
      * 判断是否安装新浪微博
      */
     public static boolean isSinaInstalled(Context context){
-        final PackageManager packageManager = context.getPackageManager();// 获取packagemanager
-        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);// 获取所有已安装程序的包信息
+        // 获取packagemanager
+        final PackageManager packageManager = context.getPackageManager();
+        // 获取所有已安装程序的包信息
+        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
         if (pinfo != null) {
             for (int i = 0; i < pinfo.size(); i++) {
                 String pn = pinfo.get(i).packageName;
-                if (pn.equals("com.sina.weibo")) {
+                if ("com.sina.weibo".equals(pn)) {
                     return true;
                 }
             }

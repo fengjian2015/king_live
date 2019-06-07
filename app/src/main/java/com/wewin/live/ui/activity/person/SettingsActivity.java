@@ -86,7 +86,7 @@ public class SettingsActivity extends BaseActivity {
         UiUtil.setOnOf(MySharedConstants.ON_OFF_Y, onOffY);
         UiUtil.setOnOf(MySharedConstants.ON_OFF_FOUR_G, onOffFourg);
         UiUtil.setOnOf(MySharedConstants.ON_OFF_LITTLE_WINDOW, onOffLittleWindow);
-        String fileSize = FileUtil.FormetFileSize(FileUtil.getFolderSize(new File(FileUtil.getStorageString(this))));
+        String fileSize = FileUtil.formetFileSize(FileUtil.getFolderSize(new File(FileUtil.getStorageString(this))));
         tvCach.setText(fileSize);
         setVersionView();
     }
@@ -150,6 +150,8 @@ public class SettingsActivity extends BaseActivity {
                 //检查更新
                 checkVersion();
                 break;
+            default:
+                break;
         }
     }
 
@@ -196,7 +198,7 @@ public class SettingsActivity extends BaseActivity {
      */
     private void checkVersion() {
         String newVersionName = MySharedPreferences.getInstance().getString(MySharedConstants.VERSION_NAME);
-        String apk_des = MySharedPreferences.getInstance().getString(MySharedConstants.APK_DES);
+        String apkDes = MySharedPreferences.getInstance().getString(MySharedConstants.APK_DES);
         //如果是最新版本则忽略
         if (StringUtils.isEmpty(newVersionName) || UtilTool.getVersionName(SettingsActivity.this).equals(newVersionName)) {
             ToastShow.showToast2(this, getString(R.string.already_new_version));
@@ -211,7 +213,7 @@ public class SettingsActivity extends BaseActivity {
         new ConfirmCancelDialog(this)
                 .setTvTitle(getString(R.string.new_now_version) + newVersionName)
                 .setBtnConfirm(getString(R.string.start_down))
-                .setTvContent(apk_des)
+                .setTvContent(apkDes)
                 .setOnClickListener(new ConfirmCancelDialog.OnClickListener() {
                     @Override
                     public void onClick() {
@@ -257,7 +259,9 @@ public class SettingsActivity extends BaseActivity {
         if (mConfirmDialog == null) {
             mConfirmDialog = new ConfirmDialog(SettingsActivity.this);
         }
-        if (mConfirmDialog.isShowing()) return;
+        if (mConfirmDialog.isShowing()) {
+            return;
+        }
         mConfirmDialog.showDialog().setTvTitle(getString(R.string.start_down));
         MessageEvent messageEvent = new MessageEvent(MessageEvent.START_UPDATA_APK);
         messageEvent.setDownloadCallback(mDownloadCallback);
@@ -306,16 +310,18 @@ public class SettingsActivity extends BaseActivity {
         public void onProgress(int progress) {
             if (!ActivityUtil.isActivityOnTop(SettingsActivity.this)
                     || mConfirmDialog == null
-                    || !mConfirmDialog.isShowing())
+                    || !mConfirmDialog.isShowing()) {
                 return;
+            }
             mConfirmDialog.setTvTitle(progress + "%");
         }
 
         @Override
         public void onComplete(File file) {
             if (!ActivityUtil.isActivityOnTop(SettingsActivity.this)
-                    || mConfirmDialog == null)
+                    || mConfirmDialog == null) {
                 return;
+            }
             mConfirmDialog.dismiss();
         }
 
@@ -323,8 +329,9 @@ public class SettingsActivity extends BaseActivity {
         public void onFail(String msg) {
             if (!ActivityUtil.isActivityOnTop(SettingsActivity.this)
                     || mConfirmDialog == null
-                    || !mConfirmDialog.isShowing())
+                    || !mConfirmDialog.isShowing()) {
                 return;
+            }
             mConfirmDialog.setTvTitle(msg);
         }
     };

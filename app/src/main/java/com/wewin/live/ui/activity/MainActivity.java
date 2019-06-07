@@ -6,6 +6,7 @@ import com.example.jasonutil.util.MySharedPreferences;
 import com.example.jasonutil.util.StringUtils;
 import com.example.jasonutil.util.UtilTool;
 import com.wewin.live.base.BaseMainAcitvity;
+import com.wewin.live.modle.BaseInfoConstants;
 import com.wewin.live.newtwork.OnSuccess;
 import com.wewin.live.presenter.PersenterLogin;
 import com.wewin.live.presenter.PersenterPersonal;
@@ -44,7 +45,7 @@ public class MainActivity extends BaseMainAcitvity {
     public void onResume() {
         super.onResume();
         //获取用户信息配置
-        PersenterPersonal.getInstance().getBaseInfo(new OnSuccess(this, new OnSuccess.OnSuccessListener() {
+        PersenterPersonal.getInstance().getBaseInfo(MySharedPreferences.getInstance().getString(BaseInfoConstants.DEVICE_TOKEN),new OnSuccess(this, new OnSuccess.OnSuccessListener() {
             @Override
             public void onSuccess(Object content) {
                 if(SignOutUtil.getIsLogin()){

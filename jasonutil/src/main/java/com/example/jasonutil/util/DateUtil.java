@@ -60,6 +60,8 @@ public class DateUtil {
                 return 30;
             case 2:
                 return day;
+            default:
+                break;
         }
         return 0;
     }

@@ -33,7 +33,9 @@ public class LiveListenerManage {
     }
 
     public void unregisterLiveListener(LiveListener listener) {
-        if(listener==null)return;
+        if(listener==null) {
+            return;
+        }
         synchronized (listeners) {
             if(listeners.contains(listener)) {
                 listeners.remove(listener);

@@ -1,8 +1,10 @@
 package com.wewin.live.base;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -24,7 +26,6 @@ import com.example.jasonutil.permission.Rigger;
 import com.example.jasonutil.util.ActivityManage;
 import com.example.jasonutil.util.ActivityUtil;
 import com.example.jasonutil.util.FileUtil;
-import com.example.jasonutil.util.MyLifecycleHandler;
 import com.example.jasonutil.util.MySharedPreferences;
 import com.example.jasonutil.util.ScreenTools;
 import com.example.jasonutil.util.StringUtils;
@@ -33,9 +34,14 @@ import com.example.jasonutil.util.UtilTool;
 import com.umeng.analytics.MobclickAgent;
 import com.wewin.live.R;
 import com.wewin.live.db.UserInfoDao;
+import com.wewin.live.modle.BaseInfoConstants;
 import com.wewin.live.modle.UserInfo;
-import com.wewin.live.ui.Fragment.HomeFragment;
-import com.wewin.live.ui.Fragment.LiveFragment;
+import com.wewin.live.newtwork.OnSuccess;
+import com.wewin.live.presenter.PersenterLogin;
+import com.wewin.live.ui.activity.HtmlActivity;
+import com.wewin.live.ui.activity.SearchActivity;
+import com.wewin.live.ui.fragment.HomeFragment;
+import com.wewin.live.ui.fragment.LiveFragment;
 import com.wewin.live.ui.activity.person.AboutActivity;
 import com.wewin.live.ui.activity.person.AccountSettingsActivity;
 import com.wewin.live.ui.activity.person.AssetRecordActivity;
@@ -48,6 +54,7 @@ import com.wewin.live.ui.activity.person.TaskCenterActivity;
 import com.wewin.live.ui.adapter.HomeMainAdapter;
 import com.wewin.live.ui.widget.CustomSideMenu;
 import com.wewin.live.ui.widget.NoScrollViewPager;
+import com.wewin.live.utils.Constants;
 import com.wewin.live.utils.GlideUtil;
 import com.wewin.live.utils.IntentStart;
 import com.wewin.live.utils.MessageEvent;
@@ -63,8 +70,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -133,6 +138,7 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
         //再调用父类之前设置，不然会开启后再关闭
         MySharedPreferences.getInstance().setBoolean(MySharedConstants.ON_OFF_SHOW_WINDOW, false);
         super.onCreate(savedInstanceState);
+        setBarTranslucent();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.home_red));
         }
@@ -144,8 +150,9 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         init();
-        if (!EventBus.getDefault().isRegistered(this))
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
+        }
         NotificationUtil.clearNotification(this);
     }
 
@@ -161,6 +168,18 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
         initData();
         loginOrOut();
         setVersionView();
+    }
+
+    private void setBarTranslucent(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            getWindow().getDecorView().setSystemUiVisibility(option);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
     }
 
     /**
@@ -234,8 +253,7 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
      * 设置状态栏高度
      */
     public void setBar() {
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             View rootView = findViewById(R.id.main_root);
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) rootView.getLayoutParams();
             layoutParams.height = ScreenTools.getStateBar3(this);
@@ -315,7 +333,7 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
     }
 
     @OnClick({R.id.rl_setting, R.id.rl_task_center, R.id.rl_fund_record, R.id.rl_personal, R.id.rl_account_settings, R.id.rl_release_record, R.id.rl_sign_out
-            ,R.id.tv_get_gem,R.id.rl_change_phone,R.id.rl_suggestion_feedback,R.id.rl_check_updata,R.id.rl_about_me,R.id.iv_avatar})
+            ,R.id.tv_get_gem,R.id.rl_change_phone,R.id.rl_suggestion_feedback,R.id.rl_check_updata,R.id.rl_about_me,R.id.iv_avatar,R.id.rl_quiz})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rl_setting:
@@ -383,7 +401,15 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
                 IntentStart.starLogin(BaseMainAcitvity.this, AccountSettingsActivity.class);
                 mCustomSideMenu.sideMenuScrollNoDuration(false);
                 break;
-
+            case R.id.rl_quiz:
+                //我的竞猜
+                Bundle bundle=new Bundle();
+                bundle.putString(BaseInfoConstants.URL,Constants.USER_BETTING);
+                IntentStart.starLogin(BaseMainAcitvity.this, HtmlActivity.class,bundle);
+                mCustomSideMenu.sideMenuScrollNoDuration(false);
+                break;
+            default:
+                break;
         }
     }
 
@@ -404,14 +430,16 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
      * 退出弹窗
      */
     private void showSignOut() {
-        if (IntentStart.starLogin(this)) return;
+        if (IntentStart.starLogin(this)) {
+            return;
+        }
         new ConfirmCancelDialog(this)
                 .showDialog()
                 .setTvTitle(getString(R.string.ok_to_log_out))
                 .setOnClickListener(new ConfirmCancelDialog.OnClickListener() {
                     @Override
                     public void onClick() {
-                        SignOutUtil.signOut();
+                        PersenterLogin.getInstance().userLogout(new OnSuccess(BaseMainAcitvity.this));
                     }
 
                     @Override
@@ -429,7 +457,9 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if(!mCustomSideMenu.getIsClose()){
-                mCustomSideMenu.sideMenuScroll(false);
+                if (!mCustomSideMenu.isBeingClose()) {
+                    mCustomSideMenu.sideMenuScroll(false);
+                }
                 return false;
             }
             exitBy2Click();      //调用双击退出函数
@@ -441,18 +471,17 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
      * 返回键控制
      */
     private void exitBy2Click() {
-        Timer tExit = null;
         if (isExit == false) {
-            isExit = true; // 准备退出
+            // 准备退出
+            isExit = true;
             ToastShow.showToast2(this, getString(R.string.click_exit));
-            tExit = new Timer();
-            tExit.schedule(new TimerTask() {
+            new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    isExit = false; // 取消退出
+                    // 取消退出
+                    isExit = false;
                 }
-            }, 3000); // 如果2秒钟内没有按下返回键，则启动定时器取消掉刚才执行的任务
-
+            },3000);
         } else {
             try {
                 Intent home = new Intent(Intent.ACTION_MAIN);
@@ -475,7 +504,7 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
             return;
         }
         String newVersionName = MySharedPreferences.getInstance().getString(MySharedConstants.VERSION_NAME);
-        String apk_des = MySharedPreferences.getInstance().getString(MySharedConstants.APK_DES);
+        String apkDes = MySharedPreferences.getInstance().getString(MySharedConstants.APK_DES);
         //如果是最新版本则忽略
         if (StringUtils.isEmpty(newVersionName) || UtilTool.getVersionName(this).equals(newVersionName)) {
             ToastShow.showToast2(this, getString(R.string.already_new_version));
@@ -484,14 +513,12 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
         //判断当前版本apk是否存在，存在则直接安装
         File file = new File(FileUtil.getApkLoc(this), FileUtil.getAPKFileName(newVersionName));
         if (file.exists()) {
-//            UtilTool.install(this, file);
-//            return;
             file.delete();
         }
         new ConfirmCancelDialog(this)
                 .setTvTitle(getString(R.string.new_now_version) + newVersionName)
                 .setBtnConfirm(getString(R.string.start_down))
-                .setTvContent(apk_des)
+                .setTvContent(apkDes)
                 .setOnClickListener(new ConfirmCancelDialog.OnClickListener() {
                     @Override
                     public void onClick() {
@@ -541,7 +568,9 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
         if (mConfirmDialog == null) {
             mConfirmDialog = new ConfirmDialog(BaseMainAcitvity.this);
         }
-        if (mConfirmDialog.isShowing()) return;
+        if (mConfirmDialog.isShowing()) {
+            return;
+        }
         mConfirmDialog.showDialog().setTvTitle(getString(R.string.start_down));
         MessageEvent messageEvent = new MessageEvent(MessageEvent.START_UPDATA_APK);
         messageEvent.setDownloadCallback(mDownloadCallback);
@@ -565,8 +594,9 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
             isDownload=true;
             if (!ActivityUtil.isActivityOnTop(BaseMainAcitvity.this)
                     || mConfirmDialog == null
-                    || !mConfirmDialog.isShowing())
+                    || !mConfirmDialog.isShowing()) {
                 return;
+            }
             mConfirmDialog.setTvTitle(progress + "%");
         }
 
@@ -574,8 +604,9 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
         public void onComplete(File file) {
             isDownload=false;
             if (!ActivityUtil.isActivityOnTop(BaseMainAcitvity.this)
-                    || mConfirmDialog == null)
+                    || mConfirmDialog == null) {
                 return;
+            }
             mConfirmDialog.dismiss();
         }
 
@@ -584,8 +615,9 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
             isDownload=false;
             if (!ActivityUtil.isActivityOnTop(BaseMainAcitvity.this)
                     || mConfirmDialog == null
-                    || !mConfirmDialog.isShowing())
+                    || !mConfirmDialog.isShowing()) {
                 return;
+            }
             mConfirmDialog.setTvTitle(msg);
         }
     };
@@ -594,27 +626,18 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
     @Override
     public void onResume() {
         super.onResume();
-        //如果是可显示状态改成显示
-        if (MySharedPreferences.getInstance().getBoolean(MySharedConstants.ON_OFF_SHOW_WINDOW)) {
-            alertWindow();
-        }
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (!MyLifecycleHandler.isApplicationVisible()) {
-            dismissWindow(false);
+        if (isFinishing()){
+            //设置小窗口不显示，当前界面销毁
+            dismissWindow(true);
+            ActivityManage.removeActivity(this);
+            EventBus.getDefault().unregister(this);
+            UtilTool.clearWeb();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        //设置小窗口不显示，当前界面销毁
-        dismissWindow(true);
-        ActivityManage.removeActivity(this);
-        EventBus.getDefault().unregister(this);
-        UtilTool.clearWeb();
-        super.onDestroy();
     }
 }

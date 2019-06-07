@@ -45,4 +45,13 @@ public class PersenterCommon {
         onSuccess.setInfoType(OnSuccess.BASEMAPINFO2)
                 .sendHttp(onSuccess.getMyServer().getHotKeywords(10),false);
     }
+
+    /**
+     * 竞猜
+     * @param onSuccess
+     */
+    public void userQuiz(String amount,String quizId,String tabId,final OnSuccess onSuccess) {
+        onSuccess.setInfoType(OnSuccess.BASEMAPINFO)
+                .sendHttp(onSuccess.getMyServer().userQuiz(SignOutUtil.getUserId(),amount,quizId,tabId));
+    }
 }

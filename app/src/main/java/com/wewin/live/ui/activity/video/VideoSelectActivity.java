@@ -45,6 +45,8 @@ public class VideoSelectActivity extends BaseActivity {
             case R.id.ll_take:
                 IntentStart.takeVideo(VideoSelectActivity.this, REQUEST_CODE_CAMERA);
                 break;
+            default:
+                break;
         }
     }
 
@@ -78,6 +80,8 @@ public class VideoSelectActivity extends BaseActivity {
                         cursor.close();
                         goDetails(newPath);
                     }
+                    break;
+                default:
                     break;
             }
         }

@@ -5,8 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 
 import com.example.jasonutil.util.LogUtil;
+import com.example.jasonutil.util.MyLifecycleHandler;
+import com.example.jasonutil.util.MySharedPreferences;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
+import com.wewin.live.utils.MySharedConstants;
 
 
 /**
@@ -21,13 +24,16 @@ public class BaseLiveActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        alertWindow();
         PushAgent.getInstance(this).onAppStart();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        //如果是可显示状态改成显示
+        if (MySharedPreferences.getInstance().getBoolean(MySharedConstants.ON_OFF_SHOW_WINDOW)) {
+            MyApp.getInstance().mSmallViewLayout.alertWindow();
+        }
         MobclickAgent.onPageStart(getClass().getSimpleName());
         MobclickAgent.onResume(this);
     }
@@ -38,9 +44,6 @@ public class BaseLiveActivity extends AppCompatActivity {
         MobclickAgent.onPause(this);
     }
 
-    public void alertWindow() {
-        MyApp.getInstance().mSmallViewLayout.alertWindow(this);
-    }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
@@ -48,7 +51,9 @@ public class BaseLiveActivity extends AppCompatActivity {
             isRange = calcPointRange(event);
         }
         if (isRange) {
-            if(MyApp.getInstance().mSmallViewLayout.getWindowView()==null)super.dispatchTouchEvent(event);
+            if(MyApp.getInstance().mSmallViewLayout.getWindowView()==null) {
+                super.dispatchTouchEvent(event);
+            }
             MyApp.getInstance().mSmallViewLayout.getWindowView().dispatchTouchEvent(event);
             return true;
         }
@@ -62,7 +67,9 @@ public class BaseLiveActivity extends AppCompatActivity {
      * @return
      */
     public boolean calcPointRange(MotionEvent event) {
-        if(MyApp.getInstance().mSmallViewLayout.getWindowView()==null)return false;
+        if(MyApp.getInstance().mSmallViewLayout.getWindowView()==null) {
+            return false;
+        }
         MyApp.getInstance().mSmallViewLayout.getWindowView().getLocationOnScreen(location);
         int width = MyApp.getInstance().mSmallViewLayout.getWindowView().getMeasuredWidth();
         int height = MyApp.getInstance().mSmallViewLayout.getWindowView().getMeasuredHeight();
@@ -74,7 +81,13 @@ public class BaseLiveActivity extends AppCompatActivity {
         return false;
     }
 
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (!MyLifecycleHandler.isApplicationVisible()) {
+            dismissWindow(false);
+        }
+    }
 
     // 移除window
     public void dismissWindow(boolean isDestroyLive) {

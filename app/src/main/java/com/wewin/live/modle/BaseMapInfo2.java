@@ -61,7 +61,9 @@ public class BaseMapInfo2 {
      */
     public static boolean getSuccess(BaseMapInfo2 map){
         try {
-            if(map==null)return false;
+            if(map==null) {
+                return false;
+            }
             if("200".equals(map.status)){
                 return true;
             }else{
@@ -80,7 +82,9 @@ public class BaseMapInfo2 {
      */
     public static boolean isTokenInvalid(BaseMapInfo2 map){
         try {
-            if(map==null)return false;
+            if(map==null) {
+                return false;
+            }
             if("201".equals(map.status)){
                 return true;
             }else{
@@ -99,7 +103,9 @@ public class BaseMapInfo2 {
      */
     public static String getMsg(BaseMapInfo2 map){
         try {
-            if(map==null)return "数据异常";
+            if(map==null) {
+                return "数据异常";
+            }
             return map.message;
         }catch (Exception e){
             e.printStackTrace();

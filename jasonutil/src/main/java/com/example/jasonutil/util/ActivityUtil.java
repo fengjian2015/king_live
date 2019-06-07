@@ -60,9 +60,9 @@ public class ActivityUtil {
 		ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
 		List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(100);
 		boolean isAppRunning = false;
-		String MY_PKG_NAME = context.getPackageName();
+		String pkgName = context.getPackageName();
 		for (ActivityManager.RunningTaskInfo info : list) {
-			if (info.topActivity.getPackageName().equals(MY_PKG_NAME) || info.baseActivity.getPackageName().equals(MY_PKG_NAME)) {
+			if (info.topActivity.getPackageName().equals(pkgName) || info.baseActivity.getPackageName().equals(pkgName)) {
 				isAppRunning = true;
 				break;
 			}

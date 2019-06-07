@@ -51,7 +51,7 @@ public class ExtendedWebView extends WebView {
     public void initWebView() {
         webJsPrompt=new WebJsPrompt(mContext);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setWebContentsDebuggingEnabled(Constants.isDebug);
+            setWebContentsDebuggingEnabled(Constants.IS_DEBUG);
         }
         //用于H5工程师区分移动端和PC端
 //        getSettings().setUserAgentString(getSettings().getUserAgentString() + "zhibo18.app/Android:"+UtilTool.getVersionName(mContext));
@@ -82,7 +82,7 @@ public class ExtendedWebView extends WebView {
         setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                LogUtil.Log("网页链接：" + url);
+                LogUtil.log("网页链接：" + url);
                 isError = false;
                 return super.shouldOverrideUrlLoading(view, url);
             }
@@ -90,8 +90,9 @@ public class ExtendedWebView extends WebView {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                if (mOnWebViewListeren != null)
+                if (mOnWebViewListeren != null) {
                     mOnWebViewListeren.onPageFinished(url);
+                }
             }
 
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -108,7 +109,9 @@ public class ExtendedWebView extends WebView {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) return;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    return;
+                }
                 if (mOnWebViewListeren != null) {
                     isError = true;
                     mOnWebViewListeren.onError();
@@ -130,16 +133,19 @@ public class ExtendedWebView extends WebView {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                if (mOnWebViewListeren != null)
+                if (mOnWebViewListeren != null) {
                     mOnWebViewListeren.onPageStarted();
+                }
             }
 
 
         });
         setWebChromeClient(new WebChromeClient() {
+            @Override
             public void onProgressChanged(WebView view, int progress) {
-                if (mOnWebViewListeren != null)
+                if (mOnWebViewListeren != null) {
                     mOnWebViewListeren.onProgressChanged(progress);
+                }
             }
 
             @Override
@@ -152,12 +158,14 @@ public class ExtendedWebView extends WebView {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                     if (title.contains("502 Bad Gateway") || title.contains("异常捕获")) {
                         //报错
-                        if (mOnWebViewListeren != null)
+                        if (mOnWebViewListeren != null) {
                             mOnWebViewListeren.onError();
+                        }
                     }
                 }
-                if (mOnWebViewListeren != null)
+                if (mOnWebViewListeren != null) {
                     mOnWebViewListeren.onReceivedTitle(title);
+                }
             }
 
             @Override

@@ -1,4 +1,4 @@
-package com.wewin.live.ui.Fragment;
+package com.wewin.live.ui.fragment;
 
 import com.wewin.live.R;
 import com.wewin.live.base.BaseMainFragment;

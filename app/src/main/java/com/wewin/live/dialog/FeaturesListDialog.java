@@ -15,27 +15,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.jasonutil.dialog.ConfirmCancelDialog;
-import com.example.jasonutil.permission.Permission;
-import com.example.jasonutil.permission.PermissionCallback;
-import com.example.jasonutil.permission.Rigger;
 import com.example.jasonutil.util.ActivityUtil;
 import com.example.jasonutil.util.AnimatorTool;
 import com.example.jasonutil.util.DateUtil;
-import com.example.jasonutil.util.LogUtil;
-import com.example.jasonutil.util.ToastShow;
 import com.wewin.live.R;
 import com.wewin.live.db.UserInfoDao;
 import com.wewin.live.modle.BaseInfoConstants;
-import com.wewin.live.newtwork.OnSuccess;
-import com.wewin.live.presenter.PersenterPersonal;
-import com.wewin.live.ui.activity.Live.LiveConfigActivity;
-import com.wewin.live.ui.activity.Live.LiveStartActivity;
-import com.wewin.live.ui.activity.Live.VideoDetailsActivity;
+import com.wewin.live.ui.activity.live.LiveConfigActivity;
+import com.wewin.live.ui.activity.live.VideoDetailsActivity;
 import com.wewin.live.ui.activity.person.TaskCenterActivity;
 import com.wewin.live.ui.activity.video.VideoSelectActivity;
 import com.wewin.live.utils.IntentStart;
-
-import java.util.HashMap;
 
 /**
  * @author jsaon
@@ -45,15 +35,15 @@ import java.util.HashMap;
 public class FeaturesListDialog extends Dialog implements View.OnClickListener {
     private Activity context;
 
-    private TextView tv_day;
+    private TextView tvDay;
     private TextView week;
-    private TextView tv_year_month;
-    private LinearLayout ll_live;
-    private LinearLayout ll_video;
-    private LinearLayout ll_dynamic;
-    private LinearLayout ll_check_in;
-    private ImageView iv_finish;
-    private RelativeLayout rl_finish;
+    private TextView tvYearMonth;
+    private LinearLayout llLive;
+    private LinearLayout llVideo;
+    private LinearLayout llDynamic;
+    private LinearLayout llCheckIn;
+    private ImageView ivFinish;
+    private RelativeLayout rlFinish;
     //判断权限有几个已申请
 
     public FeaturesListDialog(Activity context) {
@@ -71,38 +61,42 @@ public class FeaturesListDialog extends Dialog implements View.OnClickListener {
         //将设置好的属性set回去
         window.setAttributes(lp);
         window.setGravity(Gravity.BOTTOM);
-        if (!ActivityUtil.isActivityOnTop(context)) return;
+        if (!ActivityUtil.isActivityOnTop(context)) {
+            return;
+        }
         window.setWindowAnimations(R.style.BottomDialog);
         setContentView(view);
 
     }
 
     private void initView(View view) {
-        tv_day = view.findViewById(R.id.tv_day);
+        tvDay = view.findViewById(R.id.tv_day);
         week = view.findViewById(R.id.week);
-        tv_year_month = view.findViewById(R.id.tv_year_month);
-        ll_live = view.findViewById(R.id.ll_live);
-        ll_video = view.findViewById(R.id.ll_video);
-        ll_dynamic = view.findViewById(R.id.ll_dynamic);
-        ll_check_in = view.findViewById(R.id.ll_check_in);
-        iv_finish = view.findViewById(R.id.iv_finish);
-        rl_finish = view.findViewById(R.id.rl_finish);
-        ll_live.setOnClickListener(this);
-        ll_video.setOnClickListener(this);
-        ll_dynamic.setOnClickListener(this);
-        ll_check_in.setOnClickListener(this);
+        tvYearMonth = view.findViewById(R.id.tv_year_month);
+        llLive = view.findViewById(R.id.ll_live);
+        llVideo = view.findViewById(R.id.ll_video);
+        llDynamic = view.findViewById(R.id.ll_dynamic);
+        llCheckIn = view.findViewById(R.id.ll_check_in);
+        ivFinish = view.findViewById(R.id.iv_finish);
+        rlFinish = view.findViewById(R.id.rl_finish);
+        llLive.setOnClickListener(this);
+        llVideo.setOnClickListener(this);
+        llDynamic.setOnClickListener(this);
+        llCheckIn.setOnClickListener(this);
 
-        iv_finish.setOnClickListener(this);
-        rl_finish.setOnClickListener(this);
+        ivFinish.setOnClickListener(this);
+        rlFinish.setOnClickListener(this);
 
-        tv_day.setText(DateUtil.getDay());
+        tvDay.setText(DateUtil.getDay());
         week.setText(DateUtil.getWeek());
-        tv_year_month.setText(DateUtil.getMonth() + "/" + DateUtil.getYear());
+        tvYearMonth.setText(DateUtil.getMonth() + "/" + DateUtil.getYear());
 
     }
 
     public void showAtLocation() {
-        if (!ActivityUtil.isActivityOnTop(context)) return;
+        if (!ActivityUtil.isActivityOnTop(context)) {
+            return;
+        }
         show();
         mHandler.sendEmptyMessageDelayed(1, 200);
         mHandler.sendEmptyMessageDelayed(2, 300);
@@ -115,16 +109,18 @@ public class FeaturesListDialog extends Dialog implements View.OnClickListener {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-                    AnimatorTool.getInstance().viewAnimator(ll_live);
+                    AnimatorTool.getInstance().viewAnimator(llLive);
                     break;
                 case 2:
-                    AnimatorTool.getInstance().viewAnimator(ll_video);
+                    AnimatorTool.getInstance().viewAnimator(llVideo);
                     break;
                 case 3:
-                    AnimatorTool.getInstance().viewAnimator(ll_dynamic);
+                    AnimatorTool.getInstance().viewAnimator(llDynamic);
                     break;
                 case 4:
-                    AnimatorTool.getInstance().viewAnimator(ll_check_in);
+                    AnimatorTool.getInstance().viewAnimator(llCheckIn);
+                    break;
+                default:
                     break;
             }
 
@@ -159,6 +155,8 @@ public class FeaturesListDialog extends Dialog implements View.OnClickListener {
             case R.id.ll_check_in:
                 dismiss();
                 IntentStart.starLogin(context, TaskCenterActivity.class);
+                break;
+            default:
                 break;
         }
     }

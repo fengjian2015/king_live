@@ -143,10 +143,10 @@ public class OnSuccessAndFaultSub extends DisposableObserver<ResponseBody> imple
         String result = "";
         try {
             result = UtilTool.decompress(body.byteStream());
-            LogUtil.Log(result);
+            LogUtil.log(result);
             mOnSuccessAndFaultListener.onSuccess(result);
         } catch (Exception e) {
-            LogUtil.Log("数据异常：" + result);
+            LogUtil.log("数据异常：" + result);
             mOnSuccessAndFaultListener.onFault("数据异常");
         }
     }

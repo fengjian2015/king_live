@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/d300dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ft_white_bt6"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/d10dp"
+    >
+
+
+   <TextView
+       android:layout_width="match_parent"
+       android:layout_height="@dimen/d40dp"
+       android:background="@drawable/ft_red_bt7"
+       style="@style/TextWhiteStyle18sp"
+       android:text="@string/bet_amount"
+       android:gravity="center"
+       />
+    <GridView
+        android:id="@+id/gv_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="3"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="@dimen/d10dp"
+        android:paddingRight="@dimen/d10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/d10dp"
+        android:paddingRight="@dimen/d10dp"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            style="@style/TextBlackStyle14sp"
+            android:gravity="center"
+            android:text="@string/bet_amount"
+            android:layout_marginRight="@dimen/d10dp"/>
+        <EditText
+            android:id="@+id/et_amount"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            style="@style/TextBlackStyle14sp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:singleLine="true"
+            android:inputType="number"
+            android:background="@drawable/dialog_amount_bg"/>
+    </LinearLayout>
+    <GridView
+        android:id="@+id/gv_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="3"
+        android:visibility="gone"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="@dimen/d10dp"
+        android:paddingRight="@dimen/d10dp"/>
+
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@drawable/ft_red_circle"
+        style="@style/TextWhiteStyle14sp"
+        android:layout_marginTop="@dimen/d10dp"
+        android:layout_marginRight="70dp"
+        android:layout_marginLeft="@dimen/d70dp"
+        android:text="@string/betting"/>
+
+</LinearLayout>

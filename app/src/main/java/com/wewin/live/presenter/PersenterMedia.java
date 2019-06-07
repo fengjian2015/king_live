@@ -62,7 +62,7 @@ public class PersenterMedia {
                 new ProgressRequestBody.UploadProgressListener() {
                     @Override
                     public void onProgress(long currentBytesCount, long totalBytesCount) {
-                        LogUtil.Log("当前："+currentBytesCount+"   总长度："+totalBytesCount);
+                        LogUtil.log("当前："+currentBytesCount+"   总长度："+totalBytesCount);
                     }
                 }));
 
@@ -111,9 +111,9 @@ public class PersenterMedia {
                         mCoinMapList.clear();
                         mCoinList.clear();
 
-                        Map map_info = BaseMapInfo.getInfo((BaseMapInfo) content).get(0);
+                        Map mapInfo = BaseMapInfo.getInfo((BaseMapInfo) content).get(0);
                         //房间类型
-                        List<ArrayList> roomList =  JSONArray.parseArray(map_info.get(BaseInfoConstants.LIVE_TYPE) + "", ArrayList.class);
+                        List<ArrayList> roomList =  JSONArray.parseArray(mapInfo.get(BaseInfoConstants.LIVE_TYPE) + "", ArrayList.class);
                         for (int i=0;i<roomList.size();i++) {
                             ArrayList<String> list=roomList.get(i);
                             HashMap roomMap=new HashMap();
@@ -122,7 +122,7 @@ public class PersenterMedia {
                             mRoomMapList.add(roomMap);
                         }
                         //直播类型
-                        List<Map> liveList =  JSONArray.parseArray(map_info.get(BaseInfoConstants.ZHIBO_TYPE) + "", Map.class);
+                        List<Map> liveList =  JSONArray.parseArray(mapInfo.get(BaseInfoConstants.ZHIBO_TYPE) + "", Map.class);
                         for (int i=0;i<liveList.size();i++) {
                             Map liveMap=liveList.get(i);
                             liveMap.put(BaseInfoConstants.CONTENT,liveMap.get(BaseInfoConstants.CATEGORY));
@@ -133,9 +133,9 @@ public class PersenterMedia {
                             mCoinList.add((ArrayList) subCategoriesList);
                         }
                         //计费列表
-                        List<String> timeCoinList =  JSONArray.parseArray(map_info.get(BaseInfoConstants.LIVE_TIME_COIN) + "", String.class);
+                        List<String> timeCoinList =  JSONArray.parseArray(mapInfo.get(BaseInfoConstants.LIVE_TIME_COIN) + "", String.class);
                         for (int i=0;i<timeCoinList.size();i++) {
-                            HashMap timeCoinMap=new HashMap();
+                            HashMap timeCoinMap=new HashMap(16);
                             timeCoinMap.put(BaseInfoConstants.CONTENT,timeCoinList.get(i)+onSuccess.getContext().getString(R.string.time_coin));
                             timeCoinMap.put(BaseInfoConstants.ID,timeCoinList.get(i));
                             mTimeCoinMapList.add(timeCoinMap);
@@ -152,7 +152,9 @@ public class PersenterMedia {
      * @param onSuccess
      */
     public void createLive(Map hashMap,final OnSuccess onSuccess) {
-        if(hashMap==null)return;
+        if(hashMap==null) {
+            return;
+        }
         onSuccess.sendHttp(onSuccess.getMyServer().createLive(UtilTool.parseInt(SignOutUtil.getUserId()),SignOutUtil.getToken()
                 ,hashMap.get(BaseInfoConstants.TITLE)+"",UtilTool.parseInt(hashMap.get(BaseInfoConstants.TYPE)+""),hashMap.get(BaseInfoConstants.TYPE_VAL)+""
                 ,UtilTool.parseInt(hashMap.get(BaseInfoConstants.ZBTYPE)+""),hashMap.get(BaseInfoConstants.ZBTYPE_DETAIL)+""));

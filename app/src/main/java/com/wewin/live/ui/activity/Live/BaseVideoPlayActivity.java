@@ -1,4 +1,4 @@
-package com.wewin.live.ui.activity.Live;
+package com.wewin.live.ui.activity.live;
 
 import android.animation.ValueAnimator;
 import android.os.Bundle;
@@ -20,8 +20,12 @@ import com.example.jasonutil.util.UtilTool;
 import com.wewin.live.R;
 import com.wewin.live.aliyun.LiveManage;
 import com.wewin.live.base.BaseActivity;
+import com.wewin.live.listanim.DefaultAnimation3;
+import com.wewin.live.listanim.GiftAnimationLayout;
+import com.wewin.live.listanim.GiftController;
 import com.wewin.live.modle.BaseInfoConstants;
 import com.wewin.live.ui.widget.GifImageView;
+import com.wewin.live.listanim.GiftViewHolder;
 import com.wewin.live.ui.widget.VideoSurfceView;
 import com.wewin.live.utils.BarrageUtil;
 import com.wewin.live.utils.MySharedConstants;
@@ -32,14 +36,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Random;
 
 import butterknife.InjectView;
-import master.flame.danmaku.danmaku.util.SystemClock;
 
-/*
- *   author:jason
- *   date:2019/5/1019:13
+/**
+ *  author:jason
+ *  date:2019/5/1019:13
  *   播放器界面
  */
 public abstract class BaseVideoPlayActivity extends BaseActivity {
@@ -50,16 +52,38 @@ public abstract class BaseVideoPlayActivity extends BaseActivity {
     LottieAnimationView animationView;
     @InjectView(R.id.gif_view)
     GifImageView gifView;
+    @InjectView(R.id.layout_gift_1)
+    GiftAnimationLayout layoutGift1;
+    @InjectView(R.id.layout_gift_2)
+    GiftAnimationLayout layoutGift2;
+    @InjectView(R.id.layout_gift_3)
+    GiftAnimationLayout layoutGift3;
 
-    protected NetWorkUtil netWorkUtil;//网络监听
-    protected String pull_url = "";//视频链接
-    protected String marquee_text;//跑马灯文本
-    protected String wx_number;//微信号码
-    protected String wx_image;//微信图标
+    /**
+     * 网络监听
+     */
+    protected NetWorkUtil netWorkUtil;
+    /**
+     * 视频链接
+     */
+    protected String pullUrl = "";
+    /**
+     * 跑马灯文本
+     */
+    protected String marqueeText;
+    /**
+     * 微信号码
+     */
+    protected String wxNumber;
+    /**
+     * 微信图标
+     */
+    protected String wxImage;
 
     private int layoutId;
     protected Bundle bundle;
     protected BarrageUtil barrageUtil;
+    protected GiftController giftController;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,6 +96,7 @@ public abstract class BaseVideoPlayActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         //常亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
     }
 
     @Override
@@ -91,38 +116,29 @@ public abstract class BaseVideoPlayActivity extends BaseActivity {
         initNetWork();
         initVideo();
         initDanmaku();
+        initLiveGiftView();
         initChildData();
     }
 
+    protected abstract void initChildData();
+
+    /**
+     * 初始化弹幕
+     */
     private void initDanmaku() {
-        barrageUtil =liveSurfce.getBarrageUtil();
-//        new Thread(){
-//            @Override
-//            public void run() {
-//                Random random=new Random();
-//                while (true) {
-//                    int randomInt=random.nextInt(20);
-//                    if (randomInt%2==1) {
-//                        barrageUtil.addBarrage(true, "啦啦啦<img src=\"/public/front/images/face/0.gif\">啦啦啦<img src=\"/public/front/images/face/1.gif\">啦啦啦<img src=\"/public/front/images/face/2.gif\">");
-//                    }else {
-//                        barrageUtil.addBarrage(false, "随机：" + randomInt + "时间：" + System.currentTimeMillis());
-//                    }
-//                    SystemClock.sleep(randomInt*50);
-//                }
-//            }
-//        }.start();
+        barrageUtil = liveSurfce.getBarrageUtil();
     }
 
-    protected abstract void initChildData();
+
 
     @Override
     protected void getIntentData() {
         bundle = getIntent().getExtras();
         if (bundle != null) {
-            pull_url = getIntent().getExtras().getString(BaseInfoConstants.PULL_URL);
-            marquee_text = getIntent().getExtras().getString(BaseInfoConstants.ADSCONTENT);
-            wx_number = getIntent().getExtras().getString(BaseInfoConstants.WECHAT);
-            wx_image = getIntent().getExtras().getString(BaseInfoConstants.WXIMAGE);
+            pullUrl = getIntent().getExtras().getString(BaseInfoConstants.PULL_URL);
+            marqueeText = getIntent().getExtras().getString(BaseInfoConstants.ADSCONTENT);
+            wxNumber = getIntent().getExtras().getString(BaseInfoConstants.WECHAT);
+            wxImage = getIntent().getExtras().getString(BaseInfoConstants.WXIMAGE);
         }
     }
 
@@ -165,14 +181,14 @@ public abstract class BaseVideoPlayActivity extends BaseActivity {
      */
     protected void initVideo() {
         LiveManage.getInstance().setBundle(getIntent().getExtras());
-        liveSurfce.setRightPrompt(wx_number, wx_image);
-        liveSurfce.setMarqueeContent(marquee_text);
-        if (!StringUtils.isEmpty(LiveManage.getInstance().getUrl()) && LiveManage.getInstance().getUrl().equals(pull_url)) {
+        liveSurfce.setRightPrompt(wxNumber, wxImage);
+        liveSurfce.setMarqueeContent(marqueeText);
+        if (!StringUtils.isEmpty(LiveManage.getInstance().getUrl()) && LiveManage.getInstance().getUrl().equals(pullUrl)) {
             liveSurfce.changeSufaceView();
             liveSurfce.start();
 
         } else {
-            LiveManage.getInstance().setLiveSurfce(this, liveSurfce.getSurfaceView(), pull_url);
+            LiveManage.getInstance().setLiveSurfce(this, liveSurfce.getSurfaceView(), pullUrl);
         }
         liveSurfce.setSwitchScreenListener(new VideoSurfceView.onSwitchScreenListener() {
             @Override
@@ -184,11 +200,23 @@ public abstract class BaseVideoPlayActivity extends BaseActivity {
 
     }
 
+
     private void initServer() {
         //不存在就启动服务
         if (!ActivityUtil.isServiceRunning(this, DownloadService.DOWN_LOAD_SERVICE_NAME)) {
             UtilTool.startDownServer(this, DownloadService.class, DownloadService.DOWN_LOAD_SERVICE_NAME);
         }
+    }
+
+
+    /**
+     * 初始化连击礼物
+     */
+    private void initLiveGiftView(){
+        giftController = new GiftController();
+        giftController.append(layoutGift1, new GiftViewHolder(), new DefaultAnimation3(), true)
+                .append(layoutGift2, new GiftViewHolder(), new DefaultAnimation3(), true)
+                .append(layoutGift3, new GiftViewHolder(), new DefaultAnimation3(), true);
     }
 
     /**
@@ -248,12 +276,12 @@ public abstract class BaseVideoPlayActivity extends BaseActivity {
 
         @Override
         public void onProgress(int progress) {
-            LogUtil.Log("下载进度：" + progress);
+            LogUtil.log("下载进度：" + progress);
         }
 
         @Override
         public void onComplete(final File file) {
-            LogUtil.Log("下载的文件：" + file.getAbsolutePath() + Thread.currentThread());
+            LogUtil.log("下载的文件：" + file.getAbsolutePath() + Thread.currentThread());
             if (file.getAbsolutePath().contains(FileUtil.FILE_JSON)) {
                 animationView.post(new Runnable() {
                     @Override
@@ -277,7 +305,7 @@ public abstract class BaseVideoPlayActivity extends BaseActivity {
                         try {
                             gifView.setVisibility(View.VISIBLE);
                             gifView.setGifResource(file.getAbsolutePath());
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -287,7 +315,7 @@ public abstract class BaseVideoPlayActivity extends BaseActivity {
 
         @Override
         public void onFail(String msg) {
-            LogUtil.Log("下载失败：" + msg);
+            LogUtil.log("下载失败：" + msg);
         }
     };
 
@@ -318,27 +346,37 @@ public abstract class BaseVideoPlayActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        barrageUtil.onPause();
+        if (barrageUtil != null) {
+            barrageUtil.onPause();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        barrageUtil.onResume();
+        if (barrageUtil != null) {
+            barrageUtil.onResume();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (animationView==null)return;
+        if (animationView == null) {
+            return;
+        }
         animationView.cancelAnimation();
-    }
-
-    @Override
-    protected void onDestroy() {
-        //设置可以显示小窗口界面
-        barrageUtil.onDestroy();
-        netWorkUtil.stopWatch();
-        super.onDestroy();
+        if(isFinishing()){
+            if(giftController!=null) {
+                giftController.destroy();
+            }
+            //设置可以显示小窗口界面
+            if (barrageUtil != null) {
+                barrageUtil.onDestroy();
+            }
+            if (netWorkUtil != null) {
+                netWorkUtil.stopWatch();
+            }
+        }
     }
 }

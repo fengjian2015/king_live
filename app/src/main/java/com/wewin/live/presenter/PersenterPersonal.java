@@ -13,6 +13,7 @@ import com.wewin.live.newtwork.OnPersenterListener;
 import com.wewin.live.newtwork.OnSuccess;
 import com.example.jasonutil.util.FileUtil;
 import com.wewin.live.ui.activity.MainActivity;
+import com.wewin.live.utils.Constants;
 import com.wewin.live.utils.IntentStart;
 import com.wewin.live.utils.MessageEvent;
 import com.wewin.live.utils.MySharedConstants;
@@ -133,10 +134,10 @@ public class PersenterPersonal {
         onSuccess.sendHttp(onSuccess.getMyServer().getConfig(),isShow).setOnPersenterListener(new OnPersenterListener() {
             @Override
             public void onSuccess(Object content) {
-                Map map_info = BaseMapInfo.getInfo((BaseMapInfo) content).get(0);
-                MySharedPreferences.getInstance().setString(MySharedConstants.VERSION_NAME,map_info.get(BaseInfoConstants.APK_VER)+"");
-                MySharedPreferences.getInstance().setString(MySharedConstants.APK_DES,map_info.get(BaseInfoConstants.APK_DES)+"");
-                MySharedPreferences.getInstance().setString(MySharedConstants.APK_URL,map_info.get(BaseInfoConstants.APK_URL)+"");
+                Map mapInfo = BaseMapInfo.getInfo((BaseMapInfo) content).get(0);
+                MySharedPreferences.getInstance().setString(MySharedConstants.VERSION_NAME,mapInfo.get(BaseInfoConstants.APK_VER)+"");
+                MySharedPreferences.getInstance().setString(MySharedConstants.APK_DES,mapInfo.get(BaseInfoConstants.APK_DES)+"");
+                MySharedPreferences.getInstance().setString(MySharedConstants.APK_URL,mapInfo.get(BaseInfoConstants.APK_URL)+"");
             }
 
             @Override
@@ -149,9 +150,11 @@ public class PersenterPersonal {
     /**
      * 获取个人信息
      */
-    public void getBaseInfo( final OnSuccess onSuccess) {
-        if(!SignOutUtil.getIsLogin())return;
-        onSuccess.sendHttp(onSuccess.getMyServer().getBaseInfo(UtilTool.parseInt(SignOutUtil.getUserId()),SignOutUtil.getToken()),false)
+    public void getBaseInfo( String deviceToken,final OnSuccess onSuccess) {
+        if(!SignOutUtil.getIsLogin()) {
+            return;
+        }
+        onSuccess.sendHttp(onSuccess.getMyServer().getBaseInfo(UtilTool.parseInt(SignOutUtil.getUserId()),SignOutUtil.getToken(),deviceToken),false)
                 .setOnPersenterListener(new OnPersenterListener() {
             @Override
             public void onFault(String content) {
@@ -179,8 +182,8 @@ public class PersenterPersonal {
                 userInfo.setSignature(data.get(BaseInfoConstants.SIGNATURE) + "");
                 userInfo.setUser_id(data.get(BaseInfoConstants.ID) + "");
                 userInfo.setBirth(data.get(BaseInfoConstants.BIRTHDAY) + "");
-                userInfo.setAvatar(data.get(BaseInfoConstants.AVATAR) + "");
-                userInfo.setAvatar_thumb(data.get(BaseInfoConstants.AVATAR_THUMB) + "");
+                userInfo.setAvatar(Constants.BASE_URL+data.get(BaseInfoConstants.AVATAR) );
+                userInfo.setAvatar_thumb(Constants.BASE_URL+data.get(BaseInfoConstants.AVATAR_THUMB));
                 userInfo.setCoin(data.get(BaseInfoConstants.COIN) + "");
                 userInfo.setWeixin(data.get(BaseInfoConstants.WEIXIN) + "");
                 userInfo.setLevel(data.get(BaseInfoConstants.LEVEL) + "");
@@ -197,10 +200,9 @@ public class PersenterPersonal {
 
     /**
      * 修改手机号
-
      */
-    public void modifyMobile( String newMobile, String code,String user_pass, final OnSuccess onSuccess) {
-        onSuccess.sendHttp(onSuccess.getMyServer().modifyMobile(UtilTool.parseInt(SignOutUtil.getUserId()),SignOutUtil.getToken(),newMobile, code, user_pass));
+    public void modifyMobile( String newMobile, String code,String userPass, final OnSuccess onSuccess) {
+        onSuccess.sendHttp(onSuccess.getMyServer().modifyMobile(UtilTool.parseInt(SignOutUtil.getUserId()),SignOutUtil.getToken(),newMobile, code, userPass));
     }
 
     /**

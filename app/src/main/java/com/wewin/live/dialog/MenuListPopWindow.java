@@ -1,17 +1,7 @@
 package com.wewin.live.dialog;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.transition.Explode;
-import android.transition.Fade;
-import android.transition.Slide;
-import android.transition.Transition;
-import android.transition.TransitionValues;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -28,7 +18,7 @@ import java.util.List;
  * Created by xingyun on 2016/7/19.
  */
 public class MenuListPopWindow extends PopupWindow implements View.OnClickListener {
-    private ListView lv_menu;
+    private ListView lvMenu;
 
     private ListOnClick listOnClick;
     private List<String> menunames;
@@ -44,9 +34,9 @@ public class MenuListPopWindow extends PopupWindow implements View.OnClickListen
 
     private void init(View mView){
         view = View.inflate(context, R.layout.pop_menu_list, null);
-        lv_menu =  view.findViewById(R.id.lv_menu);
+        lvMenu =  view.findViewById(R.id.lv_menu);
         myMenuAdapter=new MyMenuAdapter();
-        lv_menu.setAdapter(myMenuAdapter);
+        lvMenu.setAdapter(myMenuAdapter);
         setContentView(view);
         setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
         setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -57,7 +47,7 @@ public class MenuListPopWindow extends PopupWindow implements View.OnClickListen
     }
 
     public MenuListPopWindow setBackground(int color){
-        lv_menu.setBackgroundColor(context.getResources().getColor(color));
+        lvMenu.setBackgroundColor(context.getResources().getColor(color));
         return this;
     }
 
@@ -83,6 +73,8 @@ public class MenuListPopWindow extends PopupWindow implements View.OnClickListen
         switch (view.getId()){
             case R.id.rl_data:
                 dismiss();
+                break;
+            default:
                 break;
         }
     }

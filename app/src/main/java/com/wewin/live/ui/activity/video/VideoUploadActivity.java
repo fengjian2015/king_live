@@ -63,7 +63,9 @@ public class VideoUploadActivity extends BaseActivity {
      */
     private void initIntent() {
         Bundle bundle = getIntent().getExtras();
-        if (bundle == null) return;
+        if (bundle == null) {
+            return;
+        }
         file_url = bundle.getString(IntentStart.FILE_URL);
     }
 
@@ -175,6 +177,8 @@ public class VideoUploadActivity extends BaseActivity {
                 break;
             case R.id.rl_select:
                 showSelect();
+                break;
+            default:
                 break;
         }
     }

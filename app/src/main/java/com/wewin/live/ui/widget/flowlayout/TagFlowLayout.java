@@ -2,16 +2,12 @@ package com.wewin.live.ui.widget.flowlayout;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.wewin.live.R;
 
@@ -23,9 +19,9 @@ import java.util.Set;
  * Created by zhy on 15/9/10.
  */
 public class TagFlowLayout extends FlowLayout
-        implements TagAdapter.OnDataChangedListener {
+        implements AbstractTagAdapter.OnDataChangedListener {
 
-    private TagAdapter mTagAdapter;
+    private AbstractTagAdapter mTagAdapter;
     private int mSelectedMax = -1;//-1为不限制数量
     private static final String TAG = "TagFlowLayout";
 
@@ -83,7 +79,7 @@ public class TagFlowLayout extends FlowLayout
         mOnTagClickListener = onTagClickListener;
     }
 
-    public void setAdapter(TagAdapter adapter) {
+    public void setAdapter(AbstractTagAdapter adapter) {
         mTagAdapter = adapter;
         mTagAdapter.setOnDataChangedListener(this);
         mSelectedView.clear();
@@ -93,7 +89,7 @@ public class TagFlowLayout extends FlowLayout
     @SuppressWarnings("ResourceType")
     private void changeAdapter() {
         removeAllViews();
-        TagAdapter adapter = mTagAdapter;
+        AbstractTagAdapter adapter = mTagAdapter;
         TagView tagViewContainer = null;
         HashSet preCheckedList = mTagAdapter.getPreCheckedList();
         for (int i = 0; i < adapter.getCount(); i++) {
@@ -194,7 +190,7 @@ public class TagFlowLayout extends FlowLayout
         }
     }
 
-    public TagAdapter getAdapter() {
+    public AbstractTagAdapter getAdapter() {
         return mTagAdapter;
     }
 

@@ -15,9 +15,7 @@ import com.wewin.live.modle.Emoticon;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -90,9 +88,9 @@ public class EmoticonUtil {
             }
             key = key.replace("<", "[");
             key = key.replace(">", "]");
-            LogUtil.Log("表情size:"+emoticonMap.size());
+            LogUtil.log("表情size:"+emoticonMap.size());
             String value = emoticonMap.get(key).getId();
-            LogUtil.Log("表情id:"+value);
+            LogUtil.log("表情id:"+value);
             if (TextUtils.isEmpty(value)) {
                 continue;
             }

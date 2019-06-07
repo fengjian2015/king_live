@@ -88,8 +88,9 @@ public class LiveConfigAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     select=position;
-                    if (onItemListener!=null)
+                    if (onItemListener!=null) {
                         onItemListener.onItemClick(position);
+                    }
                     notifyDataSetChanged();
                 }
             });

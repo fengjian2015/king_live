@@ -37,10 +37,10 @@ public class SignOutUtil {
 
     /**
      * 设置唯一id
-     * @param user_id
+     * @param userId
      */
-    public static void setUserId(String user_id){
-        MySharedPreferences.getInstance().setString(MySharedConstants.USER_ID,user_id);
+    public static void setUserId(String userId){
+        MySharedPreferences.getInstance().setString(MySharedConstants.USER_ID,userId);
     }
 
     /**

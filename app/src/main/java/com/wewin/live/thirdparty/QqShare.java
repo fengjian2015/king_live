@@ -45,7 +45,9 @@ public class QqShare {
      * 分享到好友
      */
     public void shareFriendImageAndText(Activity activity,String title,String content,String url,String imageUrl){
-        if(!isQQClientAvailable(activity))return;
+        if(!isQQClientAvailable(activity)) {
+            return;
+        }
         final Bundle params = new Bundle();
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);//分享类型图文
         params.putString(QQShare.SHARE_TO_QQ_TITLE, title);//最长30个字符。
@@ -61,7 +63,9 @@ public class QqShare {
      * 分享到朋友圈
      */
     public void shareToQzone(Activity activity,String title,String content,String url,String imageUrl) {
-        if(!isQQClientAvailable(activity))return;
+        if(!isQQClientAvailable(activity)) {
+            return;
+        }
         //图片地址
         ArrayList<String> arrayList=new ArrayList<>();
         arrayList.add(imageUrl);
@@ -105,7 +109,7 @@ public class QqShare {
         if (pinfo != null) {
             for (int i = 0; i < pinfo.size(); i++) {
                 String pn = pinfo.get(i).packageName;
-                if (pn.equalsIgnoreCase("com.tencent.qqlite") || pn.equalsIgnoreCase("com.tencent.mobileqq")) {
+                if ("com.tencent.qqlite".equalsIgnoreCase(pn) ||"com.tencent.mobileqq".equalsIgnoreCase(pn)) {
                     return true;
                 }
             }

@@ -107,4 +107,8 @@ public class BaseInfoConstants {
     public static final String WANGZHE_HTML_ACTIVITY="wangzhe_html_activity";
     public static final String WANGZHE_PLAY_LIVE_ACTIVITY="wangzhe_play_live_activity";
     public static final String IS_SELF="is_self";
+    public static final String DEVICE_TOKEN="device_token";
+    public static final String DATA="data";
+    public static final String TABID="tabid";
+    public static final String QUIZID="quizid";
 }

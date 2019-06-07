@@ -7,11 +7,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 /**
- * 作者：created by jason on 2019/4/5 13
+ * @author jason
  *  权限请求封装,通过接口回调方式处理权限请求结果
  */
 public class Rigger {
-    private String RIGGER_FRAGMENT_TAG = "Rigger";
+    private static final String RIGGER_FRAGMENT_TAG = "Rigger";
     private RiggerPresenter mRiggerPresenter;
 
     public static Rigger on(Activity activity){

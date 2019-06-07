@@ -1,4 +1,4 @@
-package com.wewin.live.ui.Fragment;
+package com.wewin.live.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,20 +19,17 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wewin.live.R;
 import com.wewin.live.modle.BaseInfoConstants;
-import com.wewin.live.modle.BaseMapInfo;
 import com.wewin.live.modle.BaseMapInfo2;
 import com.wewin.live.newtwork.OnSuccess;
 import com.wewin.live.presenter.PersenterCommon;
 import com.wewin.live.ui.activity.HtmlActivity;
-import com.wewin.live.ui.activity.Live.VideoDetailsActivity;
+import com.wewin.live.ui.activity.live.VideoDetailsActivity;
 import com.wewin.live.ui.activity.SearchActivity;
-import com.wewin.live.ui.activity.login.RegisteredActivity;
 import com.wewin.live.ui.adapter.SearchAnchorAdapter;
 import com.wewin.live.ui.adapter.SearchLiveAdapter;
 import com.wewin.live.ui.adapter.SearchNewsAdapter;
 import com.wewin.live.ui.adapter.SearchVideoAdapter;
 import com.wewin.live.ui.widget.ErrorView;
-import com.wewin.live.utils.Constants;
 import com.wewin.live.utils.IntentStart;
 import com.wewin.live.utils.MessageEvent;
 import com.wewin.live.utils.MySharedConstants;
@@ -41,8 +38,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +50,7 @@ import butterknife.OnClick;
  * @date 2019/3/2
  * 搜索tab页面
  */
-public class SearchFragment extends LazyFragment implements ErrorView.OnContinueListener {
+public class SearchFragment extends AbstractLazyFragment implements ErrorView.OnContinueListener {
     @InjectView(R.id.recycler_view)
     RecyclerView recyclerView;
     @InjectView(R.id.refresh_layout)
@@ -110,8 +105,9 @@ public class SearchFragment extends LazyFragment implements ErrorView.OnContinue
     @Override
     protected void lazyLoad() {
         init();
-        if (!EventBus.getDefault().isRegistered(this))
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
+        }
     }
 
     private void init() {
@@ -575,6 +571,8 @@ public class SearchFragment extends LazyFragment implements ErrorView.OnContinue
             case R.id.tv_news_more:
                 //新闻更多
                 setSelectFragment(4);
+                break;
+            default:
                 break;
         }
     }

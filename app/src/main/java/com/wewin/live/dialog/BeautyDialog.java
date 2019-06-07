@@ -53,7 +53,9 @@ public class BeautyDialog extends Dialog implements SeekBar.OnSeekBarChangeListe
         //将设置好的属性set回去
         window.setAttributes(lp);
         window.setGravity(Gravity.BOTTOM);
-        if (!ActivityUtil.isActivityOnTop(context)) return;
+        if (!ActivityUtil.isActivityOnTop(context)) {
+            return;
+        }
         window.setWindowAnimations(R.style.BottomDialog);
         setContentView(view);
     }
@@ -97,7 +99,9 @@ public class BeautyDialog extends Dialog implements SeekBar.OnSeekBarChangeListe
      * 显示
      */
     public BeautyDialog showAtLocation() {
-        if (!ActivityUtil.isActivityOnTop(context)) return this;
+        if (!ActivityUtil.isActivityOnTop(context)) {
+            return this;
+        }
         show();
         return this;
     }
@@ -133,6 +137,8 @@ public class BeautyDialog extends Dialog implements SeekBar.OnSeekBarChangeListe
                 case R.id.seekBar_cheekPink:
                     beautyInt[6]=i;
                     livePushManage.setBeautyCheekPink(i);
+                    break;
+                default:
                     break;
             }
         }

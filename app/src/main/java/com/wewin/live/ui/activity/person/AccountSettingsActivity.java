@@ -31,6 +31,7 @@ import com.wewin.live.newtwork.OnSuccessAndFaultListener;
 import com.wewin.live.presenter.PersenterPersonal;
 import com.wewin.live.thirdparty.WXUtil;
 import com.wewin.live.ui.widget.HintTextView;
+import com.wewin.live.utils.Constants;
 import com.wewin.live.utils.GlideUtil;
 import com.example.jasonutil.util.LogUtil;
 import com.wewin.live.utils.IntentStart;
@@ -51,7 +52,6 @@ import java.util.List;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
-import butterknife.OnTextChanged;
 
 /**
  * 账号设置页面
@@ -79,7 +79,7 @@ public class AccountSettingsActivity extends BaseActivity {
     //返回数据
     private final int REQUEST_CODE_EMAIL = 123;
     //判断当前是否改变过
-    private boolean isChange=false;
+    private boolean isChange = false;
 
     private List<LocalMedia> selectList = new ArrayList<>();
     private TimeSelectUtil timeSelectUtil;
@@ -94,8 +94,9 @@ public class AccountSettingsActivity extends BaseActivity {
 
     @Override
     protected void init() {
-        if (!EventBus.getDefault().isRegistered(this))
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
+        }
         setTitleNoBack(getString(R.string.account_settings));
         setTvRight(getString(R.string.save));
         initDate();
@@ -103,33 +104,33 @@ public class AccountSettingsActivity extends BaseActivity {
     }
 
     private void initDate() {
-        mUserInfo=UserInfoDao.queryUserInfo(SignOutUtil.getUserId());
+        mUserInfo = UserInfoDao.queryUserInfo(SignOutUtil.getUserId());
 
         timeSelectUtil = new TimeSelectUtil(this);
         timeSelectUtil.setOnTimeReturnListener(new TimeSelectUtil.OnTimeReturnListener() {
             @Override
             public void getTime(String time) {
-                LogUtil.Log(time);
+                LogUtil.log(time);
                 setEt(etDateBirth, time);
             }
         });
         GlideUtil.setCircleImg(this, UserInfoDao.findAvatar(), ivAvatar);
         timeSelectUtil.setDefault(mUserInfo.getBirth());
-        if(StringUtils.isEmpty(mUserInfo.getWeixin())){
-            setEtHine(etWechatNumber,getString(R.string.bind));
-        }else{
-            setEtHine(etWechatNumber,getString(R.string.replace));
+        if (StringUtils.isEmpty(mUserInfo.getWeixin())) {
+            setEtHine(etWechatNumber, getString(R.string.bind));
+        } else {
+            setEtHine(etWechatNumber, getString(R.string.replace));
         }
-        if(StringUtils.isEmpty(mUserInfo.getEmail())){
-            setEtHine(etEmailAddress,getString(R.string.bind));
-        }else{
-            setEt(etEmailAddress,mUserInfo.getEmail());
+        if (StringUtils.isEmpty(mUserInfo.getEmail())) {
+            setEtHine(etEmailAddress, getString(R.string.bind));
+        } else {
+            setEt(etEmailAddress, mUserInfo.getEmail());
         }
-        setEt(etActualName,mUserInfo.getActualName());
-        setEt(etGender,mUserInfo.getSex());
-        setEt(etSignature,mUserInfo.getSignature());
-        setEt(etDateBirth,mUserInfo.getBirth());
-        setEt(etNickName,mUserInfo.getNickName());
+        setEt(etActualName, mUserInfo.getActualName());
+        setEt(etGender, mUserInfo.getSex());
+        setEt(etSignature, mUserInfo.getSignature());
+        setEt(etDateBirth, mUserInfo.getBirth());
+        setEt(etNickName, mUserInfo.getNickName());
         etNickName.setSelection(mUserInfo.getNickName().length());
         etNickName.requestFocus();
         setOnClick();
@@ -141,7 +142,7 @@ public class AccountSettingsActivity extends BaseActivity {
         etNickName.addTextChangedListener(textWatcher);
     }
 
-    TextWatcher textWatcher=new TextWatcher() {
+    TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -149,7 +150,7 @@ public class AccountSettingsActivity extends BaseActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            isChange=true;
+            isChange = true;
         }
 
         @Override
@@ -173,31 +174,31 @@ public class AccountSettingsActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.rl_avatar, R.id.rl_gender, R.id.et_gender, R.id.rl_date_birth, R.id.et_date_birth, R.id.rl_wechat,R.id.tv_right,R.id.bark,R.id.rl_emil})
+    @OnClick({R.id.rl_avatar, R.id.rl_gender, R.id.et_gender, R.id.rl_date_birth, R.id.et_date_birth, R.id.rl_wechat, R.id.tv_right, R.id.bark, R.id.rl_emil})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rl_avatar:
-                isChange=true;
+                isChange = true;
                 //选择头像
                 UtilTool.closeKeybord(AccountSettingsActivity.this);
                 PictureSelectorUtil.selectImage(AccountSettingsActivity.this, selectList, true, 1, PictureConfig.CHOOSE_REQUEST);
                 break;
             case R.id.rl_gender:
             case R.id.et_gender:
-                isChange=true;
+                isChange = true;
                 //选择性别
                 selectGenderDialog();
                 UtilTool.closeKeybord(AccountSettingsActivity.this);
                 break;
             case R.id.rl_date_birth:
             case R.id.et_date_birth:
-                isChange=true;
+                isChange = true;
                 //出生日期
                 selectBirth();
                 UtilTool.closeKeybord(AccountSettingsActivity.this);
                 break;
             case R.id.rl_wechat:
-                isChange=true;
+                isChange = true;
                 //绑定微信
                 bindWX();
                 break;
@@ -210,9 +211,11 @@ public class AccountSettingsActivity extends BaseActivity {
                 finishDialog();
                 break;
             case R.id.rl_emil:
-                Bundle bundle=new Bundle();
-                bundle.putString(BaseInfoConstants.USER_EMAIL,mUserInfo.getEmail());
-                IntentStart.starForResult(this,ChangeEmailActivity.class,bundle,REQUEST_CODE_EMAIL);
+                Bundle bundle = new Bundle();
+                bundle.putString(BaseInfoConstants.USER_EMAIL, mUserInfo.getEmail());
+                IntentStart.starForResult(this, ChangeEmailActivity.class, bundle, REQUEST_CODE_EMAIL);
+                break;
+            default:
                 break;
         }
     }
@@ -220,8 +223,8 @@ public class AccountSettingsActivity extends BaseActivity {
     /**
      * 关闭前确定是否有内容改变和保存
      */
-    private void finishDialog(){
-        if(!isChange){
+    private void finishDialog() {
+        if (!isChange) {
             finish();
             return;
         }
@@ -279,7 +282,7 @@ public class AccountSettingsActivity extends BaseActivity {
     /**
      * 绑定微信
      */
-    private void bindWX(){
+    private void bindWX() {
         mLoadingProgressDialog = LoadingProgressDialog.createDialog(this);
         WXUtil.getInstance().sendAuthorization();
     }
@@ -302,7 +305,7 @@ public class AccountSettingsActivity extends BaseActivity {
         final MenuListDialog menu = new MenuListDialog(this, list);
         menu.setListOnClick(new MenuListDialog.ListOnClick() {
             @Override
-            public void onclickitem(int position) {
+            public void onClickItem(int position) {
                 switch (position) {
                     case 0:
                         menu.dismiss();
@@ -315,6 +318,8 @@ public class AccountSettingsActivity extends BaseActivity {
                         menu.dismiss();
                         setEt(etGender, getString(R.string.female));
                         break;
+                    default:
+                        break;
                 }
             }
         });
@@ -324,9 +329,10 @@ public class AccountSettingsActivity extends BaseActivity {
 
     /**
      * 获取微信用户信息
+     *
      * @param code
      */
-    public void getWXUserInfo(String code){
+    public void getWXUserInfo(String code) {
         WXUtil.getInstance().getAccessToken(AccountSettingsActivity.this, code, new OnSuccessAndFaultListener() {
             @Override
             public void onFault(String content) {
@@ -335,35 +341,39 @@ public class AccountSettingsActivity extends BaseActivity {
 
             @Override
             public void onSuccess(String content) {
-                if(StringUtils.isEmpty(content)){
+                if (StringUtils.isEmpty(content)) {
                     return;
                 }
                 mUserInfo.setWeixin(content);
-                setEtHine(etWechatNumber,getString(R.string.replace));
-                ToastShow.showToast(AccountSettingsActivity.this,getString(R.string.replace_success));
+                setEtHine(etWechatNumber, getString(R.string.replace));
+                ToastShow.showToast(AccountSettingsActivity.this, getString(R.string.replace_success));
             }
         });
     }
 
 
-
     //记录文件是否需要上传，点击保存继续上传，否则直接保存
-    private boolean isUpload=false;
+    private boolean isUpload = false;
     //判断是否点击了保存按钮
-    private boolean isSave=false;
+    private boolean isSave = false;
+    /**
+     * 上传图片返回地址
+     */
+    private String uploadImageUrl;
 
     /**
      * 上传图片
      */
-    private void upload(){
-        PersenterPersonal.getInstance().upLoadImage( new File(selectList.get(0).getCutPath()),new OnSuccess(this, new OnSuccess.OnSuccessListener() {
+    private void upload() {
+        PersenterPersonal.getInstance().upLoadImage(new File(selectList.get(0).getCutPath()), new OnSuccess(this, new OnSuccess.OnSuccessListener() {
             @Override
             public void onSuccess(Object content) {
                 ToastShow.showToast2(AccountSettingsActivity.this, getString(R.string.upload_success));
-                isUpload=false;
-                mUserInfo.setAvatar( BaseMapInfo.getInfo((BaseMapInfo) content).get(0).get(BaseInfoConstants.AVATAR)+"");
-                mUserInfo.setAvatar_thumb( BaseMapInfo.getInfo((BaseMapInfo) content).get(0).get(BaseInfoConstants.AVATAR_THUMB)+"");
-                if(isSave){
+                isUpload = false;
+                uploadImageUrl=BaseMapInfo.getInfo((BaseMapInfo) content).get(0).get(BaseInfoConstants.AVATAR)+"";
+                mUserInfo.setAvatar(Constants.BASE_URL+uploadImageUrl);
+                mUserInfo.setAvatar_thumb(Constants.BASE_URL+BaseMapInfo.getInfo((BaseMapInfo) content).get(0).get(BaseInfoConstants.AVATAR_THUMB));
+                if (isSave) {
                     save();
                 }
             }
@@ -378,14 +388,14 @@ public class AccountSettingsActivity extends BaseActivity {
     /**
      * 保存
      */
-    private void save(){
-        if(isUpload){
-            isSave=true;
+    private void save() {
+        if (isUpload) {
+            isSave = true;
             upload();
             return;
         }
-        isSave=false;
-        PersenterPersonal.getInstance().updateFields( getUserJson(),new OnSuccess(this, new OnSuccess.OnSuccessListener() {
+        isSave = false;
+        PersenterPersonal.getInstance().updateFields(getUserJson(), new OnSuccess(this, new OnSuccess.OnSuccessListener() {
             @Override
             public void onSuccess(Object content) {
                 ToastShow.showToast2(AccountSettingsActivity.this, getString(R.string.change_success));
@@ -403,9 +413,10 @@ public class AccountSettingsActivity extends BaseActivity {
 
     /**
      * 用户信息数据
+     *
      * @return
      */
-    private String getUserJson(){
+    private String getUserJson() {
         mUserInfo.setNickName(etNickName.getText().toString());
         mUserInfo.setActualName(etActualName.getText().toString());
         mUserInfo.setSex(etGender.getTextContent());
@@ -413,20 +424,25 @@ public class AccountSettingsActivity extends BaseActivity {
         mUserInfo.setBirth(etDateBirth.getTextContent());
         mUserInfo.setEmail(etEmailAddress.getText().toString());
 
-        HashMap hashMap=new HashMap();
-        hashMap.put(BaseInfoConstants.AVATAR,mUserInfo.getAvatar());
-        hashMap.put(BaseInfoConstants.USER_NICENAME,mUserInfo.getNickName());
-        hashMap.put(BaseInfoConstants.TRUENAME,mUserInfo.getActualName());
-        if (getString(R.string.male).equals(mUserInfo.getSex())) {
-            hashMap.put(BaseInfoConstants.SEX,"1");
+        HashMap hashMap = new HashMap();
+        if(StringUtils.isEmpty(uploadImageUrl)){
+            hashMap.put(BaseInfoConstants.AVATAR, mUserInfo.getAvatar());
         }else {
-            hashMap.put(BaseInfoConstants.SEX,"2");
+            hashMap.put(BaseInfoConstants.AVATAR,uploadImageUrl);
         }
-        hashMap.put(BaseInfoConstants.SIGNATURE,mUserInfo.getSignature());
-        hashMap.put(BaseInfoConstants.BIRTHDAY,mUserInfo.getBirth());
-        hashMap.put(BaseInfoConstants.WEIXIN,mUserInfo.getWeixin());
-        hashMap.put(BaseInfoConstants.USER_EMAIL,mUserInfo.getEmail());
-        String user=JSONObject.toJSONString(hashMap);
+
+        hashMap.put(BaseInfoConstants.USER_NICENAME, mUserInfo.getNickName());
+        hashMap.put(BaseInfoConstants.TRUENAME, mUserInfo.getActualName());
+        if (getString(R.string.male).equals(mUserInfo.getSex())) {
+            hashMap.put(BaseInfoConstants.SEX, "1");
+        } else {
+            hashMap.put(BaseInfoConstants.SEX, "2");
+        }
+        hashMap.put(BaseInfoConstants.SIGNATURE, mUserInfo.getSignature());
+        hashMap.put(BaseInfoConstants.BIRTHDAY, mUserInfo.getBirth());
+        hashMap.put(BaseInfoConstants.WEIXIN, mUserInfo.getWeixin());
+        hashMap.put(BaseInfoConstants.USER_EMAIL, mUserInfo.getEmail());
+        String user = JSONObject.toJSONString(hashMap);
         return user;
     }
 
@@ -450,21 +466,23 @@ public class AccountSettingsActivity extends BaseActivity {
             switch (requestCode) {
                 case PictureConfig.CHOOSE_REQUEST:
                     // 图片选择结果回调
-                    isUpload=true;
-                    isSave=false;
+                    isUpload = true;
+                    isSave = false;
                     selectList = PictureSelector.obtainMultipleResult(data);
                     GlideUtil.setCircleImg(AccountSettingsActivity.this, selectList.get(0).getCutPath(), ivAvatar);
                     upload();
                     break;
                 case REQUEST_CODE_EMAIL:
                     Bundle extras = data.getExtras();
-                    String email=extras.getString(BaseInfoConstants.USER_EMAIL);
+                    String email = extras.getString(BaseInfoConstants.USER_EMAIL);
                     mUserInfo.setEmail(email);
-                    if(StringUtils.isEmpty(email)){
-                        setEtHine(etEmailAddress,getString(R.string.bind));
-                    }else{
-                        setEt(etEmailAddress,email);
+                    if (StringUtils.isEmpty(email)) {
+                        setEtHine(etEmailAddress, getString(R.string.bind));
+                    } else {
+                        setEt(etEmailAddress, email);
                     }
+                    break;
+                default:
                     break;
             }
         }

@@ -173,8 +173,9 @@ public class RegisteredActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.tv_verification_code:
                 //发送验证码
-                if (checkPhone())
+                if (checkPhone()) {
                     gethttpCode(etPhone.getText().toString());
+                }
                 break;
             case R.id.tv_registered:
                 //注册
@@ -189,6 +190,8 @@ public class RegisteredActivity extends BaseActivity {
                 break;
             case R.id.tv_area_code:
 //                showCode();
+                break;
+            default:
                 break;
         }
     }
@@ -266,7 +269,9 @@ public class RegisteredActivity extends BaseActivity {
     CountDownTimer timer = new CountDownTimer(60 * 1000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
-            if (!ActivityUtil.isActivityOnTop(RegisteredActivity.this)) return;
+            if (!ActivityUtil.isActivityOnTop(RegisteredActivity.this)) {
+                return;
+            }
             tvVerificationCode.setEnabled(false);
             String result = String.format(getString(R.string.has_been_sent), millisUntilFinished / 1000 + "");
             tvVerificationCode.setText(result);
@@ -275,7 +280,9 @@ public class RegisteredActivity extends BaseActivity {
 
         @Override
         public void onFinish() {
-            if (!ActivityUtil.isActivityOnTop(RegisteredActivity.this)) return;
+            if (!ActivityUtil.isActivityOnTop(RegisteredActivity.this)) {
+                return;
+            }
             tvVerificationCode.setEnabled(true);
             tvVerificationCode.setText(getString(R.string.reacquire_code));
 

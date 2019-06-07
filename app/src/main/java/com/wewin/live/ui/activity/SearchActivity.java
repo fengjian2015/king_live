@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
@@ -27,12 +26,12 @@ import com.wewin.live.modle.BaseInfoConstants;
 import com.wewin.live.modle.BaseMapInfo2;
 import com.wewin.live.newtwork.OnSuccess;
 import com.wewin.live.presenter.PersenterCommon;
-import com.wewin.live.ui.Fragment.SearchFragment;
+import com.wewin.live.ui.fragment.SearchFragment;
 import com.wewin.live.ui.adapter.SearchPopularAdapter;
 import com.wewin.live.ui.widget.CustomTabLayout;
 import com.wewin.live.ui.widget.CustomTabUtil;
 import com.wewin.live.ui.widget.flowlayout.FlowLayout;
-import com.wewin.live.ui.widget.flowlayout.TagAdapter;
+import com.wewin.live.ui.widget.flowlayout.AbstractTagAdapter;
 import com.wewin.live.ui.widget.flowlayout.TagFlowLayout;
 import com.wewin.live.utils.MessageEvent;
 import com.wewin.live.utils.MySharedConstants;
@@ -42,10 +41,8 @@ import com.example.jasonutil.util.UtilTool;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -76,7 +73,7 @@ public class SearchActivity extends BaseActivity {
     //搜索记录
     private List recordingList ;
     //记录标签
-    TagAdapter tagAdapter;
+    AbstractTagAdapter tagAdapter;
 
     private CustomTabUtil customTabUtil;
     List<Map> mHashMapList;
@@ -122,7 +119,7 @@ public class SearchActivity extends BaseActivity {
             tgFlowLayout.setVisibility(View.GONE);
         }
         final LayoutInflater mInflater = LayoutInflater.from(SearchActivity.this);
-        tagAdapter=new TagAdapter<String>(recordingList) {
+        tagAdapter=new AbstractTagAdapter<String>(recordingList) {
             @Override
             public View getView(FlowLayout parent, int position, String s) {
                 TextView tv = (TextView) mInflater.inflate(R.layout.item_flow_tv, tgFlowLayout, false);
@@ -159,7 +156,9 @@ public class SearchActivity extends BaseActivity {
      */
     private void initRecyclerView() {
         mHashMapList = JSONObject.parseArray(MySharedPreferences.getInstance().getString(MySharedConstants.SEARCH_HOT), Map.class);
-        if(mHashMapList==null)mHashMapList=new ArrayList<>();
+        if(mHashMapList==null) {
+            mHashMapList=new ArrayList<>();
+        }
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mSearchPopularAdapter = new SearchPopularAdapter(this, mHashMapList);
         recyclerView.setAdapter(mSearchPopularAdapter);
@@ -302,6 +301,8 @@ public class SearchActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.tv_cancel:
                 finish();
+                break;
+            default:
                 break;
         }
     }

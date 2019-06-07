@@ -74,8 +74,9 @@ public class DownloadService extends Service {
     @Override
     public void unbindService(ServiceConnection conn) {
         super.unbindService(conn);
-        if (mNotificationManager != null)
+        if (mNotificationManager != null) {
             mNotificationManager.cancelAll();
+        }
         mNotificationManager = null;
         mBuilder = null;
     }
@@ -112,8 +113,9 @@ public class DownloadService extends Service {
      * 创建通知栏
      */
     private void setNotification() {
-        if (mNotificationManager == null)
+        if (mNotificationManager == null) {
             mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        }
         mBuilder = new NotificationCompat.Builder(this, CHANNEL);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -134,8 +136,9 @@ public class DownloadService extends Service {
                     .setAutoCancel(true)
                     .setWhen(System.currentTimeMillis());
         }
-        if (mNotificationManager != null)
+        if (mNotificationManager != null) {
             mNotificationManager.notify(NOTIFY_ID, mBuilder.build());
+        }
     }
 
     /**
@@ -146,8 +149,9 @@ public class DownloadService extends Service {
             mBuilder.setContentTitle("新版本").setContentText(msg);
             Notification notification = mBuilder.build();
             notification.flags = Notification.FLAG_AUTO_CANCEL;
-            if (mNotificationManager != null)
+            if (mNotificationManager != null) {
                 mNotificationManager.notify(NOTIFY_ID, notification);
+            }
         }
         stopSelf();
     }
@@ -213,10 +217,12 @@ public class DownloadService extends Service {
                     e.printStackTrace();
                 } finally {
                     try {
-                        if (is != null)
+                        if (is != null) {
                             is.close();
-                        if (fos != null)
+                        }
+                        if (fos != null) {
                             fos.close();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -238,7 +244,7 @@ public class DownloadService extends Service {
         String root = FileUtil.getAnimationLoc(this);
         File file = new File(root, fileName);
         if (file.exists() && callback != null) {
-            LogUtil.Log("动画文件已存在");
+            LogUtil.log("动画文件已存在");
             callback.onComplete(file);
             return;
         }
@@ -249,15 +255,17 @@ public class DownloadService extends Service {
             @Override
             public void onFailure(Call call, IOException e) {
                 file.delete();
-                if (callback != null)
+                if (callback != null) {
                     callback.onFail(e.getMessage());
+                }
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.body() == null) {
-                    if (callback != null)
+                    if (callback != null) {
                         callback.onFail("下载错误");
+                    }
                     return;
                 }
                 InputStream is = null;
@@ -275,22 +283,26 @@ public class DownloadService extends Service {
                         int progress = (int) (sum * 1.0f / total * 100);
                         if (rate != progress) {
                             rate = progress;
-                            if (callback != null)
+                            if (callback != null) {
                                 callback.onProgress(progress);
+                            }
                         }
                     }
                     fos.flush();
-                    if (callback != null)
+                    if (callback != null) {
                         callback.onComplete(file);
+                    }
                 } catch (Exception e) {
                     file.delete();
                     e.printStackTrace();
                 } finally {
                     try {
-                        if (is != null)
+                        if (is != null) {
                             is.close();
-                        if (fos != null)
+                        }
+                        if (fos != null) {
                             fos.close();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -308,43 +320,52 @@ public class DownloadService extends Service {
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    if (callback != null)
+                    if (callback != null) {
                         callback.onPrepare();
+                    }
                     break;
 
                 case 1:
-                    if (mNotificationManager != null)
+                    if (mNotificationManager != null) {
                         mNotificationManager.cancel(NOTIFY_ID);
-                    if (callback != null)
+                    }
+                    if (callback != null) {
                         callback.onFail((String) msg.obj);
+                    }
                     stopSelf();
                     break;
 
                 case 2: {
                     int progress = (int) msg.obj;
-                    if (callback != null)
+                    if (callback != null) {
                         callback.onProgress(progress);
+                    }
                     mBuilder.setContentTitle("正在下载：新版本...")
                             .setContentText(String.format(Locale.CHINESE, "%d%%", progress))
                             .setProgress(100, progress, false)
                             .setWhen(System.currentTimeMillis());
                     Notification notification = mBuilder.build();
                     notification.flags = Notification.FLAG_AUTO_CANCEL;
-                    if (mNotificationManager != null)
+                    if (mNotificationManager != null) {
                         mNotificationManager.notify(NOTIFY_ID, notification);
+                    }
                 }
                 break;
 
                 case 3: {
-                    if (callback != null)
+                    if (callback != null) {
                         callback.onComplete((File) msg.obj);
+                    }
                     //app运行在界面,直接安装
                     //否则运行在后台则通知形式告知完成
-                    if (mNotificationManager != null)
+                    if (mNotificationManager != null) {
                         mNotificationManager.cancel(NOTIFY_ID);
+                    }
                     UtilTool.install(DownloadService.this, (File) msg.obj);
                 }
                 break;
+                default:
+                    break;
             }
             return false;
         }

@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * @author jason
  * 自定义 TabLayout
  * 可固定个数，可自动适配
  */
@@ -58,12 +59,16 @@ public class CustomTabLayout extends HorizontalScrollView {
     private OnTabClickListener mTabClickListener;
     private OnTabScrollListener mTabScrollListener;
     private boolean isCheckedTextSet = false;
-    //一排显示几个 如果设置isAutomatic=true则无效
-    private int LineNumber=4;
+    /**
+     * 一排显示几个 如果设置isAutomatic=true则无效
+     */
+    private int lineNumber=4;
     private  int width;
     private int[] location;
     private float difference;
-    //是否自适应
+    /**
+     * 是否自适应
+     */
     private boolean isAutomatic=true;
 
     public CustomTabLayout(Context context) {
@@ -80,6 +85,11 @@ public class CustomTabLayout extends HorizontalScrollView {
     }
 
     public interface OnTabClickListener {
+        /**
+         * tab点击事件
+         * @param position
+         * @param str
+         */
         void tabClick(int position, String str);
     }
 
@@ -91,6 +101,11 @@ public class CustomTabLayout extends HorizontalScrollView {
     }
 
     public interface OnTabScrollListener {
+        /**
+         * 滚动监听
+         * @param position
+         * @param text
+         */
         void scrollChange(int position, String text);
     }
 
@@ -134,7 +149,9 @@ public class CustomTabLayout extends HorizontalScrollView {
      * 重新获取宽度，避免初始化时界面Gone状态，获取的width为0
      */
     public void reacquireWidth(){
-        if(width!=0)return;
+        if(width!=0) {
+            return;
+        }
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -260,6 +277,8 @@ public class CustomTabLayout extends HorizontalScrollView {
                     int click= (int) msg.obj;
                     startAnim(click);
                     break;
+                default:
+                    break;
             }
         }
     };
@@ -287,7 +306,7 @@ public class CustomTabLayout extends HorizontalScrollView {
             mHorizontalSpace = typedArray.getInt(R.styleable.CustomTabLayout_ctlHorizontalSpace, 20);
             mCtlCheckedTextSize=typedArray.getDimension(R.styleable.CustomTabLayout_ctlCheckedTextSize, 18);
             mTextStyle = typedArray.getString(R.styleable.CustomTabLayout_ctlTextStyle);
-            LineNumber=typedArray.getInt(R.styleable.CustomTabLayout_ctlUnderlineNumber,4);
+            lineNumber=typedArray.getInt(R.styleable.CustomTabLayout_ctlUnderlineNumber,4);
             isAutomatic=typedArray.getBoolean(R.styleable.CustomTabLayout_ctlIsAutomatic,true);
 
             typedArray.recycle();
@@ -385,10 +404,10 @@ public class CustomTabLayout extends HorizontalScrollView {
 
     private float getTextViewWidth(){
         float myWidth;
-        if(LineNumber>mTitleList.size()){
+        if(lineNumber>mTitleList.size()){
             myWidth=width/mTitleList.size();
         }else{
-            myWidth= width/LineNumber;
+            myWidth= width/lineNumber;
         }
         return myWidth;
     }
@@ -403,8 +422,9 @@ public class CustomTabLayout extends HorizontalScrollView {
                 ((TextView) mTvContainerLl.getChildAt(i)).setTextColor(mDefaultTextColor);
                 ((TextView) mTvContainerLl.getChildAt(i)).getPaint().setTextSize(mTextSize);
             }
-            if(isAutomatic)
+            if(isAutomatic) {
                 ((TextView) mTvContainerLl.getChildAt(i)).setText(((TextView) mTvContainerLl.getChildAt(i)).getText().toString());
+            }
         }
     }
 

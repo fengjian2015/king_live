@@ -12,29 +12,35 @@ import android.webkit.JavascriptInterface;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.jasonutil.dialog.ConfirmDialog;
+import com.example.jasonutil.util.LogUtil;
 import com.example.jasonutil.util.StringUtils;
 import com.example.jasonutil.util.UtilTool;
 import com.wewin.live.R;
 import com.wewin.live.db.UserInfoDao;
+import com.wewin.live.dialog.BettingDialog;
 import com.wewin.live.modle.BaseInfoConstants;
 import com.wewin.live.modle.UserInfo;
+import com.wewin.live.newtwork.OnSuccess;
+import com.wewin.live.presenter.PersenterCommon;
 import com.wewin.live.ui.activity.HtmlActivity;
-import com.wewin.live.ui.activity.Live.VideoDetailsActivity;
+import com.wewin.live.ui.activity.live.VideoDetailsActivity;
 import com.wewin.live.ui.widget.ErrorView;
-import com.wewin.live.ui.widget.web.ExtendedWebView;
 import com.wewin.live.utils.IntentStart;
 import com.wewin.live.utils.MessageEvent;
 import com.wewin.live.utils.SignOutUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.wewin.live.utils.MessageEvent.SHARE_DATA;
 import static com.wewin.live.utils.MessageEvent.START_ANIMATION;
 import static com.wewin.live.utils.MessageEvent.START_GIF;
+import static com.wewin.live.utils.MessageEvent.START_LIST_GIF;
 
 /**
  * @author jsaon
@@ -94,7 +100,7 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
         // TODO: 2019/4/24 测试用 
 //        if (StringUtils.isEmpty(html5Url))
 //            html5Url = "http://testzhibo.wewin18.net";
-//        html5Url="file:///android_asset/android_js.html";
+//        html5Url = "file:///android_asset/android_js.html";
         initWebView();
     }
 
@@ -114,8 +120,9 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
                     hintError();
                     mProgressBar.setVisibility(View.GONE);
                     if (mWebView.canGoBack()) {
-                        if (mOnHtmlListener != null)
+                        if (mOnHtmlListener != null) {
                             mOnHtmlListener.goBack();
+                        }
                     }
                 }
                 mWebView.writeData();
@@ -123,7 +130,9 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
 
             @Override
             public void onError() {
-                if (mWebView == null) return;
+                if (mWebView == null) {
+                    return;
+                }
                 showError();
             }
 
@@ -270,13 +279,23 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
         super.destroyDrawingCache();
     }
 
-    private final int GET_USER_INFO = 1;//获取用户信息
-    private final int GO_VIDEO_PLAY = 2;//跳转到播放器
-    private final int GO_VIDEO_PLAY_LOGIN = 3;//跳转到播放器需登录
-    private final int SHOW_DIALOG = 5;//弹窗提示
-    private final int SHOW_DIALOG_RELOAD = 6;//弹窗提示,重新刷新
-    private final int IS_LONG = 7;//判断是否登录
-    private final int IS_SHOW_SHARE = 8;//是否显示分享按钮
+    //获取用户信息
+    private final int GET_USER_INFO = 1;
+    //跳转到播放器
+    private final int GO_VIDEO_PLAY = 2;
+    //跳转到播放器需登录
+    private final int GO_VIDEO_PLAY_LOGIN = 3;
+    //弹窗提示
+    private final int SHOW_DIALOG = 5;
+    //弹窗提示,重新刷新
+    private final int SHOW_DIALOG_RELOAD = 6;
+    //判断是否登录
+    private final int IS_LONG = 7;
+    //是否显示分享按钮
+    private final int IS_SHOW_SHARE = 8;
+    //弹出投注窗
+    private final int BETTING_DIALOG = 9;
+
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -299,8 +318,9 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
                             .setOnClickListener(new ConfirmDialog.OnClickListener() {
                                 @Override
                                 public void onClick() {
-                                    if (what == SHOW_DIALOG_RELOAD)
+                                    if (what == SHOW_DIALOG_RELOAD) {
                                         again();
+                                    }
                                 }
                             }).showDialog();
                     break;
@@ -312,7 +332,9 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
                     }
                     break;
                 case IS_SHOW_SHARE:
-                    if (mOnHtmlListener == null) break;
+                    if (mOnHtmlListener == null) {
+                        break;
+                    }
                     int isShow = (int) msg.obj;
                     if (1 == isShow) {
                         mOnHtmlListener.setShareView(true);
@@ -320,10 +342,69 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
                         mOnHtmlListener.setShareView(false);
                     }
                     break;
+                case BETTING_DIALOG:
+                    bettingDialog((String) msg.obj);
+                    break;
+                default:
+                    break;
             }
             return false;
         }
     });
+
+    /**
+     * 竞猜投注
+     * @param content
+     */
+    private void bettingDialog(String content) {
+        if (!SignOutUtil.getIsLogin()){
+            IntentStart.starLogin(mContext);
+            return;
+        }
+        final Map dataMap=JSON.parseObject(content);
+        String data = dataMap.get(BaseInfoConstants.DATA)+"";
+        List<Map> mapList = null;
+        if(data!=null) {
+            mapList = JSON.parseArray(data, Map.class);
+        }
+        new BettingDialog(mContext)
+                .setTypeList(mapList)
+                .setOnClickListener(new BettingDialog.OnClickListener() {
+                    @Override
+                    public void onClick(String typeId, String amountSelect, String amount) {
+                        LogUtil.log(typeId+"   "+amountSelect+"  "+amount);
+                        if (StringUtils.isEmpty(amount)){
+                            amount=amountSelect;
+                        }
+                        if (StringUtils.isEmpty(typeId)){
+                            typeId=dataMap.get(BaseInfoConstants.TABID)+"";
+                        }
+                        userQuiz(amount,dataMap.get(BaseInfoConstants.QUIZID)+"",typeId);
+                    }
+                })
+                .showDialog();
+    }
+
+    /**
+     * 竞猜投注接口
+     * @param amount
+     * @param quizId
+     * @param tabId
+     */
+    private void userQuiz(String amount,String quizId,String tabId){
+        LogUtil.log(amount+"   "+quizId+"  "+tabId);
+        PersenterCommon.getInstance().userQuiz(amount,quizId,tabId,new OnSuccess(mContext, new OnSuccess.OnSuccessListener() {
+            @Override
+            public void onSuccess(Object content) {
+                getLotteryList();
+            }
+
+            @Override
+            public void onFault(String error) {
+
+            }
+        }));
+    }
 
     /**
      * * 视频播放
@@ -361,19 +442,36 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
         if (userInfo == null) {
             userInfo = new UserInfo();
         }
-        if (mWebView == null) return;
+        if (mWebView == null) {
+            return;
+        }
         mWebView.loadUrl("javascript:appGetUserInfo('" + userInfo.getJson() + " ');");
     }
 
+    /**
+     * 键盘高度关闭
+     */
+    public void keyboardHeightHint() {
+        mWebView.loadUrl("javascript:appKeyboardHeightHint();");
+    }
+
+    /**
+     * 投注框回调
+     */
+    public void getLotteryList() {
+        mWebView.loadUrl("javascript:getLotteryList();");
+    }
     /*-----------------------------------以下是java调用js,并且返回值-------------------------------------------------*/
     /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
         mWebView.evaluateJavascript("javascript:appGetUserInfo('" + userInfo.getJson() + " ')", new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
-                LogUtil.Log("返回值"+value);
+                LogUtil.log("返回值"+value);
             }
         });
     }*/
+
+
 
     /*------------------------------------以下是h5调用java方法--------------------------------------------*/
     @SuppressLint("JavascriptInterface")
@@ -500,6 +598,16 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
     }
 
     /**
+     * 获取列表动画
+     */
+    @JavascriptInterface
+    public void jsAnimationList(String content) {
+        MessageEvent messageEvent = new MessageEvent(START_LIST_GIF);
+        messageEvent.setContent(content);
+        EventBus.getDefault().post(messageEvent);
+    }
+
+    /**
      * 是否显示分享按钮
      */
     @JavascriptInterface
@@ -516,4 +624,17 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
         }
     }
 
+
+    /**
+     * 是否显示分享按钮
+     */
+    @JavascriptInterface
+    public void jsBetting(String content) {
+        if (!StringUtils.isEmpty(content)) {
+            Message message = new Message();
+            message.what = BETTING_DIALOG;
+            message.obj = content;
+            handler.sendMessage(message);
+        }
+    }
 }

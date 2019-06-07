@@ -126,8 +126,12 @@ public class RiggerPresenter {
      * 开始
      */
     public void start() {
-        if (!getIsAdded()) return;
-        if (permissions == null) return;
+        if (!getIsAdded()) {
+            return;
+        }
+        if (permissions == null) {
+            return;
+        }
         if (isShow) {
             if (supportRiggerFragment != null) {
                 AuthorizationCheck.authorizationPermission(this, activity, supportRiggerFragment, permissions, permissionsName);
@@ -149,7 +153,9 @@ public class RiggerPresenter {
      * 发送回调 ,判断当前权限申请完毕，完毕再发送回调
      */
     public void sendCallBack() {
-        if (callback == null) return;
+        if (callback == null) {
+            return;
+        }
         if (result.size() == permissions.length) {
             boolean isSuccess = true;
             for (Map.Entry<String, Boolean> entry : result.entrySet()) {
@@ -205,10 +211,10 @@ public class RiggerPresenter {
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            LogUtil.Log("Rigger activity result successful.");
+            LogUtil.log("Rigger activity result successful.");
 //            deliverResult(requestCode,data);
         } else if (requestCode == Activity.RESULT_CANCELED) {
-            LogUtil.Log("Rigger activity result canceled.");
+            LogUtil.log("Rigger activity result canceled.");
 //            deliverCanceled(requestCode);
         }
     }

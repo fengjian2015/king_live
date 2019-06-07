@@ -52,9 +52,14 @@ public class WaveSwipeHeader extends InternalAbstract implements RefreshHeader {
      */
     protected static final float MAX_PROGRESS_ROTATION_RATE = 0.8f;
 
+    /**
+     *
+     */
     protected enum VERTICAL_DRAG_THRESHOLD {
+        /**
+         *
+         */
         FIRST(0.1f), SECOND(0.16f + FIRST.val), THIRD(0.5f + FIRST.val);
-        //        FIRST(0.2f), SECOND(0.26f + FIRST.val), THIRD(0.7f + FIRST.val);
         final float val;
         VERTICAL_DRAG_THRESHOLD(float val) {
             this.val = val;
@@ -312,6 +317,8 @@ public class WaveSwipeHeader extends InternalAbstract implements RefreshHeader {
                 break;
             case Refreshing:
                 break;
+            default:
+                break;
         }
     }
 
@@ -327,8 +334,11 @@ public class WaveSwipeHeader extends InternalAbstract implements RefreshHeader {
         };
         scaleDownAnimation.setDuration(200);
         mCircleView.setAnimationListener(new Animation.AnimationListener() {
+            @Override
             public void onAnimationStart(Animation animation) {}
+            @Override
             public void onAnimationRepeat(Animation animation) {}
+            @Override
             public void onAnimationEnd(Animation animation) {
                 mProgress.stop();
                 mProgress.setAlpha(0xff);

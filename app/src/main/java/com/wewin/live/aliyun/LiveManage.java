@@ -1,14 +1,10 @@
 package com.wewin.live.aliyun;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.alivc.player.AliVcMediaPlayer;
 import com.alivc.player.MediaPlayer;
@@ -96,8 +92,8 @@ public class LiveManage {
         if(MySharedPreferences.getInstance().getBoolean(MySharedConstants.ON_OFF_Y)) {
             mPlayer.setDefaultDecoder(0);
         }
-        //MediaType.Live 表示直播；MediaType.Vod 表示点播
-//        mPlayer.setMediaType(MediaPlayer.MediaType.Live);
+        //MediaType.live 表示直播；MediaType.Vod 表示点播
+//        mPlayer.setMediaType(MediaPlayer.MediaType.live);
         //如果从历史点开始播放
         //mPlayer.seekTo(position);
         //准备开始播放
@@ -107,7 +103,9 @@ public class LiveManage {
     }
 
     private void initConfiguration() {
-        if (mPlayer==null)return;
+        if (mPlayer==null) {
+            return;
+        }
         LiveListenerManage.getInstance().initSeekBar((long) mPlayer.getDuration());
         mPlayer.setCirclePlay(true);
         LiveListenerManage.getInstance().setVolume(getVolume());
@@ -159,8 +157,10 @@ public class LiveManage {
      * 开始播放
      */
     public void start(){
-        LogUtil.Log("开始播放");
-        if (mPlayer==null)return;
+        LogUtil.log("开始播放");
+        if (mPlayer==null) {
+            return;
+        }
         isPlay=true;
         mPlayer.play();
     }
@@ -169,8 +169,10 @@ public class LiveManage {
      * 暂停
      */
     public void pause(){
-        LogUtil.Log("暂停");
-        if(mPlayer==null)return;
+        LogUtil.log("暂停");
+        if(mPlayer==null) {
+            return;
+        }
         isPlay=false;
         mPlayer.pause();
     }
@@ -179,8 +181,10 @@ public class LiveManage {
      * 停止
      */
     public void stop(){
-        LogUtil.Log("停止");
-        if(mPlayer==null)return;
+        LogUtil.log("停止");
+        if(mPlayer==null) {
+            return;
+        }
         isPlay=false;
         mPlayer.stop();
     }
@@ -189,8 +193,10 @@ public class LiveManage {
      * 继续播放
      */
     public void resume(){
-        LogUtil.Log("继续播放");
-        if(mPlayer==null)return;
+        LogUtil.log("继续播放");
+        if(mPlayer==null) {
+            return;
+        }
         isPlay=true;
         mPlayer.resume();
     }
@@ -199,14 +205,16 @@ public class LiveManage {
      * 销毁
      */
     public void release(){
-        if(mPlayer==null)return;
+        if(mPlayer==null) {
+            return;
+        }
         if(mSurfaceView!=null){
             mSurfaceView.getHolder().removeCallback(mCallback);
         }
         mPlayer.destroy();
         mPlayer=null;
         videoUrl=null;
-        LogUtil.Log("销毁播放管理类");
+        LogUtil.log("销毁播放管理类");
     }
 
 
@@ -218,7 +226,9 @@ public class LiveManage {
      * 重置播放器。当播放的过程中调用该函数，会先停止当前的播放行为，销毁当前的播放器，然后创建一个新的播放器。
      */
     public void reset(){
-        if(mPlayer==null)return;
+        if(mPlayer==null) {
+            return;
+        }
         mPlayer.reset();
     }
 
@@ -227,7 +237,9 @@ public class LiveManage {
      * @return
      */
     public boolean getIsPlaying(){
-        if(mPlayer==null)return false;
+        if(mPlayer==null) {
+            return false;
+        }
         return mPlayer.isPlaying();
     }
 
@@ -255,7 +267,9 @@ public class LiveManage {
      * @return
      */
     public long getBufferingPosition(){
-        if(mPlayer==null)return 0;
+        if(mPlayer==null) {
+            return 0;
+        }
         return mPlayer.getBufferPosition();
     }
 
@@ -285,7 +299,9 @@ public class LiveManage {
      * 音量大小，范围为 0-100，100 为最大，0 为最小。
      */
     public void setVolume(int volume){
-        if(mPlayer==null)return;
+        if(mPlayer==null) {
+            return;
+        }
         mPlayer.setVolume(volume);
     }
 
@@ -293,7 +309,9 @@ public class LiveManage {
      * 获取当前音量
      */
     public int getVolume(){
-        if(mPlayer==null)return 0;
+        if(mPlayer==null) {
+            return 0;
+        }
         return mPlayer.getVolume();
     }
 
@@ -302,7 +320,9 @@ public class LiveManage {
      * @param brightness
      */
     public void setScreenBrightness(int brightness){
-        if (mPlayer==null)return;
+        if (mPlayer==null) {
+            return;
+        }
         mPlayer.setScreenBrightness(brightness);
     }
 
@@ -311,7 +331,9 @@ public class LiveManage {
      * @return
      */
     public int getScreenBrightness(){
-        if (mPlayer==null)return 0;
+        if (mPlayer==null) {
+            return 0;
+        }
         return mPlayer.getScreenBrightness();
     }
 
@@ -325,7 +347,9 @@ public class LiveManage {
      * @param timeout
      */
     public void setNetworkTimeout(int timeout){
-        if(mPlayer==null)return;
+        if(mPlayer==null) {
+            return;
+        }
         mPlayer.setTimeout(timeout);
     }
 
@@ -432,11 +456,21 @@ public class LiveManage {
      * 当前状态4G不允许播放的情况
      */
     public void showfourG(){
-        if(!ActivityUtil.isActivityOnTop(mContext))return;
-        if(getAllowPlay())return;
-        if(network!=MOBILE)return;//不为移动网络的忽略
-        if(MySharedPreferences.getInstance().getBoolean(MySharedConstants.ON_OFF_FOUR_G))return;
-        if(mConfirmCancelDialog!=null&&mConfirmCancelDialog.isShowing())return;
+        if(!ActivityUtil.isActivityOnTop(mContext)) {
+            return;
+        }
+        if(getAllowPlay()) {
+            return;
+        }
+        if(network!=MOBILE) {
+            return;//不为移动网络的忽略
+        }
+        if(MySharedPreferences.getInstance().getBoolean(MySharedConstants.ON_OFF_FOUR_G)) {
+            return;
+        }
+        if(mConfirmCancelDialog!=null&&mConfirmCancelDialog.isShowing()) {
+            return;
+        }
         LiveListenerManage.getInstance().pause();
         LiveListenerManage.getInstance().showOrHideProgressBar(false);
         mConfirmCancelDialog=new ConfirmCancelDialog(mContext);
@@ -460,9 +494,15 @@ public class LiveManage {
      * 当前没网络状态
      */
     public void notNetWork(){
-        if(!ActivityUtil.isActivityOnTop(mContext))return;
-        if(getAllowPlay())return;
-        if(mConfirmDialog!=null&&mConfirmDialog.isShowing())return;
+        if(!ActivityUtil.isActivityOnTop(mContext)) {
+            return;
+        }
+        if(getAllowPlay()) {
+            return;
+        }
+        if(mConfirmDialog!=null&&mConfirmDialog.isShowing()) {
+            return;
+        }
         mConfirmDialog=new ConfirmDialog(mContext)
                 .showDialog()
                 .setTvTitle(mContext.getString(R.string.not_network));
@@ -479,19 +519,19 @@ public class LiveManage {
     SurfaceHolder.Callback mCallback=new SurfaceHolder.Callback() {
         @Override
         public void surfaceCreated(SurfaceHolder surfaceHolder) {
-            LogUtil.Log("surfaceCreated创建完成"+videoUrl);
+            LogUtil.log("surfaceCreated创建完成"+videoUrl);
             startPlay();
 
         }
 
         @Override
         public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-            LogUtil.Log("surfaceChanged改变");
+            LogUtil.log("surfaceChanged改变");
         }
 
         @Override
         public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-            LogUtil.Log("surfaceDestroyed销毁");
+            LogUtil.log("surfaceDestroyed销毁");
             oldCurrentPosition=getCurrentPosition();
             LiveListenerManage.getInstance().pause();
         }
@@ -509,7 +549,9 @@ public class LiveManage {
                     showfourG();
                     LiveListenerManage.getInstance().showOrHideProgressBar(true);
                 } else if (MediaPlayer.MEDIA_INFO_BUFFERING_PROGRESS == i) {
-                    if(!getAllowPlay())return;
+                    if(!getAllowPlay()) {
+                        return;
+                    }
                     LiveListenerManage.getInstance().setLoadProgress(i1);
                 } else if (MediaPlayer.MEDIA_INFO_BUFFERING_END == i) {
                     LiveListenerManage.getInstance().showOrHideProgressBar(false);
@@ -522,54 +564,54 @@ public class LiveManage {
         mPlayer.setPreparedListener(new MediaPlayer.MediaPlayerPreparedListener() {
             @Override
             public void onPrepared() {
-                LogUtil.Log("准备完成"+mPlayer.getDuration());
+                LogUtil.log("准备完成"+mPlayer.getDuration());
                 initConfiguration();
             }
         });
 //        mPlayer.setOnPcmDataListener(new IAliyunVodPlayer.OnPcmDataListener() {
 //            @Override
 //            public void onPcmData(byte[] bytes, int i) {
-//                //                LogUtil.Log("音频数据回调接口，在需要处理音频时使用，如拿到视频音频，然后绘制音柱");
+//                //                LogUtil.log("音频数据回调接口，在需要处理音频时使用，如拿到视频音频，然后绘制音柱");
 //            }
 //        });
 
         mPlayer.setFrameInfoListener(new MediaPlayer.MediaPlayerFrameInfoListener() {
             @Override
             public void onFrameInfoListener() {
-                LogUtil.Log("首帧显示时触发");
+                LogUtil.log("首帧显示时触发");
                 LiveListenerManage.getInstance().showOrHideProgressBar(false);
             }
         });
         mPlayer.setErrorListener(new MediaPlayer.MediaPlayerErrorListener() {
             @Override
             public void onError(int i, String msg) {
-                LogUtil.Log("//错误发生时触发，错误码见接口文档  msg:" + msg + "   i:" + i);
+                LogUtil.log("//错误发生时触发，错误码见接口文档  msg:" + msg + "   i:" + i);
                 LiveListenerManage.getInstance().setError(msg);
             }
         });
         mPlayer.setCompletedListener(new MediaPlayer.MediaPlayerCompletedListener() {
             @Override
             public void onCompleted() {
-                LogUtil.Log("视频正常播放完成时触发");
+                LogUtil.log("视频正常播放完成时触发");
             }
         });
 
         mPlayer.setSeekCompleteListener(new MediaPlayer.MediaPlayerSeekCompleteListener() {
             @Override
             public void onSeekCompleted() {
-                LogUtil.Log("视频seek完成时触发");
+                LogUtil.log("视频seek完成时触发");
             }
         });
         mPlayer.setStoppedListener(new MediaPlayer.MediaPlayerStoppedListener() {
             @Override
             public void onStopped() {
-                LogUtil.Log("使用stop接口时触发");
+                LogUtil.log("使用stop接口时触发");
             }
         });
         mPlayer.setCircleStartListener(new MediaPlayer.MediaPlayerCircleStartListener() {
             @Override
             public void onCircleStart() {
-                LogUtil.Log("循环播放开始");
+                LogUtil.log("循环播放开始");
             }
         });
     }

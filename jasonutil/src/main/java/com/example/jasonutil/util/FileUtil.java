@@ -207,7 +207,7 @@ public class FileUtil {
      * @param fileS
      * @return
      */
-    public static String FormetFileSize(long fileS) {// 转换文件大小
+    public static String formetFileSize(long fileS) {// 转换文件大小
         DecimalFormat df = new DecimalFormat("0.00");
         String fileSizeString = "";
         if (fileS < 1024) {
@@ -229,15 +229,17 @@ public class FileUtil {
      */
     public static void createNomedia(String file) {
         File cacheDir = new File(file);
-        if (!cacheDir.exists())
+        if (!cacheDir.exists()) {
             cacheDir.mkdirs();
+        }
         File nomedia = new File(file + "/.nomedia");
-        if (!nomedia.exists())
+        if (!nomedia.exists()) {
             try {
                 nomedia.createNewFile();
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
     }
 
     /**
@@ -327,7 +329,9 @@ public class FileUtil {
      * @return
      */
     public static Bitmap getVideoFirst(String videoPath) {
-        if(StringUtils.isEmpty(videoPath))return null;
+        if(StringUtils.isEmpty(videoPath)) {
+            return null;
+        }
         MediaMetadataRetriever media = new MediaMetadataRetriever();
         media.setDataSource(videoPath);// videoPath 本地视频的路径
         Bitmap bitmap = media.getFrameAtTime(1, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
@@ -380,7 +384,9 @@ public class FileUtil {
         }
         try {
             File outFile = new File(file, fileName);
-            if(outFile.exists())return true;
+            if(outFile.exists()) {
+                return true;
+            }
             InputStream inputStream =context.getAssets().open(fileName);
             FileOutputStream fileOutputStream = new FileOutputStream(outFile);
             // Transfer bytes from inputStream to fileOutputStream
@@ -407,11 +413,12 @@ public class FileUtil {
      * @return
      */
     public static File createAPKFile(Context context,String versionName) {
-        String root =FileUtil.getApkLoc(context);
-        FileUtil.createFile(root);
+        String root =getApkLoc(context);
+        createFile(root);
         File file = new File(root,getAPKFileName(versionName));
-        if (file.exists())
+        if (file.exists()) {
             file.delete();
+        }
         try {
             file.createNewFile();
             return file;
@@ -430,8 +437,9 @@ public class FileUtil {
     public static File createAnimationFile(Context context,String fileName) {
         String root =FileUtil.getAnimationLoc(context);
         File file = new File(root,fileName);
-        if (file.exists())
+        if (file.exists()) {
             file.delete();
+        }
         try {
             file.createNewFile();
             return file;

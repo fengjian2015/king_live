@@ -12,11 +12,10 @@ import android.widget.LinearLayout;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.example.jasonutil.util.LogUtil;
 import com.wewin.live.R;
 import com.wewin.live.modle.BaseInfoConstants;
-import com.wewin.live.ui.Fragment.HtmlFragment;
-import com.wewin.live.ui.Fragment.LazyFragment;
+import com.wewin.live.ui.fragment.HtmlFragment;
+import com.wewin.live.ui.fragment.AbstractLazyFragment;
 import com.wewin.live.ui.widget.CustomTabLayout;
 import com.wewin.live.ui.widget.CustomTabUtil;
 import com.wewin.live.ui.widget.ErrorView;
@@ -38,7 +37,7 @@ import butterknife.InjectView;
  * @date 2019/3/12
  * 首页5个fragment基类
  */
-public abstract class BaseMainFragment extends LazyFragment {
+public abstract class BaseMainFragment extends AbstractLazyFragment {
     @InjectView(R.id.custom_tab)
     CustomTabLayout customTab;
     @InjectView(R.id.view_pager)
@@ -64,8 +63,9 @@ public abstract class BaseMainFragment extends LazyFragment {
 
     @Override
     protected void lazyLoad() {
-        if (!EventBus.getDefault().isRegistered(this))
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
+        }
         initFlexTitle();
         initErrorView();
     }

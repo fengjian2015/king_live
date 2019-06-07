@@ -1,4 +1,4 @@
-package com.wewin.live.ui.Fragment;
+package com.wewin.live.ui.fragment;
 
 
 import android.view.View;
@@ -44,6 +44,8 @@ public class LiveFragment extends BaseMainFragment {
             case R.id.iv_alarm:
                 //消息提醒
                 IntentStart.star(getContext(), AllRemindersActivity.class);
+                break;
+            default:
                 break;
         }
     }
