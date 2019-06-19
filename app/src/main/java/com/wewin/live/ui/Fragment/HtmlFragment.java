@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.example.jasonutil.util.LogUtil;
 import com.wewin.live.R;
@@ -27,8 +28,9 @@ import butterknife.InjectView;
  */
 public class HtmlFragment extends AbstractLazyFragment {
 
-    @InjectView(R.id.html_webview)
     HtmlWebView htmlWebview;
+    @InjectView(R.id.fl_web)
+    FrameLayout flWeb;
 
     private String html5Url;
     private String type;
@@ -38,6 +40,8 @@ public class HtmlFragment extends AbstractLazyFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getActivity(), R.layout.fragment_html, null);
         ButterKnife.inject(this, view);
+        htmlWebview=new HtmlWebView(getActivity());
+        flWeb.addView(htmlWebview);
         return view;
     }
 
@@ -53,15 +57,15 @@ public class HtmlFragment extends AbstractLazyFragment {
         Bundle arguments = getArguments();
         if (arguments != null) {
             html5Url = arguments.getString(BaseInfoConstants.URL);
-            type=arguments.getString(BaseInfoConstants.TYPE);
-            LogUtil.log("html:"+html5Url+"   type:"+type);
+            type = arguments.getString(BaseInfoConstants.TYPE);
+            LogUtil.log("html:" + html5Url + "   type:" + type);
         }
         htmlWebview.setHtml5Url(html5Url);
-        if(getString(R.string.home).equals(type)) {
+        if (getString(R.string.home).equals(type)) {
             htmlWebview.setOnWbScrollChanged(new HtmlWebView.OnWbScrollChanged() {
                 @Override
                 public void onScrollChanged(float starY, float scrollY) {
-                    MessageEvent messageEvent=new MessageEvent(MessageEvent.WB_SCROLL_HIGHT_CHANGE);
+                    MessageEvent messageEvent = new MessageEvent(MessageEvent.WB_SCROLL_HIGHT_CHANGE);
                     messageEvent.setStarY(starY);
                     messageEvent.setScrollY(scrollY);
                     EventBus.getDefault().post(messageEvent);
@@ -73,7 +77,7 @@ public class HtmlFragment extends AbstractLazyFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         int msgId = event.getMsgId();
-        if (msgId == MessageEvent.LOGIN||msgId == MessageEvent.SIGN_OUT) {
+        if (msgId == MessageEvent.LOGIN || msgId == MessageEvent.SIGN_OUT) {
             htmlWebview.again();
         }
     }

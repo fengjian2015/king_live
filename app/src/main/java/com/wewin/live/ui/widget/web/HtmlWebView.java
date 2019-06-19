@@ -8,6 +8,8 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.webkit.JavascriptInterface;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -21,6 +23,7 @@ import com.example.jasonutil.util.UtilTool;
 import com.wewin.live.R;
 import com.wewin.live.db.UserInfoDao;
 import com.wewin.live.dialog.BettingDialog;
+import com.wewin.live.dialog.LoginDialog;
 import com.wewin.live.modle.BaseInfoConstants;
 import com.wewin.live.modle.UserInfo;
 import com.wewin.live.newtwork.OnSuccess;
@@ -28,6 +31,7 @@ import com.wewin.live.presenter.PersenterCommon;
 import com.wewin.live.ui.activity.HtmlActivity;
 import com.wewin.live.ui.activity.live.VideoDetailsActivity;
 import com.wewin.live.ui.widget.ErrorView;
+import com.wewin.live.utils.Constants;
 import com.wewin.live.utils.IntentStart;
 import com.wewin.live.utils.MessageEvent;
 import com.wewin.live.utils.SignOutUtil;
@@ -265,18 +269,26 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
 
     @Override
     public void destroyDrawingCache() {
-        try {
-            if (mWebView != null) {
-                mWebView.clearCache(true);
-                mWebView.onPause();
-                mWebView.removeAllViews();
-                mWebView.destroy();
-                mWebView = null;
+        if (mWebView != null) {
+            // 如果先调用destroy()方法，则会命中if (isDestroyed()) return;这一行代码，需要先onDetachedFromWindow()，再
+            // destory()
+            ViewParent parent = mWebView.getParent();
+            if (parent != null) {
+                ((ViewGroup) parent).removeView(mWebView);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            mWebView.stopLoading();
+            // 退出时调用此方法，移除绑定的服务，否则某些特定系统会报错
+            mWebView.getSettings().setJavaScriptEnabled(false);
+            mWebView.clearHistory();
+            mWebView.clearAnimation();
+            mWebView.clearView();
+            mWebView.removeAllViews();
+            try {
+                mWebView.destroy();
+            } catch (Throwable ex) {
+            }
+            super.destroyDrawingCache();
         }
-        super.destroyDrawingCache();
     }
 
     //获取用户信息
@@ -295,6 +307,10 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
     private final int IS_SHOW_SHARE = 8;
     //弹出投注窗
     private final int BETTING_DIALOG = 9;
+    //弹窗提示，确定跳转到登录
+    private final int SHOW_DIALOG_GO_LOGIN = 10;
+    //弹窗登录窗口
+    private final int SHOW_DIALOG_LOGIN = 11;
 
     Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -345,6 +361,26 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
                 case BETTING_DIALOG:
                     bettingDialog((String) msg.obj);
                     break;
+                case SHOW_DIALOG_GO_LOGIN:
+                    //弹窗提示
+                    new ConfirmDialog(mContext)
+                            .setTvTitle((String) msg.obj)
+                            .setOnClickListener(new ConfirmDialog.OnClickListener() {
+                                @Override
+                                public void onClick() {
+                                    IntentStart.starLogin(mContext);
+                                }
+                            }).showDialog();
+                    break;
+                case SHOW_DIALOG_LOGIN:
+                    new LoginDialog(mContext)
+                            .setOnClickListener(new LoginDialog.OnClickListener() {
+                                @Override
+                                public void onClick() {
+                                    again();
+                                }
+                            }).showDialog();
+                    break;
                 default:
                     break;
             }
@@ -354,17 +390,18 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
 
     /**
      * 竞猜投注
+     *
      * @param content
      */
     private void bettingDialog(String content) {
-        if (!SignOutUtil.getIsLogin()){
+        if (!SignOutUtil.getIsLogin()) {
             IntentStart.starLogin(mContext);
             return;
         }
-        final Map dataMap=JSON.parseObject(content);
-        String data = dataMap.get(BaseInfoConstants.DATA)+"";
+        final Map dataMap = JSON.parseObject(content);
+        String data = dataMap.get(BaseInfoConstants.DATA) + "";
         List<Map> mapList = null;
-        if(data!=null) {
+        if (data != null) {
             mapList = JSON.parseArray(data, Map.class);
         }
         new BettingDialog(mContext)
@@ -372,14 +409,14 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
                 .setOnClickListener(new BettingDialog.OnClickListener() {
                     @Override
                     public void onClick(String typeId, String amountSelect, String amount) {
-                        LogUtil.log(typeId+"   "+amountSelect+"  "+amount);
-                        if (StringUtils.isEmpty(amount)){
-                            amount=amountSelect;
+                        LogUtil.log(typeId + "   " + amountSelect + "  " + amount);
+                        if (StringUtils.isEmpty(amount)) {
+                            amount = amountSelect;
                         }
-                        if (StringUtils.isEmpty(typeId)){
-                            typeId=dataMap.get(BaseInfoConstants.TABID)+"";
+                        if (StringUtils.isEmpty(typeId)) {
+                            typeId = dataMap.get(BaseInfoConstants.TABID) + "";
                         }
-                        userQuiz(amount,dataMap.get(BaseInfoConstants.QUIZID)+"",typeId);
+                        userQuiz(amount, dataMap.get(BaseInfoConstants.QUIZID) + "", typeId);
                     }
                 })
                 .showDialog();
@@ -387,13 +424,14 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
 
     /**
      * 竞猜投注接口
+     *
      * @param amount
      * @param quizId
      * @param tabId
      */
-    private void userQuiz(String amount,String quizId,String tabId){
-        LogUtil.log(amount+"   "+quizId+"  "+tabId);
-        PersenterCommon.getInstance().userQuiz(amount,quizId,tabId,new OnSuccess(mContext, new OnSuccess.OnSuccessListener() {
+    private void userQuiz(String amount, String quizId, String tabId) {
+        LogUtil.log(amount + "   " + quizId + "  " + tabId);
+        PersenterCommon.getInstance().userQuiz(amount, quizId, tabId, new OnSuccess(mContext, new OnSuccess.OnSuccessListener() {
             @Override
             public void onSuccess(Object content) {
                 getLotteryList();
@@ -470,7 +508,6 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
             }
         });
     }*/
-
 
 
     /*------------------------------------以下是h5调用java方法--------------------------------------------*/
@@ -556,6 +593,17 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
     }
 
     /**
+     * 弹窗,跳转到登录
+     */
+    @JavascriptInterface
+    public void jsLoginDialog(String content) {
+        Message message = new Message();
+        message.what = SHOW_DIALOG_GO_LOGIN;
+        message.obj = content;
+        handler.sendMessage(message);
+    }
+
+    /**
      * 弹窗
      */
     @JavascriptInterface
@@ -581,7 +629,7 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
     @JavascriptInterface
     public void jsAnimation(String url, String fileName) {
         MessageEvent messageEvent = new MessageEvent(START_ANIMATION);
-        messageEvent.setUrl(url);
+        messageEvent.setUrl(Constants.BASE_URL + url);
         messageEvent.setFileName(fileName);
         EventBus.getDefault().post(messageEvent);
     }
@@ -592,7 +640,7 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
     @JavascriptInterface
     public void jsAnimationGif(String url, String fileName) {
         MessageEvent messageEvent = new MessageEvent(START_GIF);
-        messageEvent.setUrl(url);
+        messageEvent.setUrl(Constants.BASE_URL + url);
         messageEvent.setFileName(fileName);
         EventBus.getDefault().post(messageEvent);
     }
@@ -624,7 +672,6 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
         }
     }
 
-
     /**
      * 是否显示分享按钮
      */
@@ -634,6 +681,20 @@ public class HtmlWebView extends LinearLayout implements ErrorView.OnContinueLis
             Message message = new Message();
             message.what = BETTING_DIALOG;
             message.obj = content;
+            handler.sendMessage(message);
+        }
+    }
+
+    /**
+     * 是否显示登录弹窗
+     */
+    @JavascriptInterface
+    public void jsShowLoginDialog() {
+        if (SignOutUtil.getIsLogin()) {
+            again();
+        } else {
+            Message message = new Message();
+            message.what = SHOW_DIALOG_LOGIN;
             handler.sendMessage(message);
         }
     }

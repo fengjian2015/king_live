@@ -8,12 +8,18 @@
     android:background="@color/white"
     tools:context=".ui.activity.person.ChangeEmailActivity">
     <include layout="@layout/activity_top_red"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:src="@mipmap/icon_login_logo" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/d50dp"
         android:paddingLeft="@dimen/d15dp"
         android:paddingRight="@dimen/d15dp"
-        android:layout_marginTop="@dimen/d15dp">
+        android:layout_marginTop="@dimen/d20dp">
         <EditText
             android:id="@+id/et_emali"
             android:layout_width="match_parent"
@@ -54,6 +60,7 @@
             android:layout_centerVertical="true"
             android:background="@drawable/ft_gray_circle"
             style="@style/TextRedStyle12sp"
+            android:textColor="@color/gray11"
             android:text="@string/send_verification_code"
             android:paddingLeft="@dimen/d10dp"
             android:paddingRight="@dimen/d10dp"

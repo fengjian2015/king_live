@@ -5,8 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.wewin.live.ui.widget.web.HtmlWebView
-        android:id="@+id/html_webview"
+    <FrameLayout
+        android:id="@+id/fl_web"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+    </FrameLayout>
 </LinearLayout>

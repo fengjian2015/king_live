@@ -2,6 +2,8 @@ package com.wewin.live.ui.activity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.example.jasonutil.util.ToastShow;
@@ -21,6 +23,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
@@ -29,10 +32,11 @@ import butterknife.OnClick;
  */
 public class HtmlActivity extends BaseActivity implements HtmlWebView.OnHtmlListener {
 
-    @InjectView(R.id.html_webview)
     HtmlWebView htmlWebview;
     @InjectView(R.id.iv_finish)
     ImageView ivFinish;
+    @InjectView(R.id.fl_web)
+    FrameLayout flWeb;
 
     //网页链接
     private String html5Url;
@@ -52,9 +56,9 @@ public class HtmlActivity extends BaseActivity implements HtmlWebView.OnHtmlList
         }
     }
 
-    private void initIntent(){
-        Bundle bundle=getIntent().getExtras();
-        if(bundle==null) {
+    private void initIntent() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle == null) {
             return;
         }
         html5Url = bundle.getString(BaseInfoConstants.URL);
@@ -62,13 +66,15 @@ public class HtmlActivity extends BaseActivity implements HtmlWebView.OnHtmlList
 
     private void initView() {
         setBar();
+        htmlWebview = new HtmlWebView(this);
+        flWeb.addView(htmlWebview);
         htmlWebview.setOnHtmlListener(this);
         htmlWebview.setHtml5Url(html5Url);
 //        setIvMore(R.mipmap.icon_collection);
 //        setIvMore(R.mipmap.icon_share);
     }
 
-    @OnClick({R.id.iv_finish, R.id.bark,R.id.iv_more})
+    @OnClick({R.id.iv_finish, R.id.bark, R.id.iv_more})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_finish:
@@ -96,33 +102,33 @@ public class HtmlActivity extends BaseActivity implements HtmlWebView.OnHtmlList
     private void share() {
         mLoadingProgressDialog = LoadingProgressDialog.createDialog(this);
         WeiBoShare.getInstance().init(this);
-        final ShareDialog shareDialog= new ShareDialog(HtmlActivity.this, new ArrayList<HashMap>());
+        final ShareDialog shareDialog = new ShareDialog(HtmlActivity.this, new ArrayList<HashMap>());
         shareDialog
                 .initData()
                 .showAtLocation()
                 .setListOnClick(new ShareDialog.ListOnClick() {
                     @Override
                     public void onClickItem(int position) {
-                        if(position!=5) {
+                        if (position != 5) {
                             mLoadingProgressDialog.showDialog();
                         }
-                        shareDialog.goShare(HtmlActivity.this,"http://testzhibo.wewin18.net","标题","描述","图片地址",position);
+                        shareDialog.goShare(HtmlActivity.this, "http://testzhibo.wewin18.net", "标题", "描述", "图片地址", position);
                     }
                 });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
-        int msgId=event.getMsgId();
-        if (msgId==MessageEvent.SHARE_SUCCESS) {
+        int msgId = event.getMsgId();
+        if (msgId == MessageEvent.SHARE_SUCCESS) {
             mLoadingProgressDialog.hideDialog();
-            ToastShow.showToast2(HtmlActivity.this,getString(R.string.share_success));
-        }else if(msgId==MessageEvent.SHARE_FAIL){
+            ToastShow.showToast2(HtmlActivity.this, getString(R.string.share_success));
+        } else if (msgId == MessageEvent.SHARE_FAIL) {
             mLoadingProgressDialog.hideDialog();
-            ToastShow.showToast2(HtmlActivity.this,""+event.getError());
-        }else if(msgId==MessageEvent.SHARE_CANCEL){
+            ToastShow.showToast2(HtmlActivity.this, "" + event.getError());
+        } else if (msgId == MessageEvent.SHARE_CANCEL) {
             mLoadingProgressDialog.hideDialog();
-            ToastShow.showToast2(HtmlActivity.this,getString(R.string.share_cancel));
+            ToastShow.showToast2(HtmlActivity.this, getString(R.string.share_cancel));
         }
     }
 
@@ -145,4 +151,10 @@ public class HtmlActivity extends BaseActivity implements HtmlWebView.OnHtmlList
 
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.inject(this);
+    }
 }

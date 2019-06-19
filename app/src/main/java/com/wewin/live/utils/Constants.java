@@ -8,11 +8,11 @@ public class Constants {
     /**
      * 全局控制开关
      */
-    public static final boolean IS_DEBUG = false;
+    public static final boolean IS_DEBUG = true;
     /**
      * 测试
      */
-    public static final String BASE_URL=IS_DEBUG ? "http://testzhibo.wewin18.net/" : "https://www.zhibo16.live/";
+//    public static final String BASE_URL=IS_DEBUG ? "http://testzhibo.wewin18.net/" : "https://www.zhibo16.live/";
     /**
      * tong
      */
@@ -21,7 +21,7 @@ public class Constants {
     /**
      * tim
      */
-//    public static final String BASE_URL = IS_DEBUG ? "http://tim.wewin18.net/" : "https://www.zhibo16.live/";
+    public static final String BASE_URL = IS_DEBUG ? "http://tim.wewin18.net/" : "https://www.zhibo16.live/";
     /**
      * callan
      */

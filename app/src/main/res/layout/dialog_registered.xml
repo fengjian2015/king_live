@@ -3,117 +3,138 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/d300dp"
     android:layout_height="wrap_content"
-    android:background="@drawable/ft_white_bt1"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/d10dp">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/d15dp"
-        android:gravity="center_vertical"
-
-        >
-        <TextView
-            android:id="@+id/tv1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TextBlack1Style18sp"
-            android:text="@string/after_registration_you_can"
-            android:layout_centerHorizontal="true"
-            android:paddingTop="@dimen/d10dp"
-            />
-        <ImageView
-            android:id="@+id/iv_finish"
-            android:layout_width="@dimen/d35dp"
-            android:layout_height="@dimen/d35dp"
-            android:src="@mipmap/icon_sh_cancel"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/d5dp"
-            android:paddingTop="@dimen/d15dp"
-            android:paddingRight="@dimen/d15dp"
-            android:paddingBottom="@dimen/d5dp"
-            android:paddingLeft="@dimen/d5dp"
-            />
-    </RelativeLayout>
-
+    >
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/d100dp"
-        android:orientation="horizontal"
-        android:layout_above="@+id/iv_finish"
-        android:paddingLeft="@dimen/d10dp"
-        android:paddingRight="@dimen/d10dp"
-        >
+        android:layout_width="@dimen/d300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ft_white_bt1"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/d10dp">
         <LinearLayout
-            android:id="@+id/ll_message"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d48dp"
+            android:orientation="horizontal"
+            android:layout_above="@+id/iv_finish"
+            android:paddingLeft="@dimen/d10dp"
+            android:paddingRight="@dimen/d10dp"
+            android:background="@color/white_5"
+            >
+            <LinearLayout
+                android:id="@+id/ll_message"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="@dimen/d50dp"
-                android:layout_height="@dimen/d50dp"
-                android:src="@mipmap/icon_chat_interaction" />
+                <ImageView
+                    android:layout_width="@dimen/d20dp"
+                    android:layout_height="@dimen/d20dp"
+                    android:src="@mipmap/icon_chat_interaction" />
 
+                <TextView
+                    style="@style/TextGrayStyle13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv"
+                    android:layout_marginTop="@dimen/d2dp"
+                    android:text="@string/chat_interaction"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="2dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_live_more"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/d20dp"
+                    android:layout_height="@dimen/d20dp"
+                    android:src="@mipmap/icon_live_more" />
+
+                <TextView
+                    style="@style/TextGrayStyle13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv"
+                    android:layout_marginTop="@dimen/d2dp"
+                    android:text="@string/more_live_broadcasts"
+                    android:paddingLeft="2dp"
+                    android:paddingBottom="5dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_focus_anchor"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/d20dp"
+                    android:layout_height="@dimen/d20dp"
+                    android:src="@mipmap/icon_focus_anchor"
+                    />
+
+                <TextView
+                    style="@style/TextGrayStyle13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv"
+                    android:layout_marginTop="@dimen/d2dp"
+                    android:text="@string/focus_on_the_anchor"
+                    android:paddingLeft="2dp"
+                    android:paddingBottom="5dp"/>
+            </LinearLayout>
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            >
             <TextView
-                style="@style/TextBlack1Style13sp"
+                android:id="@+id/tv1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/iv"
-                android:layout_marginTop="@dimen/d2dp"
-                android:text="@string/chat_interaction" />
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/ll_live_more"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="@dimen/d50dp"
-                android:layout_height="@dimen/d50dp"
-                android:src="@mipmap/icon_live_more" />
-
+                style="@style/TextBlack1Style18sp"
+                android:text="@string/after_registration_you_can"
+                android:layout_centerHorizontal="true"
+                android:paddingTop="@dimen/d30dp"
+                />
             <TextView
-                style="@style/TextBlack1Style13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/iv"
-                android:layout_marginTop="@dimen/d2dp"
-                android:text="@string/more_live_broadcasts" />
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/ll_focus_anchor"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/tv1"
+                style="@style/TextGrayStyle18sp"
+                android:text="@string/register_now"
+                android:paddingBottom="25dp"
+                android:layout_marginTop="10dp"/>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/bt_registration"
+            style="@style/BtRedStyle18sp"
+            android:text="@string/registered_account"
+            android:layout_marginTop="@dimen/d10dp"></Button>
+        <TextView
+            android:id="@+id/tv_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextGrayStyle14sp"
+            android:text="@string/login"
             android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="@dimen/d50dp"
-                android:layout_height="@dimen/d50dp"
-                android:src="@mipmap/icon_focus_anchor" />
-
-            <TextView
-                style="@style/TextBlack1Style13sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/iv"
-                android:layout_marginTop="@dimen/d2dp"
-                android:text="@string/focus_on_the_anchor" />
-        </LinearLayout>
+            android:padding="15dp"/>
     </LinearLayout>
-    <View
-        style="@style/HorizontalBoundaryStyle"/>
-    <Button
-        android:id="@+id/bt_registration"
-        style="@style/BtRedStyle18sp"
-        android:text="@string/quick_registration"
-        android:layout_marginTop="@dimen/d10dp"></Button>
+    <ImageView
+        android:id="@+id/iv_finish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/icon_sh_cancel1"
+        android:layout_gravity="center"
+        android:padding="20dp"/>
 </LinearLayout>

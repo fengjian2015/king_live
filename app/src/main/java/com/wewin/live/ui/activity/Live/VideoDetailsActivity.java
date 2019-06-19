@@ -4,16 +4,21 @@ package com.wewin.live.ui.activity.live;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.jasonutil.util.ActivityUtil;
+import com.example.jasonutil.util.LogUtil;
+import com.example.jasonutil.util.MySharedPreferences;
 import com.example.jasonutil.util.ScreenTools;
 import com.example.jasonutil.util.StringUtils;
 import com.example.jasonutil.util.ToastShow;
@@ -21,25 +26,35 @@ import com.tencent.connect.common.Constants;
 import com.tencent.tauth.Tencent;
 import com.wewin.live.R;
 import com.wewin.live.dialog.LoadingProgressDialog;
+import com.wewin.live.dialog.RegisteredDialog;
 import com.wewin.live.dialog.ShareDialog;
 import com.wewin.live.listanim.MyGiftModel;
 import com.wewin.live.modle.BaseInfoConstants;
+import com.wewin.live.modle.BaseMapInfo2;
+import com.wewin.live.newtwork.OnSuccess;
+import com.wewin.live.presenter.PersenterMedia;
 import com.wewin.live.rxjava.OnRxJavaProcessListener;
 import com.wewin.live.rxjava.RxJavaObserver;
 import com.wewin.live.rxjava.RxJavaScheduler;
 import com.wewin.live.thirdparty.QqShare;
 import com.wewin.live.thirdparty.WeiBoShare;
+import com.wewin.live.ui.activity.login.RegisteredActivity;
 import com.wewin.live.ui.widget.VideoSurfceView;
 import com.wewin.live.ui.widget.web.HtmlWebView;
+import com.wewin.live.utils.IntentStart;
 import com.wewin.live.utils.MessageEvent;
+import com.wewin.live.utils.MySharedConstants;
 import com.wewin.live.utils.OrientationWatchDog;
+import com.wewin.live.utils.SignOutUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.InjectView;
@@ -55,12 +70,11 @@ import static com.wewin.live.utils.MessageEvent.DOWN_GIF;
  */
 public class VideoDetailsActivity extends BaseVideoPlayActivity {
 
-    @InjectView(R.id.html_webview)
     HtmlWebView htmlWebview;
     @InjectView(R.id.rl_title)
     LinearLayout rl_title;
     @InjectView(R.id.ll_data)
-    LinearLayout llData;
+    FrameLayout llData;
     @InjectView(R.id.iv_more_two)
     ImageView ivMoreTwo;
     @InjectView(R.id.tv_title)
@@ -69,6 +83,11 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
     ImageView bark;
     @InjectView(R.id.ll_list_anim)
     LinearLayout llListAnim;
+
+    /**
+     * 用于判断是否是主播
+     */
+    private final String ANCHOR_PLAY="app/components/anchorPlay/app-index.html";
 
     /**
      *     网页链接
@@ -90,6 +109,8 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
      * 标题
      */
     private String title;
+
+    private Map recommendMap;
 
     private LoadingProgressDialog mLoadingProgressDialog;
 
@@ -118,10 +139,18 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
         initHtml();
         initWindow();
         setTitle(true);
+        getRecommend();
+        initRegistered();
     }
 
     @Override
     protected void setListener() {
+        liveSurfce.setOnRecommendListener(new VideoSurfceView.OnRecommendListener() {
+            @Override
+            public void onClick() {
+                goVideoPlay();
+            }
+        });
         liveSurfce.setOnControlShowOrHint(new VideoSurfceView.OnControlShowOrHint() {
             @Override
             public void control(boolean isShow) {
@@ -133,6 +162,20 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
 
     }
 
+    private void goVideoPlay() {
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putString(BaseInfoConstants.PULL_URL, recommendMap.get(BaseInfoConstants.FLVURL) + "");
+            bundle.putString(BaseInfoConstants.URL, recommendMap.get(BaseInfoConstants.URL) + "");
+            bundle.putString(BaseInfoConstants.WECHAT, recommendMap.get(BaseInfoConstants.WECHAT) + "");
+            bundle.putString(BaseInfoConstants.ADSCONTENT, recommendMap.get(BaseInfoConstants.ADSCONTENT) + "");
+            bundle.putString(BaseInfoConstants.WXIMAGE, recommendMap.get(BaseInfoConstants.WXIMAGE) + "");
+            bundle.putString(BaseInfoConstants.TITLE, recommendMap.get(BaseInfoConstants.TITLE) + "");
+            IntentStart.star(this, VideoDetailsActivity.class, bundle);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 获取传递过来数据
@@ -161,6 +204,8 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
 
 
     private void initHtml() {
+        htmlWebview=new HtmlWebView(this);
+        llData.addView(htmlWebview);
         htmlWebview.setHtml5Url(html5Url);
 //        htmlWebview.setHtml5Url("file:///android_asset/android_js.html");
         htmlWebview.setOnHtmlListener(new HtmlWebView.OnHtmlListener() {
@@ -233,6 +278,30 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
                 });
     }
 
+    /**
+     * 获取推荐
+     */
+    private void getRecommend(){
+        if (html5Url!=null&&html5Url.contains(ANCHOR_PLAY)) {
+            PersenterMedia.getInstance().recommend(new OnSuccess(this, new OnSuccess.OnSuccessListener() {
+                @Override
+                public void onSuccess(Object content) {
+                    List<Map> map = (List) ((BaseMapInfo2) content).getData();
+                    if (map == null || map.size() <= 0) {
+                        return;
+                    }
+                    recommendMap = map.get(0);
+                    liveSurfce.setRecommendShow(true, recommendMap.get(BaseInfoConstants.COVER) + "");
+                }
+
+                @Override
+                public void onFault(String error) {
+
+                }
+            }));
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         int msgId = event.getMsgId();
@@ -270,6 +339,7 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
         if (model == null) {
             return;
         }
+        model.setGiftPic(com.wewin.live.utils.Constants.BASE_URL+model.getGiftPic());
         model.setSendTime(System.currentTimeMillis());
         giftController.addGift(model);
     }
@@ -390,6 +460,41 @@ public class VideoDetailsActivity extends BaseVideoPlayActivity {
         }
     }
 
+    private void initRegistered(){
+        int curday = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+        if (!SignOutUtil.getIsLogin()&&curday!=MySharedPreferences.getInstance().getInteger(MySharedConstants.NO_LOGIN_DIALOG)){
+            timer.start();
+        }
+    }
+
+    CountDownTimer timer = new CountDownTimer(60 * 1000, 1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+            if (!ActivityUtil.isActivityOnTop(VideoDetailsActivity.this)) {
+                return;
+            }
+            if (SignOutUtil.getIsLogin()){
+                timer.cancel();
+            }
+        }
+
+        @Override
+        public void onFinish() {
+            if (!ActivityUtil.isActivityOnTop(VideoDetailsActivity.this)) {
+                return;
+            }
+            if (!SignOutUtil.getIsLogin()){
+                MySharedPreferences.getInstance().setInteger(MySharedConstants.NO_LOGIN_DIALOG,Calendar.getInstance().get(Calendar.DAY_OF_YEAR));
+                new RegisteredDialog(VideoDetailsActivity.this).showDialog();
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        timer.cancel();
+        super.onDestroy();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

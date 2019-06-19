@@ -25,4 +25,5 @@ public class MySharedConstants {
     public static final String APK_URL="apk_url";//apk下载地址
     public static final String SEARCH_CONTENT="search_content";//搜索内容
     public static final String SEARCH_HOT="search_hot";//热门搜索
+    public static final String NO_LOGIN_DIALOG="no_login_dialog";//未登录时是否弹窗
 }

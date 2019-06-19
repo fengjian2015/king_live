@@ -11,6 +11,8 @@
     <color name="white3">#4DFFFFFF</color><!--30%-->
     <color name="white4">#FF4095</color>
     <color name="white_bg">#F5F5F5</color>
+    <color name="white_5">#F4F4F4</color>
+    <color name="white6">#FF4059</color>
 
     <color name="home_red">#FE454F</color>
     <color name="red">#FF2946</color><!--字体红-->
@@ -21,6 +23,7 @@
     <color name="red5">#FE2953</color>
     <color name="red6">#FF2725</color>
     <color name="red7">#F24724</color>
+    <color name="red8">#80FE2735</color>
 
     <color name="gray">#40999999</color>
     <color name="gray1">#A7A7A7</color><!--字体灰色-->

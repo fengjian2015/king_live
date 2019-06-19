@@ -1,7 +1,5 @@
 package com.wewin.live.ui.activity.login;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.SpannableStringBuilder;
@@ -16,7 +14,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.jasonutil.util.ActivityUtil;
 import com.example.jasonutil.util.AnimatorTool;
 import com.example.jasonutil.util.MySharedPreferences;
@@ -34,8 +31,6 @@ import com.wewin.live.utils.Constants;
 import com.wewin.live.utils.IntentStart;
 import com.wewin.live.utils.MySharedConstants;
 import com.wewin.live.utils.PickerViewUtil;
-
-import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 

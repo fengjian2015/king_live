@@ -1,5 +1,6 @@
 package com.wewin.live.ui.activity.login;
 
+import android.app.Activity;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -145,7 +146,17 @@ public class LoginActivity extends BaseActivity {
      */
     private void login(){
         if (check()) {
-            PersenterLogin.getInstance().login(etPhone.getText().toString(), etPassword.getText().toString(),new OnSuccess(this));
+            PersenterLogin.getInstance().login(etPhone.getText().toString(), etPassword.getText().toString(),new OnSuccess(this, new OnSuccess.OnSuccessListener() {
+                @Override
+                public void onSuccess(Object content) {
+                    finish();
+                }
+
+                @Override
+                public void onFault(String error) {
+
+                }
+            }));
         }
     }
 

@@ -426,7 +426,9 @@ public class AccountSettingsActivity extends BaseActivity {
 
         HashMap hashMap = new HashMap();
         if(StringUtils.isEmpty(uploadImageUrl)){
-            hashMap.put(BaseInfoConstants.AVATAR, mUserInfo.getAvatar());
+            String url=mUserInfo.getAvatar();
+            url=url.replace(Constants.BASE_URL,"");
+            hashMap.put(BaseInfoConstants.AVATAR, url);
         }else {
             hashMap.put(BaseInfoConstants.AVATAR,uploadImageUrl);
         }

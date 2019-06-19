@@ -95,14 +95,26 @@
             prompt(data);
         }
 
-         function jsAnimationList(){
+         function jsAnimationList1(){
             var data='{"giftId":"1","sendId":"1","senderName":"发送者姓名","giftName":"礼物名字","giftPic":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1558430005879&di=796da425cb4c5766636f9fc84519917d&imgtype=0&src=http%3A%2F%2Fs16.sinaimg.cn%2Forignal%2F494b5c3d1c41308beb16f","count":1,"gif_time":5000}'
+             app.jsAnimationList(data);
+         }
+          function jsAnimationList2(){
+            var data='{"giftId":"1","sendId":"2","senderName":"发送者姓名","giftName":"礼物名字","giftPic":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1558430005879&di=796da425cb4c5766636f9fc84519917d&imgtype=0&src=http%3A%2F%2Fs16.sinaimg.cn%2Forignal%2F494b5c3d1c41308beb16f","count":1,"gif_time":5000}'
+             app.jsAnimationList(data);
+         }
+         function jsAnimationList3(){
+            var data='{"giftId":"1","sendId":"3","senderName":"发送者姓名","giftName":"礼物名字","giftPic":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1558430005879&di=796da425cb4c5766636f9fc84519917d&imgtype=0&src=http%3A%2F%2Fs16.sinaimg.cn%2Forignal%2F494b5c3d1c41308beb16f","count":1,"gif_time":5000}'
              app.jsAnimationList(data);
          }
 
          function jsBetting(){
             var data='{"tabid":"1","quizid":"1","data":[{"name":"100","id":"0"},{"name":"200","id":"1"},{"name":"400","id":"2"},{"name":"800","id":"3"},{"name":"1000","id":"4"},{"name":"2000","id":"5"}]}'
              app.jsBetting(data);
+         }
+
+           function jsShowLoginDialog(){
+             app.jsShowLoginDialog();
          }
     </script>
 </head>
@@ -132,8 +144,11 @@
 <button type="button" id="button16" onclick="jsAddBarrage()">添加其余人弹幕</button>
 <button type="button" id="button17" onclick="jsMyAddBarrage()">添加本人弹幕</button>
 
-<button type="button" id="button18" onclick="jsAnimationList()">发送连击礼物</button>
-
+<button type="button" id="button18" onclick="jsAnimationList1()">发送连击礼物</button>
+<button type="button" id="button21" onclick="jsAnimationList2()">发送连击礼物</button>
+<button type="button" id="button22" onclick="jsAnimationList3()">发送连击礼物</button>
 <button type="button" id="button19" onclick="jsBetting()">弹出投注框</button>
+
+<button type="button" id="button20" onclick="jsShowLoginDialog()">弹出登录窗口</button>
 </body>
 </html>

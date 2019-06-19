@@ -47,6 +47,34 @@
         android:background="@drawable/ft_black_bt"
         android:padding="@dimen/d15dp"
         android:visibility="gone" />
+    <LinearLayout
+        android:id="@+id/ll_recommend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextWhiteStyle12sp"
+            android:text="@string/video_select_other"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"/>
+        <ImageView
+            android:id="@+id/iv_recommend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/iv_start"

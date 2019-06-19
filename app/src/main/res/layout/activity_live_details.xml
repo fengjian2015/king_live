@@ -58,18 +58,14 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/ll_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/live_surfce"
         android:orientation="vertical">
 
-        <com.wewin.live.ui.widget.web.HtmlWebView
-            android:id="@+id/html_webview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/ll_list_anim"

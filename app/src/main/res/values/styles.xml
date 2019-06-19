@@ -42,12 +42,17 @@
         <item name="android:textColor">@color/gray1</item>
     </style>
 
-    <!--灰色色12號-->
+    <!--灰色色14號-->
     <style name="TextGrayStyle14sp">
         <item name="android:textSize">@dimen/d14sp</item>
         <item name="android:textColor">@color/gray1</item>
     </style>
 
+    <!--灰色色12號-->
+    <style name="TextGrayStyle13sp">
+        <item name="android:textSize">@dimen/d13sp</item>
+        <item name="android:textColor">@color/gray1</item>
+    </style>
 
     <!--灰色色12號-->
     <style name="TextGrayStyle12sp">

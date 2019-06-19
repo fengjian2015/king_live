@@ -43,8 +43,6 @@ public class PictureSelectorUtil {
                                 .previewVideo(true)
                                 // 是否可播放音频 true or false
                                 .enablePreviewAudio(true)
-                                // luban压缩档次，默认3档 Luban.THIRD_GEAR、Luban.FIRST_GEAR、Luban.CUSTOM_GEAR
-                                .compressGrade(Luban.THIRD_GEAR)
                                 // 是否显示拍照按钮 true or false
                                 .isCamera(true)
                                 // 图片列表点击 缩放效果 默认true
@@ -57,8 +55,6 @@ public class PictureSelectorUtil {
                                 .enableCrop(isCrop)
                                 // 是否压缩 true or false
                                 .compress(true)
-                                //系统自带 or 鲁班压缩 PictureConfig.SYSTEM_COMPRESS_MODE or LUBAN_COMPRESS_MODE
-                                .compressMode(PictureConfig.SYSTEM_COMPRESS_MODE)
                                 // int glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
                                 .glideOverride(160, 160)
                                 // int 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
@@ -119,8 +115,6 @@ public class PictureSelectorUtil {
                                 .previewVideo(true)
                                 // 是否可播放音频 true or false
                                 .enablePreviewAudio(true)
-                                // luban压缩档次，默认3档 Luban.THIRD_GEAR、Luban.FIRST_GEAR、Luban.CUSTOM_GEAR
-                                .compressGrade(Luban.THIRD_GEAR)
                                 // 是否显示拍照按钮 true or false
                                 .isCamera(false)
                                 // 图片列表点击 缩放效果 默认true
@@ -133,8 +127,6 @@ public class PictureSelectorUtil {
                                 .enableCrop(false)
                                 // 是否压缩 true or false
                                 .compress(true)
-                                //系统自带 or 鲁班压缩 PictureConfig.SYSTEM_COMPRESS_MODE or LUBAN_COMPRESS_MODE
-                                .compressMode(PictureConfig.SYSTEM_COMPRESS_MODE)
                                 // int glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
                                 .glideOverride(160, 160)
                                 // int 裁剪比例 如16:9 3:2 3:4 1:1 可自定义

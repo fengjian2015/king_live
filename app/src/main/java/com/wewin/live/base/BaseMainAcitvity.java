@@ -139,14 +139,9 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
         MySharedPreferences.getInstance().setBoolean(MySharedConstants.ON_OFF_SHOW_WINDOW, false);
         super.onCreate(savedInstanceState);
         setBarTranslucent();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.home_red));
-        }
         ActivityManage.addActivity(this);
         //动画
-
         IntentStart.initAnimtor(this);
-
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         init();
@@ -181,6 +176,7 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
     }
+
 
     /**
      * 初始化侧栏
@@ -333,7 +329,7 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
     }
 
     @OnClick({R.id.rl_setting, R.id.rl_task_center, R.id.rl_fund_record, R.id.rl_personal, R.id.rl_account_settings, R.id.rl_release_record, R.id.rl_sign_out
-            ,R.id.tv_get_gem,R.id.rl_change_phone,R.id.rl_suggestion_feedback,R.id.rl_check_updata,R.id.rl_about_me,R.id.iv_avatar,R.id.rl_quiz})
+            ,R.id.tv_get_gem,R.id.rl_change_phone,R.id.rl_suggestion_feedback,R.id.rl_check_updata,R.id.rl_about_me,R.id.iv_avatar,R.id.rl_quiz,R.id.ll_name})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rl_setting:
@@ -397,6 +393,7 @@ public abstract class BaseMainAcitvity extends BaseLiveActivity {
                 mCustomSideMenu.sideMenuScrollNoDuration(false);
                 break;
             case R.id.iv_avatar:
+            case R.id.ll_name:
                 //点击头像
                 IntentStart.starLogin(BaseMainAcitvity.this, AccountSettingsActivity.class);
                 mCustomSideMenu.sideMenuScrollNoDuration(false);

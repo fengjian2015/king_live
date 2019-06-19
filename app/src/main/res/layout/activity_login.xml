@@ -15,21 +15,27 @@
 
         <include layout="@layout/activity_top_red" />
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:src="@mipmap/icon_login_logo" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/d50dp"
+            android:layout_marginTop="20dp"
             android:paddingLeft="@dimen/d15dp"
             android:paddingRight="@dimen/d15dp">
 
             <CheckBox
                 android:id="@+id/tv_area_code"
-                style="@style/TextBlack1Style17sp"
+                style="@style/TextGrayStyle16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:button="@null"
                 android:checked="false"
-                android:drawableRight="@drawable/selector_code"
                 android:enabled="false"
                 android:text="+86" />
 
@@ -88,20 +94,39 @@
             android:layout_marginLeft="@dimen/d15dp"
             android:layout_marginRight="@dimen/d15dp" />
 
+        <Button
+            android:id="@+id/tv_login"
+            style="@style/BtRedStyle18sp"
+            android:layout_marginTop="@dimen/d15dp"
+            android:text="@string/login" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/d15dp"
-            android:layout_marginRight="@dimen/d15dp">
+            android:layout_marginRight="@dimen/d15dp"
+            android:layout_marginTop="5dp">
 
             <TextView
-                android:id="@+id/tv_forget_password"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_registered"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/d5dp"
                 android:paddingBottom="@dimen/d5dp"
-                android:text="@string/forget_password"
-                android:textColor="@color/select_red"
+                android:text="@string/registered_account"
+                android:textColor="@color/gray11"
+                android:paddingRight="10dp"
+                android:textSize="@dimen/d11sp" />
+            <TextView
+                android:id="@+id/tv_forget_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/d5dp"
+                android:paddingBottom="@dimen/d5dp"
+                android:text="@string/forget_password1"
+                android:textColor="@color/gray11"
+                android:layout_alignParentRight="true"
+                android:paddingLeft="10dp"
                 android:textSize="@dimen/d11sp" />
 
             <TextView
@@ -117,16 +142,5 @@
                 android:visibility="gone" />
         </RelativeLayout>
 
-        <Button
-            android:id="@+id/tv_login"
-            style="@style/BtRedStyle18sp"
-            android:layout_marginTop="@dimen/d15dp"
-            android:text="@string/login" />
-
-        <Button
-            android:id="@+id/tv_registered"
-            style="@style/BtGaryStyle18sp"
-            android:layout_marginTop="@dimen/d15dp"
-            android:text="@string/registered" />
     </LinearLayout>
 </com.example.jasonutil.keyboard.AutoHeightLayout>

@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
 import com.example.jasonutil.util.StringUtils;
 import com.wewin.live.R;
 import com.wewin.live.aliyun.LiveManage;
@@ -75,11 +76,14 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
     private DanmakuView mDanmakuView;
     //弹幕开关
     private ImageView mIvBarrage;
+    //推荐直播
+    private LinearLayout llRecommend;
+    private ImageView ivRecommend;
     //----------------功能块参数
     //当前进度
     private long current = 0;
     //缓存进度
-    private long buffering=0;
+    private long buffering = 0;
     //状态栏显示时长
     private int SHOW_TRANSPARENT = 6 * 1000;
     //音量显示时长
@@ -91,16 +95,20 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
     //记录滑动时音量初始值
     private int volume_slide = 0;
     //记录滑动时亮度初始值
-    private int brightness_slide=0;
+    private int brightness_slide = 0;
     //判断是否继续滚动seekbar
-    private boolean isSeekPlay=true;
+    private boolean isSeekPlay = true;
     //弹幕工具类
     private BarrageUtil barrageUtil;
+    //是否可以显示推荐直播
+    private boolean recommendShow = false;
 
     //监听横竖屏切换点击
     private onSwitchScreenListener mSwitchScreenListener;
     //监听控制面板是否隐藏
     private OnControlShowOrHint mOnControlShowOrHint;
+    //监听点击推荐直播
+    private OnRecommendListener mOnRecommendListener;
 
 
     public VideoSurfceView(Context context) {
@@ -130,14 +138,17 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
         mTvVolume = relativeLayout.findViewById(R.id.tv_volume);
         mIvAmplification = relativeLayout.findViewById(R.id.iv_amplification);
         mRlVoluem = relativeLayout.findViewById(R.id.rl_voluem);
-        rlMarquee=relativeLayout.findViewById(R.id.rl_marquee);
-        tvMarquee=relativeLayout.findViewById(R.id.tv_marquee);
-        tvRightPrompt=relativeLayout.findViewById(R.id.tv_right_prompt);
-        llRightPrompt=relativeLayout.findViewById(R.id.ll_right_prompt);
-        ivRightPrompt=relativeLayout.findViewById(R.id.iv_right_prompt);
-        mDanmakuView=relativeLayout.findViewById(R.id.sv_danmaku);
-        mIvBarrage=relativeLayout.findViewById(R.id.iv_barrage);
-        barrageUtil =new BarrageUtil(mContext,mDanmakuView);
+        rlMarquee = relativeLayout.findViewById(R.id.rl_marquee);
+        tvMarquee = relativeLayout.findViewById(R.id.tv_marquee);
+        tvRightPrompt = relativeLayout.findViewById(R.id.tv_right_prompt);
+        llRightPrompt = relativeLayout.findViewById(R.id.ll_right_prompt);
+        ivRightPrompt = relativeLayout.findViewById(R.id.iv_right_prompt);
+        mDanmakuView = relativeLayout.findViewById(R.id.sv_danmaku);
+        mIvBarrage = relativeLayout.findViewById(R.id.iv_barrage);
+        ivRecommend = relativeLayout.findViewById(R.id.iv_recommend);
+        llRecommend = relativeLayout.findViewById(R.id.ll_recommend);
+
+        barrageUtil = new BarrageUtil(mContext, mDanmakuView);
         setListener();
         addView(relativeLayout);
         showOrHideTransparent(true);
@@ -151,7 +162,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
         return mSurfaceView;
     }
 
-    public BarrageUtil getBarrageUtil(){
+    public BarrageUtil getBarrageUtil() {
         return barrageUtil;
     }
 
@@ -161,16 +172,21 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
 
     /**
      * 设置控件面板监听
+     *
      * @param onControlShowOrHint
      */
-    public void setOnControlShowOrHint(OnControlShowOrHint onControlShowOrHint){
-        mOnControlShowOrHint=onControlShowOrHint;
+    public void setOnControlShowOrHint(OnControlShowOrHint onControlShowOrHint) {
+        mOnControlShowOrHint = onControlShowOrHint;
+    }
+
+    public void setOnRecommendListener(OnRecommendListener onRecommendListener){
+        mOnRecommendListener=onRecommendListener;
     }
 
     /**
      * 改变播放显示界面，默认隐藏加载框和进度条等。
      */
-    public void changeSufaceView(){
+    public void changeSufaceView() {
         LiveManage.getInstance().changeSufaceView(getSurfaceView());
         mLlLoad.setVisibility(GONE);
         mRlTransparent.setVisibility(GONE);
@@ -180,11 +196,19 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
     /**
      * 小屏需要做的处理
      */
-    public void setSmall(){
+    public void setSmall() {
         mTvTime.setVisibility(GONE);
         mSeekBar.setVisibility(INVISIBLE);
         mIvBarrage.setVisibility(GONE);
 //        mSurfaceView.setZOrderOnTop(true);
+    }
+
+    /**
+     * 设置是否允许显示推荐直播
+     */
+    public void setRecommendShow(boolean show,String cover) {
+        recommendShow = show;
+        GlideUtil.setImg(mContext,cover,ivRecommend,0);
     }
 
     /**
@@ -199,6 +223,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
                 mTvLoad.setText("");
                 mLlLoad.setVisibility(VISIBLE);
                 mTvPrompt.setVisibility(View.GONE);
+                llRecommend.setVisibility(GONE);
             }
         } else {
             mLlLoad.setVisibility(GONE);
@@ -212,11 +237,12 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
      */
     @Override
     public void setLoadProgress(int proportion) {
-        if(LiveManage.getInstance().getIsPlaying()) {
+        if (LiveManage.getInstance().getIsPlaying()) {
             mLlLoad.setVisibility(VISIBLE);
             mTvLoad.setText(proportion + "%");
             mTvPrompt.setVisibility(View.GONE);
-        }else{
+            llRecommend.setVisibility(GONE);
+        } else {
             mLlLoad.setVisibility(GONE);
         }
     }
@@ -231,8 +257,14 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
         if (StringUtils.isEmpty(content)) {
             return;
         }
-        mTvPrompt.setVisibility(VISIBLE);
-        mTvPrompt.setText(content);
+        if (recommendShow) {
+            llRecommend.setVisibility(VISIBLE);
+            mTvPrompt.setVisibility(GONE);
+        }else {
+            llRecommend.setVisibility(GONE);
+            mTvPrompt.setVisibility(VISIBLE);
+            mTvPrompt.setText(content);
+        }
         mLlLoad.setVisibility(GONE);
     }
 
@@ -241,13 +273,13 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
      */
     @Override
     public void initSeekBar(long duration) {
-        if(duration<=0){
+        if (duration <= 0) {
             mIvBarrage.setVisibility(VISIBLE);
             barrageUtil.start();
             mSeekBar.setVisibility(INVISIBLE);
             mTvTime.setVisibility(GONE);
             return;
-        }else {
+        } else {
             mIvBarrage.setVisibility(GONE);
             mSeekBar.setVisibility(VISIBLE);
             mTvTime.setVisibility(VISIBLE);
@@ -273,9 +305,10 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
 
     /**
      * 设置加载进度
+     *
      * @param buffering
      */
-    public void setSeekBuffering(long buffering){
+    public void setSeekBuffering(long buffering) {
         mSeekBar.setSecondaryProgress((int) buffering);
     }
 
@@ -305,7 +338,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
      * 暂停
      */
     @Override
-    public void pause(){
+    public void pause() {
         selectPlayOrPause(false);
         LiveManage.getInstance().pause();
     }
@@ -329,13 +362,13 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
      */
     @Override
     public void start() {
-        if(LiveManage.getInstance().getIsNetwork()==LiveManage.MOBILE&&
+        if (LiveManage.getInstance().getIsNetwork() == LiveManage.MOBILE &&
                 !MySharedPreferences.getInstance().getBoolean(MySharedConstants.ON_OFF_FOUR_G)) {
             LiveManage.getInstance().showfourG();
             return;
         }
         //如果缓存进度大于或等于当前进度，则表示可以正常播放，隐藏掉提示
-        if(LiveManage.getInstance().getBufferingPosition()>=LiveManage.getInstance().getCurrentPosition()){
+        if (LiveManage.getInstance().getBufferingPosition() >= LiveManage.getInstance().getCurrentPosition()) {
             mTvPrompt.setVisibility(View.GONE);
         }
         selectPlayOrPause(true);
@@ -388,7 +421,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
      */
     @Override
     public void setVolume(int progress) {
-        mTvVolume.setText(mContext.getString(R.string.volume)+progress + "%");
+        mTvVolume.setText(mContext.getString(R.string.volume) + progress + "%");
     }
 
     /**
@@ -397,7 +430,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
      * @param progress
      */
     public void setBrightness(int progress) {
-        mTvVolume.setText(mContext.getString(R.string.brightness)+progress + "%");
+        mTvVolume.setText(mContext.getString(R.string.brightness) + progress + "%");
     }
 
 
@@ -419,11 +452,11 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
     /**
      * 打开或者关闭弹幕
      */
-    public void openOrCloseBarrage(){
-        if(mIvBarrage.isSelected()){
+    public void openOrCloseBarrage() {
+        if (mIvBarrage.isSelected()) {
             //打开
             mIvBarrage.setSelected(false);
-        }else{
+        } else {
             //关闭
             mIvBarrage.setSelected(true);
         }
@@ -444,15 +477,15 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
             mRlTransparent.setVisibility(GONE);
         }
         showOrHideMarqueeAndRightPrompt(!isShow);
-        if (mOnControlShowOrHint!=null) {
+        if (mOnControlShowOrHint != null) {
             mOnControlShowOrHint.control(isShow);
         }
     }
 
-    public boolean getTransparentShow(){
-        if(mRlTransparent.isShown()){
+    public boolean getTransparentShow() {
+        if (mRlTransparent.isShown()) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
@@ -467,7 +500,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
                 while (isSeekPlay) {
                     // 如果正在播放，没0.5.毫秒更新一次进度条
                     current = LiveManage.getInstance().getCurrentPosition();
-                    buffering=LiveManage.getInstance().getBufferingPosition();
+                    buffering = LiveManage.getInstance().getBufferingPosition();
                     mHandler.sendEmptyMessage(TIME);
                     sleep(500);
                 }
@@ -499,6 +532,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
 
     /**
      * 滑动设置亮度
+     *
      * @param x
      */
     private void setSlideBrightness(float x) {
@@ -540,48 +574,50 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
 
     /**
      * 设置右上角文本
+     *
      * @param content
      */
-    public void setRightPrompt(String content,String imageUrl){
+    public void setRightPrompt(String content, String imageUrl) {
         LiveManage.getInstance().setRightPrompt(content);
         LiveManage.getInstance().setRightImage(imageUrl);
-        if(StringUtils.isEmpty(content)){
+        if (StringUtils.isEmpty(content)) {
             llRightPrompt.setVisibility(GONE);
-        }else {
+        } else {
             llRightPrompt.setVisibility(VISIBLE);
             tvRightPrompt.setText(LiveManage.getInstance().getRightPrompt());
-            GlideUtil.setImg(mContext,LiveManage.getInstance().getRightImage(),ivRightPrompt,0);
+            GlideUtil.setImg(mContext, LiveManage.getInstance().getRightImage(), ivRightPrompt, 0);
         }
     }
 
     /**
      * 设置跑马灯文本
+     *
      * @param content
      */
-    public void setMarqueeContent(String content){
+    public void setMarqueeContent(String content) {
         LiveManage.getInstance().setMarqueeContent(content);
     }
 
     /**
      * 判断是否显示与隐藏跑马灯
      */
-    private void showOrHideMarqueeAndRightPrompt(boolean isShow){
-        if(!isShow){
+    private void showOrHideMarqueeAndRightPrompt(boolean isShow) {
+        if (!isShow) {
             rlMarquee.setVisibility(GONE);
             tvMarquee.setVisibility(GONE);
-        }else if(!StringUtils.isEmpty(LiveManage.getInstance().getMarqueeContent())){
+        } else if (!StringUtils.isEmpty(LiveManage.getInstance().getMarqueeContent())) {
             rlMarquee.setVisibility(VISIBLE);
             tvMarquee.setVisibility(VISIBLE);
             tvMarquee.setText(LiveManage.getInstance().getMarqueeContent());
-        }else {
+        } else {
             rlMarquee.setVisibility(GONE);
             tvMarquee.setVisibility(GONE);
         }
-        if(!StringUtils.isEmpty(LiveManage.getInstance().getRightPrompt())){
+        if (!StringUtils.isEmpty(LiveManage.getInstance().getRightPrompt())) {
             tvRightPrompt.setText(LiveManage.getInstance().getRightPrompt());
             llRightPrompt.setVisibility(VISIBLE);
-            GlideUtil.setImg(mContext,LiveManage.getInstance().getRightImage(),ivRightPrompt,0);
-        }else {
+            GlideUtil.setImg(mContext, LiveManage.getInstance().getRightImage(), ivRightPrompt, 0);
+        } else {
             llRightPrompt.setVisibility(GONE);
         }
     }
@@ -627,6 +663,9 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
             case R.id.iv_barrage:
                 openOrCloseBarrage();
                 break;
+            case R.id.ll_recommend:
+                mOnRecommendListener.onClick();
+                break;
             default:
                 break;
         }
@@ -656,6 +695,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
         mIvSwitch.setOnClickListener(this);
         mIvAmplification.setOnClickListener(this);
         mSurfaceView.setOnTouchListener(this);
+        llRecommend.setOnClickListener(this);
     }
 
 
@@ -675,13 +715,13 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
                     if (y1 - y2 > 50) {
                         y1 = y2;
                         LR_UD = 2;
-                        brightness_slide=LiveManage.getInstance().getScreenBrightness();
+                        brightness_slide = LiveManage.getInstance().getScreenBrightness();
                         volume_slide = LiveManage.getInstance().getVolume();
 //                        LogUtil.log("向上滑");
                     } else if (y2 - y1 > 50) {
                         y1 = y2;
                         LR_UD = 2;
-                        brightness_slide=LiveManage.getInstance().getScreenBrightness();
+                        brightness_slide = LiveManage.getInstance().getScreenBrightness();
                         volume_slide = LiveManage.getInstance().getVolume();
 //                        LogUtil.log("向下滑");
                     } else if (x1 - x2 > 50) {
@@ -697,18 +737,18 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
                     }
                 } else {
                     if (y1 - y2 > 1 && LR_UD == 2) {
-                        if(x1<=getMeasuredWidth()/2) {
+                        if (x1 <= getMeasuredWidth() / 2) {
                             setSlideVolume(y2 - y1);
-                        }else {
-                            setSlideBrightness(y2-y1);
+                        } else {
+                            setSlideBrightness(y2 - y1);
                         }
                         showOrHideVolume(true);
 //                        LogUtil.log("向上滑");
                     } else if (y2 - y1 > 1 && LR_UD == 2) {
-                        if(x1<=getMeasuredWidth()/2) {
+                        if (x1 <= getMeasuredWidth() / 2) {
                             setSlideVolume(y2 - y1);
-                        }else {
-                            setSlideBrightness(y2-y1);
+                        } else {
+                            setSlideBrightness(y2 - y1);
                         }
                         showOrHideVolume(true);
 //                        LogUtil.log("向下滑");
@@ -739,7 +779,7 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
     public void destroyDrawingCache() {
         super.destroyDrawingCache();
         LiveListenerManage.getInstance().unregisterLiveListener(this);
-        isSeekPlay=false;
+        isSeekPlay = false;
         LogUtil.log("走到了播放器的destroyDrawingCache");
     }
 
@@ -748,7 +788,11 @@ public class VideoSurfceView extends RelativeLayout implements View.OnClickListe
         void amplificationOrNarrow();
     }
 
-    public interface OnControlShowOrHint{
+    public interface OnControlShowOrHint {
         void control(boolean isShow);
+    }
+
+    public interface OnRecommendListener {
+        void onClick();
     }
 }

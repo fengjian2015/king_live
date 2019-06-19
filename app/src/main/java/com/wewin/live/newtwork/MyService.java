@@ -470,4 +470,15 @@ public interface MyService {
             @Query("tabid") String tabId
     );
 
+    /**
+     * 获取推荐直播
+     * @param uid
+     * @param token
+     * @return
+     */
+    @GET(BASE1+"anchor&a=recommend")
+    Observable<ResponseBody> recommend(
+            @Query("uid") String uid,
+            @Query("token") String token
+    );
 }

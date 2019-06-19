@@ -175,4 +175,12 @@ public class PersenterMedia {
     public void setAttent(String touid,final OnSuccess onSuccess) {
         onSuccess.sendHttp(onSuccess.getMyServer().setAttent(UtilTool.parseInt(SignOutUtil.getUserId()),SignOutUtil.getToken(),touid));
     }
+
+    /**
+     * 获取推荐直播
+     * @param onSuccess
+     */
+    public void recommend(final OnSuccess onSuccess){
+        onSuccess.setInfoType(OnSuccess.BASEMAPINFO2).sendHttp(onSuccess.getMyServer().recommend(SignOutUtil.getUserId(),SignOutUtil.getToken()),false);
+    }
 }

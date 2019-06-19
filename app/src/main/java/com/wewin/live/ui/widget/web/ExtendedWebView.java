@@ -24,6 +24,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.example.jasonutil.util.LogUtil;
 import com.example.jasonutil.util.NetWorkUtil;
+import com.example.jasonutil.util.UtilTool;
 import com.wewin.live.modle.BaseInfoConstants;
 import com.wewin.live.utils.AndroidBug5497Workaround;
 import com.wewin.live.utils.Constants;
@@ -54,7 +55,7 @@ public class ExtendedWebView extends WebView {
             setWebContentsDebuggingEnabled(Constants.IS_DEBUG);
         }
         //用于H5工程师区分移动端和PC端
-//        getSettings().setUserAgentString(getSettings().getUserAgentString() + "zhibo18.app/Android:"+UtilTool.getVersionName(mContext));
+        getSettings().setUserAgentString(getSettings().getUserAgentString() + "kinglive/Android");
         getSettings().setTextZoom(100);
         AndroidBug5497Workaround.assistActivity((Activity) mContext);
         //设置WebView支持JavaScript

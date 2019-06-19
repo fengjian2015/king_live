@@ -47,7 +47,7 @@ import butterknife.InjectView;
 public abstract class BaseVideoPlayActivity extends BaseActivity {
 
     @InjectView(R.id.live_surfce)
-    VideoSurfceView liveSurfce;
+    public VideoSurfceView liveSurfce;
     @InjectView(R.id.animation_view)
     LottieAnimationView animationView;
     @InjectView(R.id.gif_view)

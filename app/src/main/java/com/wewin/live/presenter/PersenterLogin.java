@@ -114,7 +114,6 @@ public class PersenterLogin {
                 SignOutUtil.setToken(data.get(BaseInfoConstants.TOKEN) + "");
 
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.LOGIN));
-                ((Activity) context).finish();
             }
         }).sendHttp(onSuccess.getMyServer().sendlogin(userLogin, userPass));
     }
